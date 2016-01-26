@@ -1,0 +1,167 @@
+html, body {
+  font-size: 16px;
+  background-color: #efefef;
+  font-family: "Rosario", "Noto Sans", sans-serif;
+  line-height: 1em;
+}
+
+p {
+  line-height: 1.5em;
+  margin: 0 0 1em 0;
+}
+p:last-child {
+  margin-bottom: 0;
+}
+
+blockquote {
+  border-color: rgba(0, 0, 0, 0.1);
+  padding: 0 1rem;
+  margin-bottom: 1rem;
+}
+blockquote p {
+  margin: 0;
+}
+blockquote .label {
+  line-height: 2em;
+  cursor: pointer;
+  font-weight: normal;
+}
+
+.label-light {
+  color: rgba(0, 0, 0, 0.5);
+  background-color: transparent;
+}
+.label-light:hover {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+address {
+  display: inline;
+}
+
+.panel {
+  margin-bottom: 1rem;
+}
+
+.panel-body, .panel-header, .panel-footer {
+  padding: 0.5rem 1rem;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+}
+
+.collapse-top {
+  margin-top: -1rem;
+}
+
+.no-bottom {
+  margin-bottom: 0;
+}
+
+.container {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.navbar {
+  margin-bottom: 1rem;
+  min-height: 1em;
+}
+.navbar .navbar-nav {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.navbar .navbar-brand, .navbar li a, .navbar .navbar-toggle {
+  line-height: 1em;
+  height: auto;
+}
+.navbar .navbar-toggle {
+  margin-top: 0;
+  margin-bottom: 0;
+  border: none;
+  border-radius: 0;
+}
+.navbar .btn {
+  background: none;
+}
+.navbar.large .navbar-brand, .navbar.large li a, .navbar.large .navbar-toggle {
+  font-size: 1.2rem;
+  padding-top: 0.9em;
+  padding-bottom: 0.9em;
+}
+.navbar.medium .navbar-brand, .navbar.medium li a, .navbar.medium .navbar-toggle {
+  font-size: 1rem;
+  padding-top: 0.8em;
+  padding-bottom: 0.8em;
+}
+.navbar.medium .btn {
+  margin-top: 0.3em;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+}
+.navbar.small .navbar-brand, .navbar.small li a, .navbar.small .navbar-toggle {
+  font-size: 0.9rem;
+  padding-top: 0.6em;
+  padding-bottom: 0.6em;
+}
+
+.tooltip {
+  font-size: 1rem;
+  line-height: 1em;
+}
+
+.form-control {
+  height: auto;
+  padding: 0.5rem;
+  font-size: 1em;
+  line-height: 1em;
+  margin: 0 0.5rem;
+  width: 100%;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.border-bottom {
+  border-bottom: 3px rgba(0, 0, 0, 0.1) solid;
+}
+
+.badge.light {
+  color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.subset {
+  display: none;
+}
+.subset.active {
+  display: block;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.text {
+  margin-right: 0.25em;
+  margin-left: 0.25em;
+}
+
+.clear {
+  clear: both;
+}
+
+#about, .status {
+  display: none;
+}
+
+.float-right {
+  float: right;
+}
+
+.align-right {
+  text-align: right;
+}

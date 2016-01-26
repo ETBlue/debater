@@ -1,0 +1,134 @@
+html lang='en'
+  head
+    meta charset="utf-8"
+    // for unforgivable ie
+    meta http-equiv="X-UA-Compatible" content="IE=edge"
+    // for mobile, responsive
+    meta name="viewport" content="width=device-width, initial-scale=1"
+
+    // For iOS  TODO
+    //meta name="apple-mobile-web-app-capable" content="yes"
+    //link rel="apple-touch-icon-precomposed" href="img/app-icon/icon-60.png"
+    //link rel="apple-touch-icon-precomposed" sizes="76x76" href="img/app-icon/icon-76.png"
+    //link rel="apple-touch-icon-precomposed" sizes="120x120" href="img/app-icon/icon-60@2x.png"
+    //link rel="apple-touch-icon-precomposed" sizes="152x152" href="img/app-icon/icon-76@2x.png"
+
+    // css
+    // vendors
+    // bootstrap
+    /! Latest compiled and minified CSS
+    link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" rel="stylesheet" /
+    // web fonts
+    link href='https://fonts.googleapis.com/css?family=Noto+Sans:400,700' rel='stylesheet' type='text/css'
+    // custom
+    link rel="stylesheet" href="css/global.css"
+
+    // js
+    // vendors
+    script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"
+    script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" 
+    //script src="https://cdn.datatables.net/1.10.10/js/dataTables.bootstrap.min.js"
+    //script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.4/handlebars.min.js"
+
+    // custom
+    script src="js/index.js"
+
+    // meta data
+    title Debater: online opinions organizer (BETA)
+    link rel="icon" href="" type="image/x-icon"
+    link rel="shortcut icon" href="" type="image/x-icon"
+    meta property="og:image" content=""
+
+  body
+    header#about
+      .panel.panel-default.no-bottom
+        .container
+          .panel-body.text-center
+            p
+              | Debater is designed for data compulsive folks and hard working online facilitators, turning formatted discussion records into organised filterable web view. Designed by ETBlue. Source code available on 
+              a.inline-block.text target='_blank' href='https://github.com/ETBlue/debater' GitHub
+              | .
+    nav.navbar.navbar-default.navbar-static-top.large
+      .container
+        /! Brand and toggle get grouped for better mobile display
+        .navbar-header
+          a.bold.navbar-brand href="#about" data-click='toggleAbout' Debater
+          button.navbar-toggle.collapsed aria-expanded="false" data-target="#navbar-collapse-level1" data-toggle="collapse" type="button" 
+            span.glyphicon.glyphicon-menu-hamburger
+            span.sr-only Toggle navigation
+        /! Collect the nav links, forms, and other content for toggling
+        #navbar-collapse-level1.collapse.navbar-collapse
+          ul.nav.navbar-nav.navbar-left
+            li
+              a TITLE
+          form.navbar-form.navbar-right role=''
+            .form-group
+              //span.input-group-addon File URL
+              span File URL
+              input#sourcefile.form-control autofocus='true' type='text' placeholdr='your.record.file.url.md' aria-describedby=''
+
+    section.container
+      .row
+        .col-sm-3
+          ul.nav.nav-pills.nav-stacked
+            li.active role='presentation'
+              a 所有主題
+            li role='presentation'
+              a category 1
+            li role='presentation'
+              a category 2
+            li role='presentation'
+              a category 3
+            li role='presentation'
+              a category 4
+        .col-sm-9
+          nav.navbar.small.border-bottom
+            ul.nav.nav-pills
+              li.active role='presentation'
+                a 所有立場
+              li role='presentation'
+                a role 1
+              li role='presentation'
+                a role 2
+              li role='presentation'
+                a role 3
+              li role='presentation'
+                a role 4
+          nav.navbar.collapse-top.small
+            ul.nav.nav-pills
+              li.active role='presentation'
+                a 所有身份
+              li role='presentation'
+                a role 1
+              li role='presentation'
+                a role 2
+              li role='presentation'
+                a role 3
+              li role='presentation'
+                a role 4
+          article
+            blockquote cite='url'
+              p
+                | 炸蝦過多粉皮，肉類過鹹過柴，點心餅皮軟爛，蛋糕過乾，不符「保證吃很好」期望
+              .align-right.small
+                a href='' 2016/01/08 2:35am
+                |  by 
+                a href='' 孤獨的踩雷家
+              .align-right.clear
+                span.label.label-light #主題
+                span.label.label-light @立場
+                span.label.label-light @身份
+            blockquote cite='url'
+              p
+                | 炸蝦過多粉皮，肉類過鹹過柴，點心餅皮軟爛，蛋糕過乾，不符「保證吃很好」期望
+              .align-right.small
+                a href='' 2016/01/08 2:35am
+                |  by 
+                a href='' 孤獨的踩雷家
+              .align-right.clear
+                span.label.label-light #主題
+                span.label.label-light @立場
+                span.label.label-light @身份
+
+    javascript:
+
