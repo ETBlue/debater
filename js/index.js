@@ -442,14 +442,9 @@ define('model/recordData/file',['exports', 'model/fileURL'], function (exports, 
 
         var result = {};
         Object.keys(this._data).forEach(function (key) {
-          result[key] = _this[key];
+          result[key] = _this._data[key];
         });
         return result;
-      }
-    }, {
-      key: 'title',
-      get: function get() {
-        return this._data.title || "";
       }
     }]);
 
@@ -465,7 +460,75 @@ define('model/recordData/file',['exports', 'model/fileURL'], function (exports, 
       relations: [],
       topics: []
     };
-    console.log(fileData);
+    var lines = fileData.split("\n");
+    var meta = '';
+    $.each(lines, function (index, line) {
+      if (line) {
+        if (file.title.length == 0 && line[0] != '#') {
+          file.title = line;
+        } else if (line.startsWith('# ')) {
+          file.authors.push({
+            name: line.substring(2)
+          });
+        } else if (line.startsWith('## 個人頁面')) {
+          meta = 'profiles';
+          file.authors[file.authors.length - 1][meta] = [];
+        } else if (line.startsWith('## 關係')) {
+          meta = 'relations';
+          file.authors[file.authors.length - 1][meta] = [];
+        } else if (line.startsWith('## 職業')) {
+          meta = 'professions';
+          file.authors[file.authors.length - 1][meta] = [];
+        } else if (line.startsWith('## 文章')) {
+          meta = 'posts';
+          file.authors[file.authors.length - 1][meta] = [];
+        } else if (line.startsWith('### ')) {
+          var post = {
+            timestamp: line.substring(4, line.indexOf('http')).trim(),
+            url: line.substring(line.indexOf('http')).trim()
+          };
+          file.authors[file.authors.length - 1]['posts'].push(post);
+        } else if (line.startsWith('- ')) {
+          if (meta == 'posts') {
+            if (!line.includes('#')) {
+              return;
+            }
+
+            var topics = [];
+
+            if (line.indexOf('#') > 0) {
+              topics = line.substring(line.indexOf('#') + 1).split('#');
+            }
+
+            var relations = file.authors[file.authors.length - 1]['relations'];
+            var professions = file.authors[file.authors.length - 1]['professions'];
+            var point = {
+              author: file.authors[file.authors.length - 1].name,
+              timestamp: file.authors[file.authors.length - 1]['posts'][file.authors[file.authors.length - 1]['posts'].length - 1].timestamp,
+              url: file.authors[file.authors.length - 1]['posts'][file.authors[file.authors.length - 1]['posts'].length - 1].url,
+              relations: relations,
+              professions: professions,
+              topics: topics,
+              content: line.substring(2, line.indexOf('#'))
+            };
+            file.points.push(point);
+            file.topics = file.topics.concat(topics).filter(function (item, pos, self) {
+              return self.indexOf(item) == pos;
+            });
+            file.relations = file.relations.concat(relations).filter(function (item, pos, self) {
+              return self.indexOf(item) == pos;
+            });
+            ;
+            file.professions = file.professions.concat(professions).filter(function (item, pos, self) {
+              return self.indexOf(item) == pos;
+            });
+            ;
+          } else {
+            file.authors[file.authors.length - 1][meta].push(line.substring(2));
+          }
+        }
+      }
+    });
     return file;
   }
 });
@@ -560,105 +623,14 @@ define('model/recordData/authors',['exports', 'model/recordData/file'], function
       get: function get() {
         return 'author relations array';
       }
+    }, {
+      key: 'posts',
+      get: function get() {
+        return 'author posts array';
+      }
     }]);
 
     return Author;
-  })();
-});
-
-
-define('model/recordData/points',['exports', 'model/recordData/file'], function (exports, _file) {
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  exports.points = undefined;
-
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
-
-  var _createClass = (function () {
-    function defineProperties(target, props) {
-      for (var i = 0; i < props.length; i++) {
-        var descriptor = props[i];
-        descriptor.enumerable = descriptor.enumerable || false;
-        descriptor.configurable = true;
-        if ("value" in descriptor) descriptor.writable = true;
-        Object.defineProperty(target, descriptor.key, descriptor);
-      }
-    }
-
-    return function (Constructor, protoProps, staticProps) {
-      if (protoProps) defineProperties(Constructor.prototype, protoProps);
-      if (staticProps) defineProperties(Constructor, staticProps);
-      return Constructor;
-    };
-  })();
-
-  var dataRef = undefined;
-  var points = exports.points = {
-    get: function get() {
-      return dataRef;
-    },
-    load: function load() {
-      var loadDeferred = new $.Deferred();
-      var waiting = [];
-      waiting.push(_file.file.load());
-      $.when.apply($.when, waiting).done(function () {
-        dataRef = _file.file.points.map(function (pointData) {
-          var point = new Point(pointData);
-          return point.toJSON();
-        });
-        loadDeferred.resolve(dataRef);
-      });
-      return loadDeferred;
-    }
-  };
-
-  var Point = (function () {
-    function Point(data) {
-      _classCallCheck(this, Point);
-
-      this._data = data;
-      return this;
-    }
-
-    _createClass(Point, [{
-      key: 'toJSON',
-      value: function toJSON() {
-        var _this = this;
-
-        var result = {};
-        Object.keys(this._data).forEach(function (key) {
-          result[key] = _this[key] || "";
-        });
-        return result;
-      }
-    }, {
-      key: 'author',
-      get: function get() {
-        return 'point author string';
-      }
-    }, {
-      key: 'cite',
-      get: function get() {
-        return 'point cite string';
-      }
-    }, {
-      key: 'timestamp',
-      get: function get() {
-        return 'point timestamp string';
-      }
-    }, {
-      key: 'topics',
-      get: function get() {
-        return 'point topics array';
-      }
-    }]);
-
-    return Point;
   })();
 });
 
@@ -703,9 +675,9 @@ define('model/recordData/professions',['exports', 'model/recordData/file'], func
       var waiting = [];
       waiting.push(_file.file.load());
       $.when.apply($.when, waiting).done(function () {
-        dataRef = _file.file.professions.map(function (professionData) {
+        dataRef = _file.file.get('professions').map(function (professionData) {
           var profession = new Profession(professionData);
-          return profession.toJSON();
+          return profession.toHTML();
         });
         loadDeferred.resolve(dataRef);
       });
@@ -722,20 +694,9 @@ define('model/recordData/professions',['exports', 'model/recordData/file'], func
     }
 
     _createClass(Profession, [{
-      key: 'toJSON',
-      value: function toJSON() {
-        var _this = this;
-
-        var result = {};
-        Object.keys(this._data).forEach(function (key) {
-          result[key] = _this[key] || "";
-        });
-        return result;
-      }
-    }, {
-      key: 'name',
-      get: function get() {
-        return 'profession name string';
+      key: 'toHTML',
+      value: function toHTML() {
+        return '\n      <li>\n        <a>' + this._data + '\n        </a>\n      </li>';
       }
     }]);
 
@@ -784,9 +745,9 @@ define('model/recordData/relations',['exports', 'model/recordData/file'], functi
       var waiting = [];
       waiting.push(_file.file.load());
       $.when.apply($.when, waiting).done(function () {
-        dataRef = _file.file.relations.map(function (relationData) {
+        dataRef = _file.file.get('relations').map(function (relationData) {
           var relation = new Relation(relationData);
-          return relation.toJSON();
+          return relation.toHTML();
         });
         loadDeferred.resolve(dataRef);
       });
@@ -803,20 +764,9 @@ define('model/recordData/relations',['exports', 'model/recordData/file'], functi
     }
 
     _createClass(Relation, [{
-      key: 'toJSON',
-      value: function toJSON() {
-        var _this = this;
-
-        var result = {};
-        Object.keys(this._data).forEach(function (key) {
-          result[key] = _this[key] || "";
-        });
-        return result;
-      }
-    }, {
-      key: 'name',
-      get: function get() {
-        return 'relation name string';
+      key: 'toHTML',
+      value: function toHTML() {
+        return '\n      <li>\n        <a>' + this._data + '\n        </a>\n      </li>';
       }
     }]);
 
@@ -865,9 +815,9 @@ define('model/recordData/topics',['exports', 'model/recordData/file'], function 
       var waiting = [];
       waiting.push(_file.file.load());
       $.when.apply($.when, waiting).done(function () {
-        dataRef = _file.file.topics.map(function (topicData) {
+        dataRef = _file.file.get('topics').map(function (topicData) {
           var topic = new Topic(topicData);
-          return topic.toJSON();
+          return topic.toHTML();
         });
         loadDeferred.resolve(dataRef);
       });
@@ -884,20 +834,9 @@ define('model/recordData/topics',['exports', 'model/recordData/file'], function 
     }
 
     _createClass(Topic, [{
-      key: 'toJSON',
-      value: function toJSON() {
-        var _this = this;
-
-        var result = {};
-        Object.keys(this._data).forEach(function (key) {
-          result[key] = _this[key] || "";
-        });
-        return result;
-      }
-    }, {
-      key: 'name',
-      get: function get() {
-        return 'topic name string';
+      key: 'toHTML',
+      value: function toHTML() {
+        return '\n      <li>\n        <a>' + this._data + '\n        </a>\n      </li>';
       }
     }]);
 
@@ -906,7 +845,89 @@ define('model/recordData/topics',['exports', 'model/recordData/file'], function 
 });
 
 
-define('model/recordData/recordData',['exports', 'utils/events', 'model/recordData/file', 'model/recordData/authors', 'model/recordData/points', 'model/recordData/professions', 'model/recordData/relations', 'model/recordData/topics'], function (exports, _events, _file, _authors, _points, _professions, _relations, _topics) {
+define('model/recordData/points',['exports', 'model/recordData/file'], function (exports, _file) {
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.points = undefined;
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  var _createClass = (function () {
+    function defineProperties(target, props) {
+      for (var i = 0; i < props.length; i++) {
+        var descriptor = props[i];
+        descriptor.enumerable = descriptor.enumerable || false;
+        descriptor.configurable = true;
+        if ("value" in descriptor) descriptor.writable = true;
+        Object.defineProperty(target, descriptor.key, descriptor);
+      }
+    }
+
+    return function (Constructor, protoProps, staticProps) {
+      if (protoProps) defineProperties(Constructor.prototype, protoProps);
+      if (staticProps) defineProperties(Constructor, staticProps);
+      return Constructor;
+    };
+  })();
+
+  var dataRef = undefined;
+  var points = exports.points = {
+    get: function get() {
+      return dataRef;
+    },
+    load: function load() {
+      var loadDeferred = new $.Deferred();
+      var waiting = [];
+      waiting.push(_file.file.load());
+      $.when.apply($.when, waiting).done(function () {
+        dataRef = _file.file.get('points').map(function (pointData) {
+          var point = new Point(pointData);
+          return point.toHTML();
+        });
+        loadDeferred.resolve(dataRef);
+      });
+      return loadDeferred;
+    }
+  };
+
+  var Point = (function () {
+    function Point(data) {
+      _classCallCheck(this, Point);
+
+      this._data = data;
+      return this;
+    }
+
+    _createClass(Point, [{
+      key: 'toHTML',
+      value: function toHTML() {
+        var topics = this._data.topics.map(function (topic) {
+          return '<span class="label label-light">#' + topic + '</span>';
+        });
+
+        var relations = this._data.relations.map(function (relation) {
+          return '<span class="label label-light">@' + relation + '</span>';
+        });
+
+        var professions = this._data.professions.map(function (profession) {
+          return '<span class="label label-light">@' + profession + '</span>';
+        });
+
+        return '\n      <blockquote cite="' + this._data.url + '">\n        <p>' + this._data.content + '</p>\n        <div class="align-right small">\n          <a href="' + this._data.url + '">' + this._data.timestamp + '</a> by <a href="">' + this._data.author + '</a>\n        </div>\n        <div class="align-right clear">\n        </div>\n      </blockquote>\n    ';
+      }
+    }]);
+
+    return Point;
+  })();
+});
+
+
+define('model/recordData/recordData',['exports', 'utils/events', 'model/recordData/file', 'model/recordData/authors', 'model/recordData/professions', 'model/recordData/relations', 'model/recordData/topics', 'model/recordData/points'], function (exports, _events, _file, _authors, _professions, _relations, _topics, _points) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
@@ -920,7 +941,7 @@ define('model/recordData/recordData',['exports', 'utils/events', 'model/recordDa
         _this.trigger('loaded:file', fileData);
       });
     },
-    loadAuthor: function loadAuthor() {
+    loadAuthors: function loadAuthors() {
       var _this2 = this;
 
       this.trigger('load:authors');
@@ -928,36 +949,36 @@ define('model/recordData/recordData',['exports', 'utils/events', 'model/recordDa
         _this2.trigger('loaded:authors', authorsData);
       });
     },
-    loadPost: function loadPost() {
+    loadProfessions: function loadProfessions() {
       var _this3 = this;
-
-      this.trigger('load:points');
-      return _points.points.load().done(function (pointsData) {
-        _this3.trigger('loaded:points', pointsData);
-      });
-    },
-    loadProfession: function loadProfession() {
-      var _this4 = this;
 
       this.trigger('load:professions');
       return _professions.professions.load().done(function (professionsData) {
-        _this4.trigger('loaded:professions', professionsData);
+        _this3.trigger('loaded:professions', professionsData);
       });
     },
-    loadRelation: function loadRelation() {
-      var _this5 = this;
+    loadRelations: function loadRelations() {
+      var _this4 = this;
 
       this.trigger('load:relations');
       return _relations.relations.load().done(function (relationsData) {
-        _this5.trigger('loaded:relations', relationsData);
+        _this4.trigger('loaded:relations', relationsData);
       });
     },
-    loadTopic: function loadTopic() {
-      var _this6 = this;
+    loadTopics: function loadTopics() {
+      var _this5 = this;
 
       this.trigger('load:topics');
       return _topics.topics.load().done(function (topicsData) {
-        _this6.trigger('loaded:topics', topicsData);
+        _this5.trigger('loaded:topics', topicsData);
+      });
+    },
+    loadPoints: function loadPoints() {
+      var _this6 = this;
+
+      this.trigger('load:points');
+      return _points.points.load().done(function (pointsData) {
+        _this6.trigger('loaded:points', pointsData);
       });
     }
   };
@@ -987,11 +1008,34 @@ define('view/home',['exports', 'model/recordData/recordData', 'model/fileURL'], 
           _fileURL.fileURL.setURL(newURL);
           app.showLoading();
           _recordData.recordData.loadFile();
+          _recordData.recordData.loadTopics();
+          _recordData.recordData.loadRelations();
+          _recordData.recordData.loadProfessions();
+          _recordData.recordData.loadPoints();
         }
       });
       _recordData.recordData.on('loaded:file', function (file) {
         $('#title').html(file.title);
-        $('#file-status').html('File loaded <span class="glyphicon glyphicon-ok text-success"></span>');
+      });
+      _recordData.recordData.on('loaded:topics', function (topics) {
+        topics.forEach(function (topic) {
+          $('#topics').append(topic);
+        });
+      });
+      _recordData.recordData.on('loaded:relations', function (relations) {
+        relations.forEach(function (relation) {
+          $('#relations').append(relation);
+        });
+      });
+      _recordData.recordData.on('loaded:professions', function (professions) {
+        professions.forEach(function (profession) {
+          $('#professions').append(profession);
+        });
+      });
+      _recordData.recordData.on('loaded:points', function (points) {
+        points.forEach(function (point) {
+          $('#points').append(point);
+        });
       });
     },
     showLoading: function showLoading() {

@@ -40,9 +40,9 @@ define(['exports', 'model/recordData/file'], function (exports, _file) {
       var waiting = [];
       waiting.push(_file.file.load());
       $.when.apply($.when, waiting).done(function () {
-        dataRef = _file.file.professions.map(function (professionData) {
+        dataRef = _file.file.get('professions').map(function (professionData) {
           var profession = new Profession(professionData);
-          return profession.toJSON();
+          return profession.toHTML();
         });
         loadDeferred.resolve(dataRef);
       });
@@ -59,20 +59,9 @@ define(['exports', 'model/recordData/file'], function (exports, _file) {
     }
 
     _createClass(Profession, [{
-      key: 'toJSON',
-      value: function toJSON() {
-        var _this = this;
-
-        var result = {};
-        Object.keys(this._data).forEach(function (key) {
-          result[key] = _this[key] || "";
-        });
-        return result;
-      }
-    }, {
-      key: 'name',
-      get: function get() {
-        return 'profession name string';
+      key: 'toHTML',
+      value: function toHTML() {
+        return '\n      <li>\n        <a>' + this._data + '\n        </a>\n      </li>';
       }
     }]);
 

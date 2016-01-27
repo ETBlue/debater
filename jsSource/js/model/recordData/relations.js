@@ -40,9 +40,9 @@ define(['exports', 'model/recordData/file'], function (exports, _file) {
       var waiting = [];
       waiting.push(_file.file.load());
       $.when.apply($.when, waiting).done(function () {
-        dataRef = _file.file.relations.map(function (relationData) {
+        dataRef = _file.file.get('relations').map(function (relationData) {
           var relation = new Relation(relationData);
-          return relation.toJSON();
+          return relation.toHTML();
         });
         loadDeferred.resolve(dataRef);
       });
@@ -59,20 +59,9 @@ define(['exports', 'model/recordData/file'], function (exports, _file) {
     }
 
     _createClass(Relation, [{
-      key: 'toJSON',
-      value: function toJSON() {
-        var _this = this;
-
-        var result = {};
-        Object.keys(this._data).forEach(function (key) {
-          result[key] = _this[key] || "";
-        });
-        return result;
-      }
-    }, {
-      key: 'name',
-      get: function get() {
-        return 'relation name string';
+      key: 'toHTML',
+      value: function toHTML() {
+        return '\n      <li>\n        <a>' + this._data + '\n        </a>\n      </li>';
       }
     }]);
 

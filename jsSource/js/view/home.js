@@ -21,11 +21,34 @@ define(['exports', 'model/recordData/recordData', 'model/fileURL'], function (ex
           _fileURL.fileURL.setURL(newURL);
           app.showLoading();
           _recordData.recordData.loadFile();
+          _recordData.recordData.loadTopics();
+          _recordData.recordData.loadRelations();
+          _recordData.recordData.loadProfessions();
+          _recordData.recordData.loadPoints();
         }
       });
       _recordData.recordData.on('loaded:file', function (file) {
         $('#title').html(file.title);
-        $('#file-status').html('File loaded <span class="glyphicon glyphicon-ok text-success"></span>');
+      });
+      _recordData.recordData.on('loaded:topics', function (topics) {
+        topics.forEach(function (topic) {
+          $('#topics').append(topic);
+        });
+      });
+      _recordData.recordData.on('loaded:relations', function (relations) {
+        relations.forEach(function (relation) {
+          $('#relations').append(relation);
+        });
+      });
+      _recordData.recordData.on('loaded:professions', function (professions) {
+        professions.forEach(function (profession) {
+          $('#professions').append(profession);
+        });
+      });
+      _recordData.recordData.on('loaded:points', function (points) {
+        points.forEach(function (point) {
+          $('#points').append(point);
+        });
       });
     },
     showLoading: function showLoading() {

@@ -40,9 +40,9 @@ define(['exports', 'model/recordData/file'], function (exports, _file) {
       var waiting = [];
       waiting.push(_file.file.load());
       $.when.apply($.when, waiting).done(function () {
-        dataRef = _file.file.topics.map(function (topicData) {
+        dataRef = _file.file.get('topics').map(function (topicData) {
           var topic = new Topic(topicData);
-          return topic.toJSON();
+          return topic.toHTML();
         });
         loadDeferred.resolve(dataRef);
       });
@@ -59,20 +59,9 @@ define(['exports', 'model/recordData/file'], function (exports, _file) {
     }
 
     _createClass(Topic, [{
-      key: 'toJSON',
-      value: function toJSON() {
-        var _this = this;
-
-        var result = {};
-        Object.keys(this._data).forEach(function (key) {
-          result[key] = _this[key] || "";
-        });
-        return result;
-      }
-    }, {
-      key: 'name',
-      get: function get() {
-        return 'topic name string';
+      key: 'toHTML',
+      value: function toHTML() {
+        return '\n      <li>\n        <a>' + this._data + '\n        </a>\n      </li>';
       }
     }]);
 

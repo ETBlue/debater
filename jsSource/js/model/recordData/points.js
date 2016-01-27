@@ -40,9 +40,9 @@ define(['exports', 'model/recordData/file'], function (exports, _file) {
       var waiting = [];
       waiting.push(_file.file.load());
       $.when.apply($.when, waiting).done(function () {
-        dataRef = _file.file.points.map(function (pointData) {
+        dataRef = _file.file.get('points').map(function (pointData) {
           var point = new Point(pointData);
-          return point.toJSON();
+          return point.toHTML();
         });
         loadDeferred.resolve(dataRef);
       });
@@ -59,35 +59,21 @@ define(['exports', 'model/recordData/file'], function (exports, _file) {
     }
 
     _createClass(Point, [{
-      key: 'toJSON',
-      value: function toJSON() {
-        var _this = this;
-
-        var result = {};
-        Object.keys(this._data).forEach(function (key) {
-          result[key] = _this[key] || "";
+      key: 'toHTML',
+      value: function toHTML() {
+        var topics = this._data.topics.map(function (topic) {
+          return '<span class="label label-light">#' + topic + '</span>';
         });
-        return result;
-      }
-    }, {
-      key: 'author',
-      get: function get() {
-        return 'point author string';
-      }
-    }, {
-      key: 'cite',
-      get: function get() {
-        return 'point cite string';
-      }
-    }, {
-      key: 'timestamp',
-      get: function get() {
-        return 'point timestamp string';
-      }
-    }, {
-      key: 'topics',
-      get: function get() {
-        return 'point topics array';
+
+        var relations = this._data.relations.map(function (relation) {
+          return '<span class="label label-light">@' + relation + '</span>';
+        });
+
+        var professions = this._data.professions.map(function (profession) {
+          return '<span class="label label-light">@' + profession + '</span>';
+        });
+
+        return '\n      <blockquote cite="' + this._data.url + '">\n        <p>' + this._data.content + '</p>\n        <div class="align-right small">\n          <a href="' + this._data.url + '">' + this._data.timestamp + '</a> by <a href="">' + this._data.author + '</a>\n        </div>\n        <div class="align-right clear">\n        </div>\n      </blockquote>\n    ';
       }
     }]);
 

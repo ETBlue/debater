@@ -89,6 +89,11 @@ define(['exports', 'model/recordData/file'], function (exports, _file) {
       get: function get() {
         return 'author relations array';
       }
+    }, {
+      key: 'posts',
+      get: function get() {
+        return 'author posts array';
+      }
     }]);
 
     return Author;
