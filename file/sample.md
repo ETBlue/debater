@@ -51,11 +51,11 @@ Growth Hack 事件簿
 
 # XDite
 
-## 連結
+## 個人頁面
 
 - https://www.facebook.com/xdite
 
-## 身份
+## 職業
 
 - 工程師
 - 講師
