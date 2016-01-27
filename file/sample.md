@@ -6,7 +6,7 @@ Growth Hack 事件簿
 
 - https://www.facebook.com/%E5%AD%A4%E7%8D%A8%E7%9A%84%E8%B8%A9%E9%9B%B7%E5%AE%B6-856814281099027/
 
-## 身份
+## 職業
 
 - 業務
 - 工程師
@@ -15,7 +15,7 @@ Growth Hack 事件簿
 - 家庭主婦
 - LOL gamer
 
-## 立場
+## 關係 
 
 - GH 學員
 

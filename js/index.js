@@ -326,57 +326,66 @@ define('utils/events',['exports'], function (exports) {
 });
 
 
-define('model/apiKey',['exports'], function (exports) {
+define('model/fileURL',['exports'], function (exports) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  var key = localStorage.getItem('gw2apikey');
-  var apiKey = exports.apiKey = {
-    getKey: function getKey() {
-      return key;
-    },
-    setKey: function setKey(apiKey) {
-      key = apiKey;
-      localStorage.setItem('gw2apikey', key);
+  var storage = localStorage.getItem('debaterData');
+  var url = undefined;
+
+  if (storage) {
+    if (storage.indexOf('current') > -1) {
+      url = JSON.parse(storage);
+    } else {
+      url = {
+        current: storage,
+        recent: {}
+      };
     }
-  };
-  exports.default = apiKey;
-});
+  }
 
-
-define('model/gw2Data/worlds',['exports'], function (exports) {
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  var dataRef = {};
-  var loadingRef = undefined;
-  var worlds = exports.worlds = {
-    get: function get(id) {
-      return dataRef[id];
-    },
-    load: function load() {
-      if (!loadingRef) {
-        var params = {
-          ids: 'all',
-          lang: 'en'
-        };
-        loadingRef = $.get('https://api.guildwars2.com/v2/worlds?' + $.param(params)).done(function (worldsData) {
-          worldsData.forEach(function (worldData) {
-            dataRef[worldData.id] = worldData;
-          });
-        });
+  var fileURL = exports.fileURL = {
+    getURL: function getURL() {
+      if (url) {
+        return url.current;
+      } else {
+        return null;
       }
-      return loadingRef;
+    },
+    setURL: function setURL(fileURL) {
+      if (!url) {
+        url = { current: '', recent: {} };
+      } else if (!url.current) {
+        url = { current: '', recent: {} };
+      }
+      url.current = fileURL;
+      localStorage.setItem('debaterData', JSON.stringify(url));
+    },
+    getHistory: function getHistory() {
+      return url.recent;
+    },
+    setHistory: function setHistory(fileURL, docTitle) {
+      if (!url) {
+        url = { current: '', recent: {} };
+      } else if (!url.recent) {
+        url = { current: '', recent: {} };
+      }
+      url.recent[fileURL] = docTitle;
+      localStorage.setItem('debaterData', JSON.stringify(url));
+    },
+    clearHistory: function clearHistory() {
+      localStorage.removeItem('debaterData');
     }
   };
+  exports.default = fileURL;
 });
 
 
-define('model/gw2Data/account',['exports', 'model/apiKey', 'model/gw2Data/worlds'], function (exports, _apiKey, _worlds) {
+define('model/recordData/file',['exports', 'model/fileURL'], function (exports, _fileURL) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.account = undefined;
+  exports.file = undefined;
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -403,41 +412,30 @@ define('model/gw2Data/account',['exports', 'model/apiKey', 'model/gw2Data/worlds
   })();
 
   var dataRef = undefined;
-  var account = exports.account = {
-    get: function get() {
-      return dataRef;
+  var file = exports.file = {
+    get: function get(key) {
+      return dataRef[key];
     },
     load: function load() {
       var loadDeferred = new $.Deferred();
-      var params = {
-        access_token: _apiKey.apiKey.getKey(),
-        lang: 'en'
-      };
-      var waiting = [];
-      $.get('https://api.guildwars2.com/v2/account?' + $.param(params)).done(function (accountData) {
-        //載入worlds
-        waiting.push(_worlds.worlds.load());
-
-        //全部載入完畢後才resolve loadDeferred
-        $.when.apply($.when, waiting).done(function () {
-          var account = new Account(accountData);
-          dataRef = account.toJSON();
-          loadDeferred.resolve(dataRef);
-        });
+      $.get('http://etblue.github.io/debater/file/sample.md').done(function (fileData) {
+        var file = new File(fileData);
+        dataRef = file.toJSON();
+        loadDeferred.resolve(dataRef);
       });
       return loadDeferred;
     }
   };
 
-  var Account = (function () {
-    function Account(data) {
-      _classCallCheck(this, Account);
+  var File = (function () {
+    function File(fileData) {
+      _classCallCheck(this, File);
 
-      this._data = data;
+      this._data = getFileJSON(fileData);
       return this;
     }
 
-    _createClass(Account, [{
+    _createClass(File, [{
       key: 'toJSON',
       value: function toJSON() {
         var _this = this;
@@ -449,331 +447,35 @@ define('model/gw2Data/account',['exports', 'model/apiKey', 'model/gw2Data/worlds
         return result;
       }
     }, {
-      key: 'id',
+      key: 'title',
       get: function get() {
-        return this._data.id || '';
-      }
-    }, {
-      key: 'name',
-      get: function get() {
-        return this._data.name || '';
-      }
-    }, {
-      key: 'world',
-      get: function get() {
-        var worldData = _worlds.worlds.get(this._data.world);
-
-        return '' + worldData.name;
-      }
-    }, {
-      key: 'created',
-      get: function get() {
-        var created = this._data.created;
-        return created.slice(0, created.indexOf('T')) || '';
-      }
-    }, {
-      key: 'access',
-      get: function get() {
-        return this._data.access || '';
-      }
-    }, {
-      key: 'fractal_level',
-      get: function get() {
-        return this._data.fractal_level || '';
+        return this._data.title || "";
       }
     }]);
 
-    return Account;
+    return File;
   })();
-});
 
-
-define('model/gw2Data/guilds',['exports'], function (exports) {
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  var dataRef = {};
-  var loadingRef = {};
-  var guilds = exports.guilds = {
-    get: function get(id) {
-      return dataRef[id];
-    },
-    load: function load(id) {
-      if (!loadingRef[id]) {
-        var params = {
-          guild_id: id
-        };
-        loadingRef[id] = $.get('https://api.guildwars2.com/v1/guild_details.json?' + $.param(params)).done(function (guildData) {
-          dataRef[guildData.guild_id] = guildData;
-        });
-      }
-      return loadingRef[id];
-    },
-    loadByCharacterList: function loadByCharacterList(characterList) {
-      var _this = this;
-
-      var waiting = [];
-      characterList.forEach(function (characterData) {
-        if (characterData.guild) {
-          waiting.push(_this.load(characterData.guild));
-        }
-      });
-      return $.when.apply($.when, waiting);
-    }
-  };
-});
-
-
-define('model/gw2Data/specializations',['exports'], function (exports) {
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  var dataRef = {};
-  var loadingRef = undefined;
-  var specializations = exports.specializations = {
-    get: function get(id) {
-      return dataRef[id];
-    },
-    load: function load() {
-      if (!loadingRef) {
-        var params = {
-          ids: 'all',
-          lang: 'en'
-        };
-        loadingRef = $.get('https://api.guildwars2.com/v2/specializations?' + $.param(params)).done(function (specializationData) {
-          specializationData.forEach(function (specialization) {
-            dataRef[specialization.id] = specialization;
-          });
-        });
-      }
-      return loadingRef;
-    }
-  };
-});
-
-
-define('model/gw2Data/traits',['exports'], function (exports) {
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-
-  function _toConsumableArray(arr) {
-    if (Array.isArray(arr)) {
-      for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
-        arr2[i] = arr[i];
-      }
-
-      return arr2;
-    } else {
-      return Array.from(arr);
-    }
+  function getFileJSON(fileData) {
+    var file = {
+      title: "",
+      authors: [],
+      points: [],
+      professions: [],
+      relations: [],
+      topics: []
+    };
+    console.log(fileData);
+    return file;
   }
-
-  var dataRef = {};
-  var traits = exports.traits = {
-    get: function get(id) {
-      return dataRef[id];
-    },
-    load: function load(ids) {
-      var result = new $.Deferred();
-      ids = [].concat(_toConsumableArray(new Set(ids)));
-      var params = {
-        lang: 'en'
-      };
-      var waiting = [1];
-      while (ids.length > 0) {
-        params.ids = ids.splice(0, 200).join(',');
-        waiting.push($.get('https://api.guildwars2.com/v2/traits?' + $.param(params)));
-      }
-      $.when.apply($.when, waiting).done(function (one) {
-        for (var _len = arguments.length, deferrerResponse = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-          deferrerResponse[_key - 1] = arguments[_key];
-        }
-
-        deferrerResponse.forEach(function (response) {
-          var traitList = response[0];
-          traitList.forEach(function (trait) {
-            dataRef[trait.id] = trait;
-          });
-        });
-        result.resolve(dataRef);
-      });
-      return result;
-    },
-    loadByCharacterList: function loadByCharacterList(characterList) {
-      var needTraitsIdList = [];
-      characterList.forEach(function (characterData) {
-        if (characterData.specializations) {
-          $.each(characterData.specializations, function (key, subSpecialization) {
-            if (subSpecialization) {
-              subSpecialization.forEach(function (specialization) {
-                if (specialization && specialization.traits) {
-                  specialization.traits.forEach(function (trait) {
-                    needTraitsIdList.push(trait);
-                  });
-                }
-              });
-            }
-          });
-        }
-      });
-      return this.load(needTraitsIdList);
-    }
-  };
 });
 
 
-define('model/gw2Data/items',['exports'], function (exports) {
+define('model/recordData/authors',['exports', 'model/recordData/file'], function (exports, _file) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-
-  function _toConsumableArray(arr) {
-    if (Array.isArray(arr)) {
-      for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
-        arr2[i] = arr[i];
-      }
-
-      return arr2;
-    } else {
-      return Array.from(arr);
-    }
-  }
-
-  var dataRef = {};
-  var items = exports.items = {
-    get: function get(id) {
-      return dataRef[id];
-    },
-    load: function load(ids) {
-      var result = new $.Deferred();
-      ids = [].concat(_toConsumableArray(new Set(ids)));
-      var params = {
-        lang: 'en'
-      };
-      var waiting = [1];
-      while (ids.length > 0) {
-        params.ids = ids.splice(0, 200).join(',');
-        waiting.push($.get('https://api.guildwars2.com/v2/items?' + $.param(params)));
-      }
-      $.when.apply($.when, waiting).done(function (one) {
-        for (var _len = arguments.length, deferrerResponse = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-          deferrerResponse[_key - 1] = arguments[_key];
-        }
-
-        deferrerResponse.forEach(function (response) {
-          var itemList = response[0];
-          itemList.forEach(function (item) {
-            dataRef[item.id] = item;
-          });
-        });
-        result.resolve(dataRef);
-      });
-      return result;
-    },
-    loadByCharacterList: function loadByCharacterList(characterList) {
-      var needItemIdList = [];
-      characterList.forEach(function (characterData) {
-        if (characterData.bags) {
-          characterData.bags.forEach(function (bag) {
-            if (bag) {
-              needItemIdList.push(bag.id);
-              if (bag.inventory) {
-                bag.inventory.forEach(function (item) {
-                  if (item) {
-                    needItemIdList.push(item.id);
-                    if (item.upgrades) {
-                      item.upgrades.forEach(function (upgradeId) {
-                        needItemIdList.push(upgradeId);
-                      });
-                    }
-                    if (item.infusions) {
-                      item.infusions.forEach(function (infusionId) {
-                        needItemIdList.push(infusionId);
-                      });
-                    }
-                  }
-                });
-              }
-            }
-          });
-        }
-        if (characterData.equipment) {
-          characterData.equipment.forEach(function (equipment) {
-            if (equipment) {
-              needItemIdList.push(equipment.id);
-              if (equipment.upgrades) {
-                equipment.upgrades.forEach(function (upgradeId) {
-                  needItemIdList.push(upgradeId);
-                });
-              }
-              if (equipment.infusions) {
-                equipment.infusions.forEach(function (infusionId) {
-                  needItemIdList.push(infusionId);
-                });
-              }
-            }
-          });
-        }
-      });
-      return this.load(needItemIdList);
-    },
-    loadByCharacterInventory: function loadByCharacterInventory(characterList) {
-      var needItemIdList = [];
-      characterList.forEach(function (characterData) {
-        if (characterData.bags) {
-          characterData.bags.forEach(function (bag) {
-            if (bag) {
-              if (bag.inventory) {
-                bag.inventory.forEach(function (item) {
-                  if (item) {
-                    needItemIdList.push(item.id);
-                    if (item.upgrades) {
-                      item.upgrades.forEach(function (upgradeId) {
-                        needItemIdList.push(upgradeId);
-                      });
-                    }
-                    if (item.infusions) {
-                      item.infusions.forEach(function (infusionId) {
-                        needItemIdList.push(infusionId);
-                      });
-                    }
-                  }
-                });
-              }
-            }
-          });
-        }
-      });
-      return this.load(needItemIdList);
-    },
-    loadByBankList: function loadByBankList(bankData) {
-      var needItemIdList = [];
-      bankData.forEach(function (itemData) {
-        if (itemData) {
-          needItemIdList.push(itemData.id);
-        }
-      });
-      return this.load(needItemIdList);
-    },
-    loadByVaultList: function loadByVaultList(vaultData) {
-      var needItemIdList = [];
-      vaultData.forEach(function (itemData) {
-        if (itemData) {
-          needItemIdList.push(itemData.id);
-        }
-      });
-      return this.load(needItemIdList);
-    }
-  };
-});
-
-
-define('model/gw2Data/characters',['exports', 'model/apiKey', 'model/gw2Data/guilds', 'model/gw2Data/specializations', 'model/gw2Data/traits', 'model/gw2Data/items'], function (exports, _apiKey, _guilds, _specializations, _traits, _items) {
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  exports.characters = undefined;
+  exports.authors = undefined;
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -800,667 +502,76 @@ define('model/gw2Data/characters',['exports', 'model/apiKey', 'model/gw2Data/gui
   })();
 
   var dataRef = undefined;
-  var characters = exports.characters = {
+  var authors = exports.authors = {
     get: function get() {
       return dataRef;
     },
     load: function load() {
       var loadDeferred = new $.Deferred();
-      var params = {
-        access_token: _apiKey.apiKey.getKey(),
-        lang: 'en',
-        page: 0
-      };
       var waiting = [];
-      //載入specializations
-      waiting.push(_specializations.specializations.load());
-      $.get('https://api.guildwars2.com/v2/characters?' + $.param(params)).done(function (characterList) {
-        //載入guild
-        waiting.push(_guilds.guilds.loadByCharacterList(characterList));
-        //載入traits
-        waiting.push(_traits.traits.loadByCharacterList(characterList));
-        //載入items
-        waiting.push(_items.items.loadByCharacterList(characterList));
-
-        //全部載入完畢後才resolve loadDeferred
-        $.when.apply($.when, waiting).done(function () {
-          dataRef = characterList.map(function (characterData) {
-            var character = new Character(characterData);
-            return character.toJSON();
-          });
-          loadDeferred.resolve(dataRef);
-        });
-      });
-      return loadDeferred;
-    }
-  };
-
-  var Character = (function () {
-    function Character(data) {
-      _classCallCheck(this, Character);
-
-      this._data = data;
-      return this;
-    }
-
-    _createClass(Character, [{
-      key: 'toJSON',
-      value: function toJSON() {
-        var _this = this;
-
-        var result = {};
-        Object.keys(this._data).forEach(function (key) {
-          result[key] = _this[key];
-        });
-        result.inventory = this.inventory;
-        result._data = this._data;
-        return result;
-      }
-    }, {
-      key: 'name',
-      get: function get() {
-        return this._data.name || '';
-      }
-    }, {
-      key: 'race',
-      get: function get() {
-        return this._data.race || '';
-      }
-    }, {
-      key: 'gender',
-      get: function get() {
-        return this._data.gender || '';
-      }
-    }, {
-      key: 'profession',
-      get: function get() {
-        return this._data.profession || '';
-      }
-    }, {
-      key: 'level',
-      get: function get() {
-        return this._data.level || '';
-      }
-    }, {
-      key: 'created',
-      get: function get() {
-        var created = this._data.created;
-        return created.slice(0, created.indexOf('T')) || '';
-      }
-    }, {
-      key: 'age',
-      get: function get() {
-        var age = this._data.age;
-        var seconds = age % 60;
-        var minutes = Math.floor(age / 60) % 60;
-        var hours = Math.floor(age / 3600);
-        return hours + ':' + minutes + ':' + seconds;
-      }
-    }, {
-      key: 'deaths',
-      get: function get() {
-        return this._data.deaths || '';
-      }
-    }, {
-      key: 'guild',
-      get: function get() {
-        if (this._data.guild) {
-          var guildData = _guilds.guilds.get(this._data.guild);
-
-          return guildData.guild_name + '<br />[' + guildData.tag + ']';
-        } else {
-          return '';
-        }
-      }
-    }, {
-      key: 'crafting',
-      get: function get() {
-        var crafting = this._data.crafting;
-
-        if (crafting && crafting.reduce) {
-          return crafting.reduce(function (html, craftData) {
-            return html + (craftData.rating + '|' + craftData.discipline + ' <br />');
-          }, '');
-        }
-      }
-    }, {
-      key: 'specializations',
-      get: function get() {
-        var specializations = this._data.specializations;
-        return {
-          pve: getSpecializationHtml(specializations.pve),
-          pvp: getSpecializationHtml(specializations.pvp),
-          wvw: getSpecializationHtml(specializations.wvw)
-        };
-      }
-    }, {
-      key: 'equipment',
-      get: function get() {
-        var equipmentArray = this._data.equipment;
-        var equipment = {};
-        equipmentArray.forEach(function (element) {
-          equipment[element.slot] = {};
-          equipment[element.slot].id = element.id;
-          equipment[element.slot].upgrades = element.upgrades;
-          equipment[element.slot].infusions = element.infusions;
-        });
-        return {
-          Helm: getEquipmentItemHtml(equipment.Helm),
-          Shoulders: getEquipmentItemHtml(equipment.Shoulders),
-          Gloves: getEquipmentItemHtml(equipment.Gloves),
-          Coat: getEquipmentItemHtml(equipment.Coat),
-          Leggings: getEquipmentItemHtml(equipment.Leggings),
-          Boots: getEquipmentItemHtml(equipment.Boots),
-          Backpack: getEquipmentItemHtml(equipment.Backpack),
-          HelmAquatic: getEquipmentItemHtml(equipment.HelmAquatic),
-          Amulet: getEquipmentItemHtml(equipment.Amulet),
-          Accessory1: getEquipmentItemHtml(equipment.Accessory1),
-          Accessory2: getEquipmentItemHtml(equipment.Accessory2),
-          Ring1: getEquipmentItemHtml(equipment.Ring1),
-          Ring2: getEquipmentItemHtml(equipment.Ring2),
-          WeaponA1: getEquipmentItemHtml(equipment.WeaponA1),
-          WeaponA2: getEquipmentItemHtml(equipment.WeaponA2),
-          WeaponB1: getEquipmentItemHtml(equipment.WeaponB1),
-          WeaponB2: getEquipmentItemHtml(equipment.WeaponB2),
-          WeaponAquaticA: getEquipmentItemHtml(equipment.WeaponAquaticA),
-          WeaponAquaticB: getEquipmentItemHtml(equipment.WeaponAquaticB),
-          Sickle: getEquipmentItemHtml(equipment.Sickle),
-          Axe: getEquipmentItemHtml(equipment.Axe),
-          Pick: getEquipmentItemHtml(equipment.Pick)
-        };
-      }
-    }, {
-      key: 'bags',
-      get: function get() {
-        var bags = this._data.bags;
-        return getBagHtml(bags);
-      }
-    }, {
-      key: 'inventory',
-      get: function get() {
-        var bags = this._data.bags;
-        var inventory = {
-          services: [],
-          special: [],
-          boosts: [],
-          misc: []
-        };
-        bags.forEach(function (bag) {
-          if (bag) {
-            bag.inventory.forEach(function (item) {
-              if (item) {
-                var itemData = _items.items.get(item.id);
-
-                if (itemData) {
-                  itemData.count = item.count || "";
-                  itemData.binding = item.binding || "";
-                  itemData.bound_to = item.bound_to || "";
-
-                  if (itemData.type == "Consumable") {
-                    if (itemData.details.type == "Booze") {}
-
-                    if (itemData.details.type == "Food") {
-                      inventory.boosts.push(itemData);
-                    }
-
-                    if (itemData.details.type == "Generic") {
-                      inventory.misc.push(itemData);
-                    }
-
-                    if (itemData.details.type == "Halloween") {
-                      inventory.boosts.push(itemData);
-                    }
-
-                    if (itemData.details.type == "Immediate") {
-                      inventory.misc.push(itemData);
-                    }
-
-                    if (itemData.details.type == "Unlock") {
-                      inventory.misc.push(itemData);
-                    }
-
-                    if (itemData.details.type == "Utility") {
-                      inventory.boosts.push(itemData);
-                    }
-                  }
-
-                  if (itemData.type == "Gizmo") {
-                    if (itemData.details.type == "Default") {
-                      inventory.misc.push(itemData);
-                    }
-                  }
-                }
-              }
-            });
-          }
-        });
-        return {
-          boosts: getInventoryHtml(inventory.boosts),
-          misc: getInventoryHtml(inventory.misc)
-        };
-      }
-    }]);
-
-    return Character;
-  })();
-
-  function getSpecializationHtml(dataList) {
-    return dataList.reduce(function (html, specializationData) {
-      if (specializationData) {
-        var specialization = _specializations.specializations.get(specializationData.id);
-
-        var traitHtml = '';
-
-        if (specializationData.traits) {
-          traitHtml = specializationData.traits.reduce(function (traitHtml, traitId) {
-            var trait = _traits.traits.get(traitId);
-
-            if (trait) {
-              return traitHtml + ('\n              <div class="table-item">\n                <img class="small icon" data-toggle="tooltip" data-placement="left" title="' + trait.description + '" src="' + trait.icon + '">\n                <span>' + trait.name + '</span>\n              </div>\n            ');
-            } else {
-              return traitHtml;
-            }
-          }, '');
-        }
-
-        return html + ('\n        <div class="table-item">\n          <img class="medium icon spec" src="' + specialization.icon + '" />\n          <span>' + specialization.name + '</span>\n        </div>\n        ' + traitHtml + '\n      ');
-      } else {
-        return html;
-      }
-    }, '');
-  }
-
-  function getEquipmentItemHtml(data) {
-    var html = '';
-
-    if (data) {
-      var equipment = _items.items.get(data.id);
-
-      var upgradeHtml = '';
-
-      if (data.upgrades) {
-        upgradeHtml = data.upgrades.reduce(function (upgradeHtml, upgradeId) {
-          var upgrade = _items.items.get(upgradeId);
-
-          if (upgrade) {
-            return upgradeHtml + ('\n            <div class="table-item">\n              <img class="small icon item ' + upgrade.rarity + '" data-toggle="tooltip" data-placement="left" title=\'\' src="' + upgrade.icon + '">\n              <span class="bold ' + upgrade.rarity + '">' + upgrade.name + '\n                <small>(' + upgrade.level + ')</small>\n              </span>\n            </div>\n          ');
-          } else {
-            return upgradeHtml;
-          }
-        }, '');
-      }
-
-      var infusionHtml = '';
-
-      if (data.infusions) {
-        infusionHtml = data.infusions.reduce(function (infusionHtml, infusionId) {
-          var infusion = _items.items.get(infusionId);
-
-          if (infusion) {
-            return infusionHtml + ('\n            <div class="table-item">\n              <img class="small icon item ' + infusion.rarity + '" data-toggle="tooltip" data-placement="left" title=\'\' src="' + infusion.icon + '">\n              <span>' + infusion.name + '</span>\n            </div>\n          ');
-          } else {
-            return infusionHtml;
-          }
-        }, '');
-      }
-
-      return html + ('\n      <div class="table-item">\n        <img data-toggle="tooltip" data-placement="left" title="" class="icon medium item ' + equipment.rarity + '" src="' + equipment.icon + '" />\n        <span class="bold ' + equipment.rarity + '">' + equipment.name + '\n          <small>(' + equipment.level + ')</small>\n        </span>\n      </div>\n      ' + upgradeHtml + '\n      ' + infusionHtml + '\n    ');
-    } else {
-      return html;
-    }
-  }
-
-  function getBagHtml(dataList) {
-    return dataList.reduce(function (html, bagData) {
-      if (bagData) {
-        var bag = _items.items.get(bagData.id);
-
-        return html + ('\n        <div class="table-item">\n          <img data-toggle="tooltip" data-placement="left" title="" class="icon medium item ' + bag.rarity + '" src="' + bag.icon + '" />\n          <span class="bold ' + bag.rarity + '">' + bag.name + ' \n            <small>(' + bag.details.size + ' slots)</small>\n          </span>\n        </div>\n      ');
-      } else {
-        return html;
-      }
-    }, '');
-  }
-
-  function getInventoryHtml(dataList) {
-    return dataList.reduce(function (html, item) {
-      if (item) {
-        return html + ('\n        <div class="table-item">\n          <img data-toggle="tooltip" data-placement="left" title="" class="icon medium item ' + item.rarity + '" src="' + item.icon + '" />\n          <span class="bold ' + item.rarity + '">' + item.name + ' \n            <small>(' + item.count + ')</small>\n          </span>\n        </div>\n      ');
-      } else {
-        return html;
-      }
-    }, '');
-  }
-});
-
-
-define('model/gw2Data/materials',['exports'], function (exports) {
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  var dataRef = {};
-  var loadingRef = undefined;
-  var materials = exports.materials = {
-    get: function get(id) {
-      return dataRef[id];
-    },
-    load: function load() {
-      if (!loadingRef) {
-        var params = {
-          ids: 'all',
-          lang: 'en'
-        };
-        loadingRef = $.get('https://api.guildwars2.com/v2/materials?' + $.param(params)).done(function (categories) {
-          categories.forEach(function (category) {
-            dataRef[category.id] = category;
-          });
-        });
-      }
-      return loadingRef;
-    }
-  };
-});
-
-
-define('model/gw2Data/vault',['exports', 'model/apiKey'], function (exports, _apiKey) {
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  exports.vault = undefined;
-  var dataRef = undefined;
-  var vault = exports.vault = {
-    get: function get() {
-      return dataRef;
-    },
-    load: function load() {
-      var loadDeferred = new $.Deferred();
-      var params = {
-        access_token: _apiKey.apiKey.getKey(),
-        lang: 'en'
-      };
-      //載入倉庫
-      $.get('https://api.guildwars2.com/v2/account/materials?' + $.param(params)).done(function (materialList) {
-        dataRef = materialList;
-        loadDeferred.resolve(dataRef);
-      });
-      return loadDeferred;
-    }
-  };
-});
-
-
-define('model/gw2Data/bank',['exports', 'model/apiKey'], function (exports, _apiKey) {
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  exports.bank = undefined;
-  var dataRef = undefined;
-  var bank = exports.bank = {
-    get: function get() {
-      return dataRef;
-    },
-    load: function load() {
-      var loadDeferred = new $.Deferred();
-      var params = {
-        access_token: _apiKey.apiKey.getKey(),
-        lang: 'en',
-        page: 0
-      };
-
-      //載入銀行
-      $.get('https://api.guildwars2.com/v2/account/bank?' + $.param(params)).done(function (bankData) {
-        dataRef = bankData;
-        loadDeferred.resolve(dataRef);
-      });
-      return loadDeferred;
-    }
-  };
-});
-
-
-define('model/gw2Data/inventory',['exports', 'model/apiKey', 'model/gw2Data/items', 'model/gw2Data/characters', 'model/gw2Data/materials', 'model/gw2Data/vault', 'model/gw2Data/bank'], function (exports, _apiKey, _items, _characters, _materials, _vault, _bank) {
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  exports.inventory = undefined;
-
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
-
-  var _createClass = (function () {
-    function defineProperties(target, props) {
-      for (var i = 0; i < props.length; i++) {
-        var descriptor = props[i];
-        descriptor.enumerable = descriptor.enumerable || false;
-        descriptor.configurable = true;
-        if ("value" in descriptor) descriptor.writable = true;
-        Object.defineProperty(target, descriptor.key, descriptor);
-      }
-    }
-
-    return function (Constructor, protoProps, staticProps) {
-      if (protoProps) defineProperties(Constructor.prototype, protoProps);
-      if (staticProps) defineProperties(Constructor, staticProps);
-      return Constructor;
-    };
-  })();
-
-  var dataRef = undefined;
-  var inventory = exports.inventory = {
-    get: function get() {
-      return dataRef;
-    },
-    load: function load() {
-      var loadDeferred = new $.Deferred();
-      var params = {
-        access_token: _apiKey.apiKey.getKey(),
-        lang: 'en',
-        page: 0
-      };
-      var waiting = [];
-
-      // 載入材料分類表
-      waiting.push(_materials.materials.load());
-
-      // 載入角色包包與物品資料
-      waiting.push(_characters.characters.load());
-
-      // 載入倉庫與物品資料
-      waiting.push(_vault.vault.load());
-
-      //載入銀行
-      waiting.push(_bank.bank.load());
-
+      waiting.push(_file.file.load());
       $.when.apply($.when, waiting).done(function () {
-        var waitingLoadItems = [];
-        //載入銀行物品資料
-        waitingLoadItems.push(_items.items.loadByBankList(_bank.bank.get()));
-        waitingLoadItems.push(_items.items.loadByVaultList(_vault.vault.get()));
-
-        //全部載入完畢後才 merge
-        $.when.apply($.when, waitingLoadItems).done(function () {
-
-          dataRef = [];
-
-          var characterDataRef = [];
-          _characters.characters.get().forEach(function (character) {
-            character._data.bags.forEach(function (bag) {
-              if (bag) {
-                bag.inventory.forEach(function (bagItem) {
-                  if (bagItem) {
-                    var itemInfo = _items.items.get(bagItem.id);
-                    var position = character.name;
-                    var item = new Item(position, bagItem, itemInfo);
-                    characterDataRef.push(item.toJSON());
-                  }
-                });
-              }
-            });
-          });
-          $.merge(dataRef, characterDataRef);
-
-          var bankDataRef = _bank.bank.get().map(function (bankItem, index) {
-            if (bankItem) {
-              var itemInfo = _items.items.get(bankItem.id);
-              var position = 'Bank|' + (index + 1);
-              var item = new Item(position, bankItem, itemInfo);
-              return item.toJSON();
-            }
-          });
-          $.merge(dataRef, bankDataRef);
-
-          var vaultDataRef = _vault.vault.get().map(function (material, index) {
-            if (material) {
-              var itemInfo = _items.items.get(material.id);
-              var position = 'Vault|' + (index + 1);
-              var item = new Item(position, material, itemInfo);
-              return item.toJSON();
-            }
-          });
-          $.merge(dataRef, vaultDataRef);
-
-          loadDeferred.resolve(dataRef);
+        dataRef = _file.file.authors.map(function (authorData) {
+          var author = new Author(authorData);
+          return author.toJSON();
         });
+        loadDeferred.resolve(dataRef);
       });
       return loadDeferred;
     }
   };
 
-  var Item = (function () {
-    function Item(position, data, itemInfo) {
-      _classCallCheck(this, Item);
+  var Author = (function () {
+    function Author(data) {
+      _classCallCheck(this, Author);
 
-      this._data = data || {};
-      this._data.position = position || '';
-      this._ref = itemInfo || {};
+      this._data = data;
       return this;
     }
 
-    _createClass(Item, [{
+    _createClass(Author, [{
       key: 'toJSON',
       value: function toJSON() {
         var _this = this;
 
         var result = {};
-        var keys = ['icon', 'name', 'count', 'type', 'level', 'rarity', 'position', 'binding', 'description', 'category'];
-        keys.forEach(function (key) {
-          result[key] = _this[key];
+        Object.keys(this._data).forEach(function (key) {
+          result[key] = _this[key] || "";
         });
         return result;
       }
     }, {
-      key: 'icon',
-      get: function get() {
-        var icon = this._ref.icon || '';
-        var rarity = this._ref.rarity || '';
-        var description = this._ref.description || '';
-        return '<img class=\'large solo item icon ' + rarity + '\' data-toggle=\'tooltip\' data-placement=\'right\' title=\'\' src=\'' + icon + '\' />';
-      }
-    }, {
       key: 'name',
       get: function get() {
-        var name = this._ref.name || '';
-        var rarity = this._ref.rarity || '';
-        return '<span class="bold ' + rarity + '">' + name + '</span>';
+        return 'author name string';
       }
     }, {
-      key: 'count',
+      key: 'profiles',
       get: function get() {
-        return parseInt(this._data.count, 10);
+        return 'author profiles array';
       }
     }, {
-      key: 'type',
+      key: 'professions',
       get: function get() {
-        return this._ref.type || '';
+        return 'author professions array';
       }
     }, {
-      key: 'level',
+      key: 'relations',
       get: function get() {
-        return this._ref.level || '';
-      }
-    }, {
-      key: 'rarity',
-      get: function get() {
-        return this._ref.rarity || '';
-      }
-    }, {
-      key: 'position',
-      get: function get() {
-        return this._data.position || '';
-      }
-    }, {
-      key: 'binding',
-      get: function get() {
-        var binding = this._data.binding;
-        var bound_to = this._data.bound_to;
-
-        if (binding) {
-          if (bound_to) {
-            return bound_to;
-          } else {
-            return binding;
-          }
-        } else {
-          return '';
-        }
-      }
-    }, {
-      key: 'description',
-      get: function get() {
-        return this._ref.description || '';
-      }
-    }, {
-      key: 'category',
-      get: function get() {
-        if (this._data.category) {
-          return _materials.materials.get(this._data.category).name || '';
-        } else {
-          return '';
-        }
+        return 'author relations array';
       }
     }]);
 
-    return Item;
+    return Author;
   })();
 });
 
 
-define('model/gw2Data/currencies',['exports'], function (exports) {
+define('model/recordData/points',['exports', 'model/recordData/file'], function (exports, _file) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  var dataRef = {};
-  var loadingRef = undefined;
-  var currencies = exports.currencies = {
-    get: function get(id) {
-      return dataRef[id];
-    },
-    load: function load() {
-      if (!loadingRef) {
-        var params = {
-          ids: 'all',
-          lang: 'en'
-        };
-        loadingRef = $.get('https://api.guildwars2.com/v2/currencies?' + $.param(params)).done(function (currenciesData) {
-          currenciesData.forEach(function (currency) {
-            dataRef[currency.id] = currency;
-          });
-        });
-      }
-      return loadingRef;
-    }
-  };
-});
-
-
-define('model/gw2Data/wallet',['exports', 'model/apiKey', 'model/gw2Data/currencies'], function (exports, _apiKey, _currencies) {
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  exports.wallet = undefined;
+  exports.points = undefined;
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -1487,204 +598,404 @@ define('model/gw2Data/wallet',['exports', 'model/apiKey', 'model/gw2Data/currenc
   })();
 
   var dataRef = undefined;
-  var wallet = exports.wallet = {
+  var points = exports.points = {
     get: function get() {
       return dataRef;
     },
     load: function load() {
       var loadDeferred = new $.Deferred();
-      var params = {
-        access_token: _apiKey.apiKey.getKey(),
-        lang: 'en'
-      };
       var waiting = [];
-      $.get('https://api.guildwars2.com/v2/account/wallet?' + $.param(params)).done(function (walletData) {
-        //載入currencies
-        waiting.push(_currencies.currencies.load());
-
-        //全部載入完畢後才resolve loadDeferred
-        $.when.apply($.when, waiting).done(function () {
-          dataRef = walletData.map(function (walletItem) {
-            var item = new Wallet(walletItem);
-            return item.toJSON();
-          });
-          loadDeferred.resolve(dataRef);
+      waiting.push(_file.file.load());
+      $.when.apply($.when, waiting).done(function () {
+        dataRef = _file.file.points.map(function (pointData) {
+          var point = new Point(pointData);
+          return point.toJSON();
         });
+        loadDeferred.resolve(dataRef);
       });
       return loadDeferred;
     }
   };
 
-  var Wallet = (function () {
-    function Wallet(data) {
-      _classCallCheck(this, Wallet);
+  var Point = (function () {
+    function Point(data) {
+      _classCallCheck(this, Point);
 
       this._data = data;
       return this;
     }
 
-    _createClass(Wallet, [{
+    _createClass(Point, [{
       key: 'toJSON',
       value: function toJSON() {
         var _this = this;
 
         var result = {};
         Object.keys(this._data).forEach(function (key) {
-          result[key] = _this[key];
-        });
-        ['name', 'description', 'icon', 'order'].forEach(function (key) {
-          result[key] = _this[key] || '';
+          result[key] = _this[key] || "";
         });
         return result;
       }
     }, {
-      key: 'icon',
+      key: 'author',
       get: function get() {
-        var iconUrl = _currencies.currencies.get(this._data.id).icon || '';
-        return '<img class=\'large solo icon\' src=\'' + iconUrl + '\' />';
+        return 'point author string';
+      }
+    }, {
+      key: 'cite',
+      get: function get() {
+        return 'point cite string';
+      }
+    }, {
+      key: 'timestamp',
+      get: function get() {
+        return 'point timestamp string';
+      }
+    }, {
+      key: 'topics',
+      get: function get() {
+        return 'point topics array';
+      }
+    }]);
+
+    return Point;
+  })();
+});
+
+
+define('model/recordData/professions',['exports', 'model/recordData/file'], function (exports, _file) {
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.professions = undefined;
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  var _createClass = (function () {
+    function defineProperties(target, props) {
+      for (var i = 0; i < props.length; i++) {
+        var descriptor = props[i];
+        descriptor.enumerable = descriptor.enumerable || false;
+        descriptor.configurable = true;
+        if ("value" in descriptor) descriptor.writable = true;
+        Object.defineProperty(target, descriptor.key, descriptor);
+      }
+    }
+
+    return function (Constructor, protoProps, staticProps) {
+      if (protoProps) defineProperties(Constructor.prototype, protoProps);
+      if (staticProps) defineProperties(Constructor, staticProps);
+      return Constructor;
+    };
+  })();
+
+  var dataRef = undefined;
+  var professions = exports.professions = {
+    get: function get() {
+      return dataRef;
+    },
+    load: function load() {
+      var loadDeferred = new $.Deferred();
+      var waiting = [];
+      waiting.push(_file.file.load());
+      $.when.apply($.when, waiting).done(function () {
+        dataRef = _file.file.professions.map(function (professionData) {
+          var profession = new Profession(professionData);
+          return profession.toJSON();
+        });
+        loadDeferred.resolve(dataRef);
+      });
+      return loadDeferred;
+    }
+  };
+
+  var Profession = (function () {
+    function Profession(data) {
+      _classCallCheck(this, Profession);
+
+      this._data = data;
+      return this;
+    }
+
+    _createClass(Profession, [{
+      key: 'toJSON',
+      value: function toJSON() {
+        var _this = this;
+
+        var result = {};
+        Object.keys(this._data).forEach(function (key) {
+          result[key] = _this[key] || "";
+        });
+        return result;
       }
     }, {
       key: 'name',
       get: function get() {
-        var name = _currencies.currencies.get(this._data.id).name || '';
-        return '<span class="bold">' + name + '</span>';
-      }
-    }, {
-      key: 'value',
-      get: function get() {
-        var value = this._data.value || '';
-
-        var name = _currencies.currencies.get(this._data.id).name;
-
-        if (name == 'Coin') {
-          return getCoinHtml(value);
-        } else if (name == 'Gem') {
-          return '<span class=\'currency gem\'>' + value + '</span>';
-        } else if (name == 'Karma') {
-          return '<span class=\'currency karma\'>' + value + '</span>';
-        } else if (name == 'Laurel') {
-          return '<span class=\'currency laurel\'>' + value + '</span>';
-        } else {
-          return value;
-        }
-      }
-    }, {
-      key: 'description',
-      get: function get() {
-        return _currencies.currencies.get(this._data.id).description || '';
-      }
-    }, {
-      key: 'order',
-      get: function get() {
-        return _currencies.currencies.get(this._data.id).order || '';
+        return 'profession name string';
       }
     }]);
 
-    return Wallet;
+    return Profession;
   })();
-
-  function getCoinHtml(value) {
-    var copper = value % 100;
-    var silver = Math.floor(value / 100) % 100;
-    var gold = Math.floor(value / 10000);
-    return '\n    <div class="gold coin">\n      ' + gold + '\n      <img class="icon inline" title="gold" src="https://wiki.guildwars2.com/images/d/d1/Gold_coin.png" />\n    </div>\n    <div class="silver coin">\n      ' + silver + '\n      <img class="icon inline" title="silver" src="https://wiki.guildwars2.com/images/3/3c/Silver_coin.png" />\n    </div>\n    <div class="copper coin">\n      ' + copper + '\n      <img class="icon inline" title="copper" src="https://wiki.guildwars2.com/images/e/eb/Copper_coin.png" />\n    </div>\n  ';
-  }
 });
 
 
-define('model/gw2Data/gw2Data',['exports', 'utils/events', 'model/apiKey', 'model/gw2Data/account', 'model/gw2Data/characters', 'model/gw2Data/inventory', 'model/gw2Data/wallet'], function (exports, _events, _apiKey, _account, _characters, _inventory, _wallet) {
+define('model/recordData/relations',['exports', 'model/recordData/file'], function (exports, _file) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.gw2Data = undefined;
-  var gw2Data = exports.gw2Data = {
-    loadAccount: function loadAccount() {
+  exports.relations = undefined;
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  var _createClass = (function () {
+    function defineProperties(target, props) {
+      for (var i = 0; i < props.length; i++) {
+        var descriptor = props[i];
+        descriptor.enumerable = descriptor.enumerable || false;
+        descriptor.configurable = true;
+        if ("value" in descriptor) descriptor.writable = true;
+        Object.defineProperty(target, descriptor.key, descriptor);
+      }
+    }
+
+    return function (Constructor, protoProps, staticProps) {
+      if (protoProps) defineProperties(Constructor.prototype, protoProps);
+      if (staticProps) defineProperties(Constructor, staticProps);
+      return Constructor;
+    };
+  })();
+
+  var dataRef = undefined;
+  var relations = exports.relations = {
+    get: function get() {
+      return dataRef;
+    },
+    load: function load() {
+      var loadDeferred = new $.Deferred();
+      var waiting = [];
+      waiting.push(_file.file.load());
+      $.when.apply($.when, waiting).done(function () {
+        dataRef = _file.file.relations.map(function (relationData) {
+          var relation = new Relation(relationData);
+          return relation.toJSON();
+        });
+        loadDeferred.resolve(dataRef);
+      });
+      return loadDeferred;
+    }
+  };
+
+  var Relation = (function () {
+    function Relation(data) {
+      _classCallCheck(this, Relation);
+
+      this._data = data;
+      return this;
+    }
+
+    _createClass(Relation, [{
+      key: 'toJSON',
+      value: function toJSON() {
+        var _this = this;
+
+        var result = {};
+        Object.keys(this._data).forEach(function (key) {
+          result[key] = _this[key] || "";
+        });
+        return result;
+      }
+    }, {
+      key: 'name',
+      get: function get() {
+        return 'relation name string';
+      }
+    }]);
+
+    return Relation;
+  })();
+});
+
+
+define('model/recordData/topics',['exports', 'model/recordData/file'], function (exports, _file) {
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.topics = undefined;
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  var _createClass = (function () {
+    function defineProperties(target, props) {
+      for (var i = 0; i < props.length; i++) {
+        var descriptor = props[i];
+        descriptor.enumerable = descriptor.enumerable || false;
+        descriptor.configurable = true;
+        if ("value" in descriptor) descriptor.writable = true;
+        Object.defineProperty(target, descriptor.key, descriptor);
+      }
+    }
+
+    return function (Constructor, protoProps, staticProps) {
+      if (protoProps) defineProperties(Constructor.prototype, protoProps);
+      if (staticProps) defineProperties(Constructor, staticProps);
+      return Constructor;
+    };
+  })();
+
+  var dataRef = undefined;
+  var topics = exports.topics = {
+    get: function get() {
+      return dataRef;
+    },
+    load: function load() {
+      var loadDeferred = new $.Deferred();
+      var waiting = [];
+      waiting.push(_file.file.load());
+      $.when.apply($.when, waiting).done(function () {
+        dataRef = _file.file.topics.map(function (topicData) {
+          var topic = new Topic(topicData);
+          return topic.toJSON();
+        });
+        loadDeferred.resolve(dataRef);
+      });
+      return loadDeferred;
+    }
+  };
+
+  var Topic = (function () {
+    function Topic(data) {
+      _classCallCheck(this, Topic);
+
+      this._data = data;
+      return this;
+    }
+
+    _createClass(Topic, [{
+      key: 'toJSON',
+      value: function toJSON() {
+        var _this = this;
+
+        var result = {};
+        Object.keys(this._data).forEach(function (key) {
+          result[key] = _this[key] || "";
+        });
+        return result;
+      }
+    }, {
+      key: 'name',
+      get: function get() {
+        return 'topic name string';
+      }
+    }]);
+
+    return Topic;
+  })();
+});
+
+
+define('model/recordData/recordData',['exports', 'utils/events', 'model/recordData/file', 'model/recordData/authors', 'model/recordData/points', 'model/recordData/professions', 'model/recordData/relations', 'model/recordData/topics'], function (exports, _events, _file, _authors, _points, _professions, _relations, _topics) {
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.recordData = undefined;
+  var recordData = exports.recordData = {
+    loadFile: function loadFile() {
       var _this = this;
 
-      this.trigger('load:account');
-      return _account.account.load().done(function (accountData) {
-        _this.trigger('loaded:account', accountData);
+      this.trigger('load:file');
+      return _file.file.load().done(function (fileData) {
+        _this.trigger('loaded:file', fileData);
       });
     },
-    loadCharacters: function loadCharacters() {
+    loadAuthor: function loadAuthor() {
       var _this2 = this;
 
-      this.trigger('load:characters');
-      return _characters.characters.load().done(function (characterList) {
-        _this2.trigger('loaded:characters', characterList);
+      this.trigger('load:authors');
+      return _authors.authors.load().done(function (authorsData) {
+        _this2.trigger('loaded:authors', authorsData);
       });
     },
-    loadInventory: function loadInventory() {
+    loadPost: function loadPost() {
       var _this3 = this;
 
-      this.trigger('load:inventory');
-      return _inventory.inventory.load().done(function (inventoryData) {
-        _this3.trigger('loaded:inventory', inventoryData);
+      this.trigger('load:points');
+      return _points.points.load().done(function (pointsData) {
+        _this3.trigger('loaded:points', pointsData);
       });
     },
-    loadWallet: function loadWallet() {
+    loadProfession: function loadProfession() {
       var _this4 = this;
 
-      this.trigger('load:wallet');
-      return _wallet.wallet.load().done(function (walletData) {
-        _this4.trigger('loaded:wallet', walletData);
+      this.trigger('load:professions');
+      return _professions.professions.load().done(function (professionsData) {
+        _this4.trigger('loaded:professions', professionsData);
+      });
+    },
+    loadRelation: function loadRelation() {
+      var _this5 = this;
+
+      this.trigger('load:relations');
+      return _relations.relations.load().done(function (relationsData) {
+        _this5.trigger('loaded:relations', relationsData);
+      });
+    },
+    loadTopic: function loadTopic() {
+      var _this6 = this;
+
+      this.trigger('load:topics');
+      return _topics.topics.load().done(function (topicsData) {
+        _this6.trigger('loaded:topics', topicsData);
       });
     }
   };
-  exports.default = gw2Data;
-  (0, _events.eventful)(gw2Data);
+  exports.default = recordData;
+  (0, _events.eventful)(recordData);
 });
 
 
-define('view/account',['exports', 'model/gw2Data/gw2Data', 'model/apiKey'], function (exports, _gw2Data, _apiKey) {
+define('view/home',['exports', 'model/recordData/recordData', 'model/fileURL'], function (exports, _recordData, _fileURL) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
   exports.app = undefined;
   var app = exports.app = {
     initialize: function initialize() {
-      // show saved apiKey
-      var savedKey = _apiKey.apiKey.getKey();
-      if (savedKey) {
-        $('#api_key').val(savedKey);
+      // show saved fileURL
+      var savedURL = _fileURL.fileURL.getURL();
+      if (savedURL) {
+        $('#fileURL').val(savedURL);
       }
       this.bindEvents();
     },
     bindEvents: function bindEvents() {
-      $('#api_key').keypress(function (e) {
+      $('#fileURL').keypress(function (e) {
         if (e.keyCode == 13) {
-          var newKey = $(this).val();
-          _apiKey.apiKey.setKey(newKey);
+          var newURL = $(this).val();
+          _fileURL.fileURL.setURL(newURL);
           app.showLoading();
-          _gw2Data.gw2Data.loadAccount();
-          _gw2Data.gw2Data.loadCharacters();
-          _gw2Data.gw2Data.loadInventory();
-          _gw2Data.gw2Data.loadWallet();
+          _recordData.recordData.loadFile();
         }
       });
-
-      _gw2Data.gw2Data.on('loaded:characters', function () {
-        $('#characters-status').html('Characters loaded <span class="glyphicon glyphicon-ok text-success"></span>');
-      });
-      _gw2Data.gw2Data.on('loaded:account', function (account) {
-        $('.accountname').text(account.name);
-        $('.accountid').text(account.id);
-        $('.accountcreated').text(account.created);
-        $('.worldname').html(account.world);
-        $('.fractal_level').html(account.fractal_level);
-        $('.access').html(account.access);
-
-        $('#account-status').html('Account loaded <span class="glyphicon glyphicon-ok text-success"></span>');
-      });
-      _gw2Data.gw2Data.on('loaded:wallet', function () {
-        $('#wallet-status').html('Wallet loaded <span class="glyphicon glyphicon-ok text-success"></span>');
-      });
-      _gw2Data.gw2Data.on('loaded:inventory', function () {
-        $('#inventory-status').html('Inventory loaded <span class="glyphicon glyphicon-ok text-success"></span>');
+      _recordData.recordData.on('loaded:file', function (file) {
+        $('#title').html(file.title);
+        $('#file-status').html('File loaded <span class="glyphicon glyphicon-ok text-success"></span>');
       });
     },
     showLoading: function showLoading() {
-      $('#account-status').parent().empty().html('\n      <p id="account-status" class="status" style="display: block;">\n        Loading account...\n      </p>\n      <p id="characters-status" class="status" style="display: block;">\n        Loading characters...\n      </p>\n      <p id="inventory-status" class="status" style="display: block;">\n        Loading inventory...\n      </p>\n      <p id="wallet-status" class="status" style="display: block;">\n        Loading wallet...\n      </p>\n    ');
+      $('#file-status').parent().empty().html('\n      <p id="file-status" class="status" style="display: block;">\n        Loading file...\n      </p>\n    ');
     }
   };
   $(function () {
@@ -1693,215 +1004,7 @@ define('view/account',['exports', 'model/gw2Data/gw2Data', 'model/apiKey'], func
 });
 
 
-define('view/characters',['exports', 'model/gw2Data/gw2Data'], function (exports, _gw2Data) {
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  exports.characters = undefined;
-  var characters = exports.characters = {
-    initialize: function initialize() {
-      $('#characters [data-click]').button('reset');
-      this.bindEvents();
-    },
-    bindEvents: function bindEvents() {
-      _gw2Data.gw2Data.on('loaded:characters', function (characterList) {
-        var dataSet = characterList.map(function (character) {
-          return [character.name, character.level, character.profession, character.race, character.gender, character.age, character.deaths, character.created, character.guild, character.crafting, character.specializations.pve, character.specializations.pvp, character.specializations.wvw, character.equipment.Helm, character.equipment.Shoulders, character.equipment.Gloves, character.equipment.Coat, character.equipment.Leggings, character.equipment.Boots, character.equipment.Backpack, character.equipment.HelmAquatic, character.equipment.Amulet, character.equipment.Accessory1, character.equipment.Accessory2, character.equipment.Ring1, character.equipment.Ring2, character.equipment.WeaponA1, character.equipment.WeaponA2, character.equipment.WeaponB1, character.equipment.WeaponB2, character.equipment.WeaponAquaticA, character.equipment.WeaponAquaticB, character.bags,
-          //character.inventory.services,
-          //character.inventory.special,
-          character.inventory.boosts,
-          //character.inventory.style,
-          character.inventory.misc, character.equipment.Sickle, character.equipment.Axe, character.equipment.Pick];
-        });
-        $('#characters-table').DataTable({
-          data: dataSet,
-          destroy: true,
-          pageLength: 50,
-          columnDefs: [{
-            targets: 0,
-            render: function render(data, type, row) {
-              if (data) {
-                return '<span class="bold">' + data + '</span>';
-              } else {
-                return data;
-              }
-            }
-          }, {
-            targets: 3,
-            render: function render(data, type, row) {
-              return data + '<br />' + row[4];
-            }
-          }, {
-            targets: [1, 5, 6],
-            type: 'natural'
-          }, {
-            targets: [4, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37],
-            visible: false
-          }]
-        });
-        $('#characters .loading').hide();
-        var table = $('#characters-table').DataTable();
-        $('#characters [data-subset]').on('click tap', function () {
-          table.columns('[data-toggle]').visible(false);
-          table.columns('[data-toggle="' + $(this).attr('data-subset') + '"]').visible(true);
-        });
-        $('#characters [data-click]').on('click tap', function () {
-          $(this).button('loading');
-          $(this).parents('.tab-pane').children('.loading').show();
-          var action = $(this).attr('data-click');
-          if (action == 'refreshcharacters') {
-            get_render_characters();
-          }
-        });
-        $('#characters [data-option]').on('click tap', function () {
-          var searchValue = $(this).attr("data-option");
-          table.column([2]).search(searchValue).draw();
-        });
-      });
-    }
-  };
-  $(function () {
-    characters.initialize();
-  });
-  exports.default = characters;
-});
-
-
-define('view/inventory',['exports', 'model/gw2Data/gw2Data'], function (exports, _gw2Data) {
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  exports.inventory = undefined;
-  var inventory = exports.inventory = {
-    initialize: function initialize() {
-      $('#inventory [data-click]').button('reset');
-      this.bindEvents();
-    },
-    bindEvents: function bindEvents() {
-      _gw2Data.gw2Data.on('loaded:inventory', function (itemList) {
-        var fullList = itemList.filter(function (n) {
-          return n != undefined;
-        });
-        var dataSet = fullList.map(function (item) {
-          return [item.icon, item.name, item.count, item.type, item.level, item.rarity, item.position, item.binding, 'item.description', item.category];
-        });
-        var table = $('#inventory-table').DataTable({
-          data: dataSet,
-          "destroy": true,
-          "pageLength": 50,
-          "order": [[6, 'asc']],
-          "columnDefs": [{
-            type: 'natural',
-            targets: [2, 4, 6]
-          }, {
-            visible: false,
-            targets: [8, 9]
-          }],
-          drawCallback: function drawCallback() {
-            var api = this.api();
-            $('.dataTables_length #sum').remove();
-            $('.dataTables_length').append("<span id='sum'>. Current amount: " + api.column(2, { page: 'current' }).data().sum() + '</span>');
-          }
-        });
-        $('#inventory .loading').hide();
-
-        var searchValue = "";
-        var searchCollection = "";
-        // enable table search by nav bar click
-        $('#inventory [data-subset]').on('click tap', function () {
-          searchCollection = $(this).attr("data-subset");
-          if (searchCollection == "rarity") {} else {
-            if (searchCollection == "equipment") {
-              searchValue = "Armor|Weapon|Trinket|UpgradeComponent|Back";
-            } else if (searchCollection == "utilities") {
-              searchValue = "Bag|Gathering|Tool";
-            } else if (searchCollection == "toys") {
-              searchValue = "";
-            } else if (searchCollection == "materials") {
-              searchValue = "CraftingMaterial";
-            } else if (searchCollection == "misc") {
-              searchValue = "Container|Trophy|Trait|Consumable|Gizmo|Minipet";
-            } else if (searchCollection == "all") {
-              searchValue = "";
-            }
-            table.column([9]).search('').column([3]).search(searchValue, true).draw();
-          }
-        });
-        $('#inventory [data-option]').on('click tap', function () {
-          searchValue = $(this).attr("data-option");
-          var searchTarget = $(this).attr("data-target");
-          if (searchTarget == 'rarity') {
-            table.column([5]).search(searchValue).draw();
-          } else if (searchTarget == 'category') {
-            table.column([3]).search('').column([9]).search(searchValue).draw();
-          } else {
-            table.column([9]).search('').column([3]).search(searchValue).draw();
-          }
-        });
-        // TODO: enable table refresh by navbar click
-        $('#inventory [data-click]').on('click tap', function () {
-          $(this).button('loading');
-          $(this).parents('.tab-pane').children('.subset').removeClass('active');
-          $(this).parents('.tab-pane').children('.loading').show();
-          var action = $(this).attr('data-click');
-          if (action == 'refreshinventory') {
-            //get_render_inventory();
-          }
-        });
-      });
-    }
-  };
-  $(function () {
-    inventory.initialize();
-  });
-  exports.default = inventory;
-});
-
-
-define('view/wallet',['exports', 'model/gw2Data/gw2Data'], function (exports, _gw2Data) {
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  exports.wallet = undefined;
-  var wallet = exports.wallet = {
-    initialize: function initialize() {
-      $('#wallet [data-click]').button('reset');
-      this.bindEvents();
-    },
-    bindEvents: function bindEvents() {
-      _gw2Data.gw2Data.on('loaded:wallet', function (walletData) {
-        var dataSet = walletData.map(function (walletItem) {
-          return [walletItem.icon, walletItem.name, walletItem.value, walletItem.description, walletItem.order];
-        });
-        $('#wallet-table').DataTable({
-          data: dataSet,
-          destroy: true,
-          pageLength: 50,
-          "order": [[4, 'asc']],
-          "dom": '',
-          "columnDefs": [{ type: 'natural', targets: 2 }]
-        });
-        $('#wallet .loading').hide();
-        var table = $('#wallet-table').DataTable();
-        $('#wallet [data-click]').on('click tap', function () {
-          $(this).button('loading');
-          $(this).parents('.tab-pane').children('.loading').show();
-          var action = $(this).attr('data-click');
-          if (action == 'refreshwallet') {
-            get_render_wallet();
-          }
-        });
-      });
-    }
-  };
-  $(function () {
-    wallet.initialize();
-  });
-  exports.default = wallet;
-});
-
-
-define('index.js',['view/account', 'view/characters', 'view/inventory', 'view/wallet'], function (_account, _characters, _inventory, _wallet) {
+define('index.js',['view/home'], function (_home) {
   $(function () {
     $('#tabs').tab();
     $('body').on('mouseenter', '*[data-toggle="tooltip"]', function () {
