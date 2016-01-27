@@ -11,9 +11,9 @@ export const professions = {
     const waiting = [];
     waiting.push(file.load());
     $.when.apply($.when, waiting).done(() => {
-      dataRef = file.professions.map((professionData) => {
+      dataRef = file.get('professions').map((professionData) => {
         const profession = new Profession(professionData);
-        return profession.toJSON();
+        return profession.toHTML();
       });
       loadDeferred.resolve(dataRef);
     });
@@ -26,14 +26,11 @@ class Profession {
     this._data = data;
     return this;
   }
-  toJSON() {
-    const result = {};
-    Object.keys(this._data).forEach((key) => {
-      result[key] = this[key] || "";
-    });
-    return result;
-  }
-  get name() {
-    return 'profession name string';
+  toHTML() {
+    return `
+      <li>
+        <a>${this._data}
+        </a>
+      </li>`;
   }
 }

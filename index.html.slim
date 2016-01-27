@@ -60,7 +60,7 @@ html lang='en'
         #navbar-collapse-level1.collapse.navbar-collapse
           ul.nav.navbar-nav.navbar-left
             li
-              a TITLE
+              a#title TITLE
           form.navbar-form.navbar-right role=''
             .form-group
               //span.input-group-addon File URL
@@ -70,65 +70,19 @@ html lang='en'
     section.container
       .row
         .col-sm-3
-          ul.nav.nav-pills.nav-stacked
-            li.active role='presentation'
+          ul#topics.nav.nav-pills.nav-stacked
+            li.active
               a 所有主題
-            li role='presentation'
-              a category 1
-            li role='presentation'
-              a category 2
-            li role='presentation'
-              a category 3
-            li role='presentation'
-              a category 4
         .col-sm-9
           nav.navbar.small.border-bottom
-            ul.nav.nav-pills
-              li.active role='presentation'
-                a 所有立場
-              li role='presentation'
-                a role 1
-              li role='presentation'
-                a role 2
-              li role='presentation'
-                a role 3
-              li role='presentation'
-                a role 4
+            ul#relations.nav.nav-pills
+              li.active
+                a 所有關係人
           nav.navbar.collapse-top.small
-            ul.nav.nav-pills
-              li.active role='presentation'
-                a 所有身份
-              li role='presentation'
-                a role 1
-              li role='presentation'
-                a role 2
-              li role='presentation'
-                a role 3
-              li role='presentation'
-                a role 4
-          article
-            blockquote cite='url'
-              p
-                | 炸蝦過多粉皮，肉類過鹹過柴，點心餅皮軟爛，蛋糕過乾，不符「保證吃很好」期望
-              .align-right.small
-                a href='' 2016/01/08 2:35am
-                |  by 
-                a href='' 孤獨的踩雷家
-              .align-right.clear
-                span.label.label-light #主題
-                span.label.label-light @立場
-                span.label.label-light @身份
-            blockquote cite='url'
-              p
-                | 炸蝦過多粉皮，肉類過鹹過柴，點心餅皮軟爛，蛋糕過乾，不符「保證吃很好」期望
-              .align-right.small
-                a href='' 2016/01/08 2:35am
-                |  by 
-                a href='' 孤獨的踩雷家
-              .align-right.clear
-                span.label.label-light #主題
-                span.label.label-light @立場
-                span.label.label-light @身份
+            ul#professions.nav.nav-pills
+              li.active
+                a 所有職業
+          article#points
 
     javascript:
 

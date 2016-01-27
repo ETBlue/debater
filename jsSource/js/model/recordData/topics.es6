@@ -11,9 +11,9 @@ export const topics = {
     const waiting = [];
     waiting.push(file.load());
     $.when.apply($.when, waiting).done(() => {
-      dataRef = file.topics.map((topicData) => {
+      dataRef = file.get('topics').map((topicData) => {
         const topic = new Topic(topicData);
-        return topic.toJSON();
+        return topic.toHTML();
       });
       loadDeferred.resolve(dataRef);
     });
@@ -26,14 +26,11 @@ class Topic {
     this._data = data;
     return this;
   }
-  toJSON() {
-    const result = {};
-    Object.keys(this._data).forEach((key) => {
-      result[key] = this[key] || "";
-    });
-    return result;
-  }
-  get name() {
-    return 'topic name string';
+  toHTML() {
+    return `
+      <li>
+        <a>${this._data}
+        </a>
+      </li>`;
   }
 }

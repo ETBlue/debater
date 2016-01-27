@@ -11,9 +11,9 @@ export const relations = {
     const waiting = [];
     waiting.push(file.load());
     $.when.apply($.when, waiting).done(() => {
-      dataRef = file.relations.map((relationData) => {
+      dataRef = file.get('relations').map((relationData) => {
         const relation = new Relation(relationData);
-        return relation.toJSON();
+        return relation.toHTML();
       });
       loadDeferred.resolve(dataRef);
     });
@@ -26,14 +26,11 @@ class Relation {
     this._data = data;
     return this;
   }
-  toJSON() {
-    const result = {};
-    Object.keys(this._data).forEach((key) => {
-      result[key] = this[key] || "";
-    });
-    return result;
-  }
-  get name() {
-    return 'relation name string';
+  toHTML() {
+    return `
+      <li>
+        <a>${this._data}
+        </a>
+      </li>`;
   }
 }

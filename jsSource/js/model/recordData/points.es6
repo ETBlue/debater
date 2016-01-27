@@ -11,9 +11,9 @@ export const points = {
     const waiting = [];
     waiting.push(file.load());
     $.when.apply($.when, waiting).done(() => {
-      dataRef = file.points.map((pointData) => {
+      dataRef = file.get('points').map((pointData) => {
         const point = new Point(pointData);
-        return point.toJSON();
+        return point.toHTML();
       });
       loadDeferred.resolve(dataRef);
     });
@@ -26,23 +26,29 @@ class Point {
     this._data = data;
     return this;
   }
-  toJSON() {
-    const result = {};
-    Object.keys(this._data).forEach((key) => {
-      result[key] = this[key] || "";
+  toHTML() {
+    const topics = this._data.topics.map((topic) => {
+      return `<span class="label label-light">#${topic}</span>`;
     });
-    return result;
-  }
-  get author() {
-    return 'point author string';
-  }
-  get cite() {
-    return 'point cite string';
-  }
-  get timestamp() {
-    return 'point timestamp string';
-  }
-  get topics() {
-    return 'point topics array';
+    const relations = this._data.relations.map((relation) => {
+      return `<span class="label label-light">@${relation}</span>`;
+    });
+    const professions = this._data.professions.map((profession) => {
+      return `<span class="label label-light">@${profession}</span>`;
+    });
+    return `
+      <blockquote cite="${this._data.url}">
+        <p>${this._data.content}</p>
+        <div class="align-right small">
+          <a href="${this._data.url}">${this._data.timestamp}</a> by <a href="">${this._data.author}</a>
+        </div>
+        <div class="align-right clear">
+        </div>
+      </blockquote>
+    `;
+          //${topics}
+          //${relations}
+          //${professions}
+
   }
 }

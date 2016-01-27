@@ -17,12 +17,34 @@ export const app = {
         fileURL.setURL(newURL);
         app.showLoading();
         recordData.loadFile();
+        recordData.loadTopics();
+        recordData.loadRelations();
+        recordData.loadProfessions();
+        recordData.loadPoints();
       }
     });
     recordData.on('loaded:file', (file) => {
       $('#title').html(file.title);
-      $('#file-status')
-        .html('File loaded <span class="glyphicon glyphicon-ok text-success"></span>');
+    });
+    recordData.on('loaded:topics', (topics) => {
+      topics.forEach((topic) => {
+        $('#topics').append(topic);
+      });
+    });
+    recordData.on('loaded:relations', (relations) => {
+      relations.forEach((relation) => {
+        $('#relations').append(relation);
+      });
+    });
+    recordData.on('loaded:professions', (professions) => {
+      professions.forEach((profession) => {
+        $('#professions').append(profession);
+      });
+    });
+    recordData.on('loaded:points', (points) => {
+      points.forEach((point) => {
+        $('#points').append(point);
+      });
     });
   },
   showLoading() {

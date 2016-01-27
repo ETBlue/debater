@@ -45,4 +45,7 @@ class Author {
   get relations() {
     return 'author relations array';
   }
+  get posts() {
+    return 'author posts array';
+  }
 }
