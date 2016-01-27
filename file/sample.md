@@ -15,7 +15,7 @@ Growth Hack 事件簿
 - 家庭主婦
 - LOL gamer
 
-## 立場 
+## 關係 
 
 - GH 學員
 
@@ -61,7 +61,7 @@ Growth Hack 事件簿
 - 講師
 - 創業者
 
-## 立場
+## 關係
 
 - GH 講師
 - GH 課程業者
