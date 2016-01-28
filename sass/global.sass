@@ -1,6 +1,8 @@
 @charset "UTF-8"
 @import compass/css3
 
+// global
+
 html, body
   font-size: 16px
   background-color: #efefef
@@ -12,6 +14,39 @@ p
   margin: 0 0 1em 0
   &:last-child
     margin-bottom: 0
+
+.inline-block
+  display: inline-block
+
+.clear
+  clear: both
+
+.float-right
+  float: right
+
+.align-right
+  text-align: right
+
+.collapse-top
+  margin-top: -1rem
+
+.no-bottom
+  margin-bottom: 0
+
+// for bootstrap
+
+.container
+  padding-left: 1rem
+  padding-right: 1rem
+  width: 100%
+  max-width: 1200px
+
+// for general layout
+
+#about
+  display: none
+
+// for points
 
 blockquote
   border-color: rgba(#000, 0.1)
@@ -32,28 +67,7 @@ blockquote
   &:hover
     color: rgba(#000,0.4)
 
-[data-topic], [data-relation], [data-profession]
-  cursor: pointer
-
-.panel
-  margin-bottom: 1rem
-
-.panel-body, .panel-header, .panel-footer
-  padding: 0.5rem 1rem
-
-.container
-  width: 100%
-  max-width: 1200px
-
-.collapse-top
-  margin-top: -1rem
-
-.no-bottom
-  margin-bottom: 0
-
-.container
-  padding-left: 1rem
-  padding-right: 1rem
+// for navbars
 
 .navbar
   margin-bottom: 1rem
@@ -70,72 +84,59 @@ blockquote
     border: none
     border-radius: 0
   .btn
-    background: none
+    background-color: rgba(#000,0)
+  .btn-default
+    background-color: #fff
   &.large
     .navbar-brand, li a, .navbar-toggle
       font-size: 1.2rem
       padding-top: 0.9em
       padding-bottom: 0.9em
-    .btn
   &.medium
     .navbar-brand, li a, .navbar-toggle
       font-size: 1rem
       padding-top: 0.8em
       padding-bottom: 0.8em
-    .btn
-      margin-top: 0.3em
-      padding-top: 0.5em
-      padding-bottom: 0.5em
   &.small
     .navbar-brand, li a, .navbar-toggle
       font-size: 0.9rem
       padding-top: 0.6em
       padding-bottom: 0.6em
-    .btn
+  .input-group-btn li a
+    font-size: 0.9rem
 
-.tooltip
-  font-size: 1rem
-  line-height: 1em
+
+// for top navbar
 
 .form-control
   height: auto
   padding: 0.5rem
   font-size: 1em
   line-height: 1em
-  margin: 0 0.5rem
+  margin: 0 0 0 0.5rem
   width: 100%
 
-.bold
-  font-weight: bold
+.form-group, .input-group-btn
+  width: auto
+  display: inline-block
 
-// custom
+input[type=file]
+  display: inline-block
+  margin: 0 0 0 0.5rem
+  padding: 0.5rem
+  font-size: 1em
+  line-height: 1em
+
+.dropdown-menu
+  li.divider
+    margin: 0.3em 0
+
+
+// for content navbar
+
 .border-bottom
   border-bottom: 3px rgba(#000,0.1) solid
 
-.badge.light
-  color: rgba(#000,0.3)
-  background-color: rgba(#000,0.05)
+[data-topic], [data-relation], [data-profession]
+  cursor: pointer
 
-.subset
-  display: none
-  &.active
-    display: block
-
-.inline-block
-  display: inline-block
-
-.text
-  margin-right: 0.25em
-  margin-left: 0.25em
-
-.clear
-  clear: both
-
-#about, .status
-  display: none
-
-.float-right
-  float: right
-
-.align-right
-  text-align: right

@@ -7,6 +7,7 @@ export const topics = {
     return dataRef;
   },
   load() {
+    $('#topics').html('<li class="active"><a data-topic="">所有主題</a></li>');
     const loadDeferred = new $.Deferred();
     const waiting = [];
     waiting.push(file.load());

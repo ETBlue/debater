@@ -1,14 +1,23 @@
 $(() => {
+
+  $('#fileChooser').toggle();
+
   // toggle about section
   $('[data-click="toggleAbout"]').on('click tap', function(){
     $('#about').slideToggle();
   });
 
+  // toggle file section
+  $('[data-source]').on('click tap', function (e) {
+    $('#fileURL, #fileChooser').toggle();
+    $('[data-source]').toggleClass('btn-default');
+  });
+
   // initialize filter
   function filterPoints(filters) {
-    $('#points .point').show();
+    $('#points .point').slideDown('fast');
     Object.keys(filters).forEach((key) => {
-      $('#points .point').not($('#points .point').has('[data-' + key + '="' + filters[key] + '"]')).hide();
+      $('#points .point').not($('#points .point').has('[data-' + key + '="' + filters[key] + '"]')).slideUp('fast');
     });
     //$('#points .point').has('[data-topic="'+filters.topic+'"]').show();
   }

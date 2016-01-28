@@ -1,4 +1,6 @@
 import {fileURL} from 'model/fileURL';
+import {fileSource} from 'model/fileSource';
+import {fileUploaded} from 'model/fileUploaded';
 
 let dataRef;
 
@@ -8,13 +10,29 @@ export const file = {
   },
   load() {
     const loadDeferred = new $.Deferred();
-    $.get('http://etblue.github.io/debater/file/sample.md')
-      .done((fileData) => {
-        const file = new File(fileData);
-        dataRef = file.toJSON();
-        loadDeferred.resolve(dataRef);
-      });
-    return loadDeferred;
+    if (fileSource.get() == 'web') {
+      const url = fileURL.getURL();
+      $.get(url)
+        .done((fileData) => {
+          const file = new File(fileData);
+          dataRef = file.toJSON();
+          loadDeferred.resolve(dataRef);
+        });
+      return loadDeferred;
+    } else if (fileSource.get() == 'local') {
+      if (window.File && window.FileReader && window.FileList && window.Blob) {
+        // Great success! All the File APIs are supported.
+
+        fileUploaded.load(fileUploaded.getUploaded()).done((result) => {
+          const file = new File(result);
+          dataRef = file.toJSON();
+          loadDeferred.resolve(dataRef);
+        });
+        return loadDeferred;
+      } else {
+        alert('The File APIs are not fully supported in this browser.');
+      }
+    }
   }
 };
 

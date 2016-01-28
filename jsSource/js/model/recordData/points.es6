@@ -7,6 +7,7 @@ export const points = {
     return dataRef;
   },
   load() {
+    $('#points').html('');
     const loadDeferred = new $.Deferred();
     const waiting = [];
     waiting.push(file.load());
