@@ -28,27 +28,27 @@ class Point {
   }
   toHTML() {
     const topics = this._data.topics.map((topic) => {
-      return `<span class="label label-light">#${topic}</span>`;
-    });
+      return `<span data-topic='${topic}'></span>`;
+    }).join("");
     const relations = this._data.relations.map((relation) => {
-      return `<span class="label label-light">@${relation}</span>`;
-    });
+      return `<span data-relation='${relation}'></span>`;
+    }).join("");
     const professions = this._data.professions.map((profession) => {
-      return `<span class="label label-light">@${profession}</span>`;
-    });
+      return `<span data-profession='${profession}'></span>`;
+    }).join("");
     return `
-      <blockquote cite="${this._data.url}">
+      <blockquote class='point' data-timestamp="${this._data.timestamp}" cite="${this._data.url}">
         <p>${this._data.content}</p>
         <div class="align-right small">
           <a href="${this._data.url}">${this._data.timestamp}</a> by <a href="">${this._data.author}</a>
         </div>
         <div class="align-right clear">
+          ${topics}
+          ${relations}
+          ${professions}
         </div>
       </blockquote>
     `;
-          //${topics}
-          //${relations}
-          //${professions}
 
   }
 }

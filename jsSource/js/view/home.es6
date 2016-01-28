@@ -15,7 +15,6 @@ export const app = {
       if (e.keyCode == 13) {
         const newURL = $(this).val();
         fileURL.setURL(newURL);
-        app.showLoading();
         recordData.loadFile();
         recordData.loadTopics();
         recordData.loadRelations();
@@ -45,14 +44,10 @@ export const app = {
       points.forEach((point) => {
         $('#points').append(point);
       });
+      $('#points .point').sort(function(a,b) {
+        return $(a).data('timestamp') > $(b).data('timestamp');
+      }).appendTo('#points');
     });
-  },
-  showLoading() {
-    $('#file-status').parent().empty().html(`
-      <p id="file-status" class="status" style="display: block;">
-        Loading file...
-      </p>
-    `);
   }
 };
 

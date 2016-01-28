@@ -29,7 +29,7 @@ class Relation {
   toHTML() {
     return `
       <li>
-        <a>${this._data}
+        <a data-relation='${this._data}'>${this._data}
         </a>
       </li>`;
   }

@@ -29,7 +29,7 @@ class Profession {
   toHTML() {
     return `
       <li>
-        <a>${this._data}
+        <a data-profession='${this._data}'>${this._data}
         </a>
       </li>`;
   }
