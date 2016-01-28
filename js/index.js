@@ -381,7 +381,67 @@ define('model/fileURL',['exports'], function (exports) {
 });
 
 
-define('model/recordData/file',['exports', 'model/fileURL'], function (exports, _fileURL) {
+define('model/fileSource',['exports'], function (exports) {
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var source = '';
+  var fileSource = exports.fileSource = {
+    get: function get() {
+      return source;
+    },
+    set: function set(fileSource) {
+      source = fileSource;
+    }
+  };
+  exports.default = fileSource;
+});
+
+
+define('model/fileUploaded',['exports'], function (exports) {
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var uploaded = undefined;
+  var result = undefined;
+  var fileUploaded = exports.fileUploaded = {
+    getResult: function getResult() {
+      console.log(result);
+      return result;
+    },
+    getUploaded: function getUploaded() {
+      return uploaded;
+    },
+    load: function load(file) {
+      var loadDeferred = new $.Deferred();
+      if (window.File && window.FileReader && window.FileList && window.Blob) {
+        // Great success! All the File APIs are supported.
+
+        if (file) {
+          var reader = new FileReader();
+          reader.onload = function (event) {
+            result = event.target.result;
+            loadDeferred.resolve(result);
+            //console.log(loadDeferred);
+          };
+          reader.readAsText(file);
+          return loadDeferred;
+        } else {
+          return;
+        }
+      } else {
+        alert('The File APIs are not fully supported in this browser.');
+      }
+    },
+    set: function set(file) {
+      uploaded = file;
+    }
+  };
+  exports.default = fileUploaded;
+});
+
+
+define('model/recordData/file',['exports', 'model/fileURL', 'model/fileSource', 'model/fileUploaded'], function (exports, _fileURL, _fileSource, _fileUploaded) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
@@ -418,12 +478,28 @@ define('model/recordData/file',['exports', 'model/fileURL'], function (exports, 
     },
     load: function load() {
       var loadDeferred = new $.Deferred();
-      $.get('http://etblue.github.io/debater/file/sample.md').done(function (fileData) {
-        var file = new File(fileData);
-        dataRef = file.toJSON();
-        loadDeferred.resolve(dataRef);
-      });
-      return loadDeferred;
+      if (_fileSource.fileSource.get() == 'web') {
+        var url = _fileURL.fileURL.getURL();
+        $.get(url).done(function (fileData) {
+          var file = new File(fileData);
+          dataRef = file.toJSON();
+          loadDeferred.resolve(dataRef);
+        });
+        return loadDeferred;
+      } else if (_fileSource.fileSource.get() == 'local') {
+        if (window.File && window.FileReader && window.FileList && window.Blob) {
+          // Great success! All the File APIs are supported.
+
+          _fileUploaded.fileUploaded.load(_fileUploaded.fileUploaded.getUploaded()).done(function (result) {
+            var file = new File(result);
+            dataRef = file.toJSON();
+            loadDeferred.resolve(dataRef);
+          });
+          return loadDeferred;
+        } else {
+          alert('The File APIs are not fully supported in this browser.');
+        }
+      }
     }
   };
 
@@ -671,6 +747,7 @@ define('model/recordData/professions',['exports', 'model/recordData/file'], func
       return dataRef;
     },
     load: function load() {
+      $('#professions').html('<li class="active"><a data-profession="">所有職業</a></li>');
       var loadDeferred = new $.Deferred();
       var waiting = [];
       waiting.push(_file.file.load());
@@ -741,6 +818,7 @@ define('model/recordData/relations',['exports', 'model/recordData/file'], functi
       return dataRef;
     },
     load: function load() {
+      $('#relations').html('<li class="active"><a data-relation="">所有關係人</a></li>');
       var loadDeferred = new $.Deferred();
       var waiting = [];
       waiting.push(_file.file.load());
@@ -811,6 +889,7 @@ define('model/recordData/topics',['exports', 'model/recordData/file'], function 
       return dataRef;
     },
     load: function load() {
+      $('#topics').html('<li class="active"><a data-topic="">所有主題</a></li>');
       var loadDeferred = new $.Deferred();
       var waiting = [];
       waiting.push(_file.file.load());
@@ -881,6 +960,7 @@ define('model/recordData/points',['exports', 'model/recordData/file'], function 
       return dataRef;
     },
     load: function load() {
+      $('#points').html('');
       var loadDeferred = new $.Deferred();
       var waiting = [];
       waiting.push(_file.file.load());
@@ -987,7 +1067,7 @@ define('model/recordData/recordData',['exports', 'utils/events', 'model/recordDa
 });
 
 
-define('view/home',['exports', 'model/recordData/recordData', 'model/fileURL'], function (exports, _recordData, _fileURL) {
+define('view/home',['exports', 'model/recordData/recordData', 'model/fileURL', 'model/fileSource', 'model/fileUploaded'], function (exports, _recordData, _fileURL, _fileSource, _fileUploaded) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
@@ -997,24 +1077,77 @@ define('view/home',['exports', 'model/recordData/recordData', 'model/fileURL'], 
       // show saved fileURL
       var savedURL = _fileURL.fileURL.getURL();
       if (savedURL) {
-        $('#fileURL').val(savedURL);
+        $('#fileURL #current').val(savedURL);
+        $('#fileURL #recent').html(function () {
+          var savedURLHistory = _fileURL.fileURL.getHistory();
+          if (savedURLHistory) {
+            var html = '';
+            Object.keys(savedURLHistory).forEach(function (key) {
+              html += '\n              <li>\n                <a data-url=\'' + key + '\'>' + savedURLHistory[key] + '</a>\n              </li>\n            ';
+            });
+            html += '\n              <li role="separator" class="divider"></li>\n              <li>\n                <a data-action="clear">Clear Hostory</a>\n              </li>\n          ';
+            return html;
+          }
+        });
       }
       this.bindEvents();
     },
     bindEvents: function bindEvents() {
-      $('#fileURL').keypress(function (e) {
+      var newURL = undefined;
+      function loadPage() {
+        _recordData.recordData.loadFile();
+        _recordData.recordData.loadTopics();
+        _recordData.recordData.loadRelations();
+        _recordData.recordData.loadProfessions();
+        _recordData.recordData.loadPoints();
+      }
+      function drawHistory() {
+        $('#fileURL #recent').html(function () {
+          var savedURLHistory = _fileURL.fileURL.getHistory();
+          if (savedURLHistory) {
+            var html = '';
+            Object.keys(savedURLHistory).forEach(function (key) {
+              html += '\n              <li>\n                <a data-url=\'' + key + '\'>' + savedURLHistory[key] + '</a>\n              </li>\n            ';
+            });
+            html += '\n              <li role="separator" class="divider"></li>\n              <li>\n                <a data-action="clear">Clear Hostory</a>\n              </li>\n          ';
+            return html;
+          }
+        });
+      }
+
+      $('#fileURL #current').keypress(function (e) {
         if (e.keyCode == 13) {
-          var newURL = $(this).val();
+          _fileSource.fileSource.set('web');
+          newURL = $(this).val();
           _fileURL.fileURL.setURL(newURL);
-          _recordData.recordData.loadFile();
-          _recordData.recordData.loadTopics();
-          _recordData.recordData.loadRelations();
-          _recordData.recordData.loadProfessions();
-          _recordData.recordData.loadPoints();
+          loadPage();
         }
       });
+      $('#fileURL #recent').on('click tap', '[data-url]', function (e) {
+        newURL = $(this).attr('data-url');
+        $('#fileURL #current').val(newURL);
+        _fileURL.fileURL.setKey(newURL);
+        loadpage();
+      });
+      $('#fileURL #recent').on('click tap', '[data-action="clear"]', function (e) {
+        $('#fileURL #current').val('');
+        _fileURL.fileURL.clearHistory();
+        $('#fileURL #recent').html('<li><a>Hmmm. No history yet.</a></li>');
+      });
+
+      $('#fileChooser input').change(function (e) {
+        _fileSource.fileSource.set('local');
+        var file = e.target.files[0];
+        _fileUploaded.fileUploaded.set(file);
+        loadPage();
+      });
+
       _recordData.recordData.on('loaded:file', function (file) {
         $('#title').html(file.title);
+        if (_fileSource.fileSource.get() == 'web') {
+          _fileURL.fileURL.setHistory(newURL, file.title);
+          drawHistory();
+        }
       });
       _recordData.recordData.on('loaded:topics', function (topics) {
         topics.forEach(function (topic) {
@@ -1049,14 +1182,19 @@ define('view/home',['exports', 'model/recordData/recordData', 'model/fileURL'], 
 
 define('index.js',['view/home'], function (_home) {
   $(function () {
+    $('#fileChooser').toggle();
     $('[data-click="toggleAbout"]').on('click tap', function () {
       $('#about').slideToggle();
     });
+    $('[data-source]').on('click tap', function (e) {
+      $('#fileURL, #fileChooser').toggle();
+      $('[data-source]').toggleClass('btn-default');
+    });
 
     function filterPoints(filters) {
-      $('#points .point').show();
+      $('#points .point').slideDown('fast');
       Object.keys(filters).forEach(function (key) {
-        $('#points .point').not($('#points .point').has('[data-' + key + '="' + filters[key] + '"]')).hide();
+        $('#points .point').not($('#points .point').has('[data-' + key + '="' + filters[key] + '"]')).slideUp('fast');
       });
     }
 

@@ -36,6 +36,7 @@ define(['exports', 'model/recordData/file'], function (exports, _file) {
       return dataRef;
     },
     load: function load() {
+      $('#topics').html('<li class="active"><a data-topic="">所有主題</a></li>');
       var loadDeferred = new $.Deferred();
       var waiting = [];
       waiting.push(_file.file.load());

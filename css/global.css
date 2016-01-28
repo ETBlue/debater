@@ -13,6 +13,41 @@ p:last-child {
   margin-bottom: 0;
 }
 
+.inline-block {
+  display: inline-block;
+}
+
+.clear {
+  clear: both;
+}
+
+.float-right {
+  float: right;
+}
+
+.align-right {
+  text-align: right;
+}
+
+.collapse-top {
+  margin-top: -1rem;
+}
+
+.no-bottom {
+  margin-bottom: 0;
+}
+
+.container {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  width: 100%;
+  max-width: 1200px;
+}
+
+#about {
+  display: none;
+}
+
 blockquote {
   border-color: rgba(0, 0, 0, 0.1);
   padding: 0 1rem;
@@ -35,36 +70,6 @@ blockquote .label {
   color: rgba(0, 0, 0, 0.4);
 }
 
-[data-topic], [data-relation], [data-profession] {
-  cursor: pointer;
-}
-
-.panel {
-  margin-bottom: 1rem;
-}
-
-.panel-body, .panel-header, .panel-footer {
-  padding: 0.5rem 1rem;
-}
-
-.container {
-  width: 100%;
-  max-width: 1200px;
-}
-
-.collapse-top {
-  margin-top: -1rem;
-}
-
-.no-bottom {
-  margin-bottom: 0;
-}
-
-.container {
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-
 .navbar {
   margin-bottom: 1rem;
   min-height: 1em;
@@ -84,7 +89,10 @@ blockquote .label {
   border-radius: 0;
 }
 .navbar .btn {
-  background: none;
+  background-color: transparent;
+}
+.navbar .btn-default {
+  background-color: #fff;
 }
 .navbar.large .navbar-brand, .navbar.large li a, .navbar.large .navbar-toggle {
   font-size: 1.2rem;
@@ -96,20 +104,13 @@ blockquote .label {
   padding-top: 0.8em;
   padding-bottom: 0.8em;
 }
-.navbar.medium .btn {
-  margin-top: 0.3em;
-  padding-top: 0.5em;
-  padding-bottom: 0.5em;
-}
 .navbar.small .navbar-brand, .navbar.small li a, .navbar.small .navbar-toggle {
   font-size: 0.9rem;
   padding-top: 0.6em;
   padding-bottom: 0.6em;
 }
-
-.tooltip {
-  font-size: 1rem;
-  line-height: 1em;
+.navbar .input-group-btn li a {
+  font-size: 0.9rem;
 }
 
 .form-control {
@@ -117,51 +118,31 @@ blockquote .label {
   padding: 0.5rem;
   font-size: 1em;
   line-height: 1em;
-  margin: 0 0.5rem;
+  margin: 0 0 0 0.5rem;
   width: 100%;
 }
 
-.bold {
-  font-weight: bold;
+.form-group, .input-group-btn {
+  width: auto;
+  display: inline-block;
+}
+
+input[type=file] {
+  display: inline-block;
+  margin: 0 0 0 0.5rem;
+  padding: 0.5rem;
+  font-size: 1em;
+  line-height: 1em;
+}
+
+.dropdown-menu li.divider {
+  margin: 0.3em 0;
 }
 
 .border-bottom {
   border-bottom: 3px rgba(0, 0, 0, 0.1) solid;
 }
 
-.badge.light {
-  color: rgba(0, 0, 0, 0.3);
-  background-color: rgba(0, 0, 0, 0.05);
-}
-
-.subset {
-  display: none;
-}
-.subset.active {
-  display: block;
-}
-
-.inline-block {
-  display: inline-block;
-}
-
-.text {
-  margin-right: 0.25em;
-  margin-left: 0.25em;
-}
-
-.clear {
-  clear: both;
-}
-
-#about, .status {
-  display: none;
-}
-
-.float-right {
-  float: right;
-}
-
-.align-right {
-  text-align: right;
+[data-topic], [data-relation], [data-profession] {
+  cursor: pointer;
 }

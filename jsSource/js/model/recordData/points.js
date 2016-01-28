@@ -36,6 +36,7 @@ define(['exports', 'model/recordData/file'], function (exports, _file) {
       return dataRef;
     },
     load: function load() {
+      $('#points').html('');
       var loadDeferred = new $.Deferred();
       var waiting = [];
       waiting.push(_file.file.load());

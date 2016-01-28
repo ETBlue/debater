@@ -1,6 +1,6 @@
 'use strict';
 
-define(['exports', 'model/fileURL'], function (exports, _fileURL) {
+define(['exports', 'model/fileURL', 'model/fileSource', 'model/fileUploaded'], function (exports, _fileURL, _fileSource, _fileUploaded) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
@@ -37,12 +37,28 @@ define(['exports', 'model/fileURL'], function (exports, _fileURL) {
     },
     load: function load() {
       var loadDeferred = new $.Deferred();
-      $.get('http://etblue.github.io/debater/file/sample.md').done(function (fileData) {
-        var file = new File(fileData);
-        dataRef = file.toJSON();
-        loadDeferred.resolve(dataRef);
-      });
-      return loadDeferred;
+      if (_fileSource.fileSource.get() == 'web') {
+        var url = _fileURL.fileURL.getURL();
+        $.get(url).done(function (fileData) {
+          var file = new File(fileData);
+          dataRef = file.toJSON();
+          loadDeferred.resolve(dataRef);
+        });
+        return loadDeferred;
+      } else if (_fileSource.fileSource.get() == 'local') {
+        if (window.File && window.FileReader && window.FileList && window.Blob) {
+          // Great success! All the File APIs are supported.
+
+          _fileUploaded.fileUploaded.load(_fileUploaded.fileUploaded.getUploaded()).done(function (result) {
+            var file = new File(result);
+            dataRef = file.toJSON();
+            loadDeferred.resolve(dataRef);
+          });
+          return loadDeferred;
+        } else {
+          alert('The File APIs are not fully supported in this browser.');
+        }
+      }
     }
   };
 
