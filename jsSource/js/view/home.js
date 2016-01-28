@@ -19,7 +19,6 @@ define(['exports', 'model/recordData/recordData', 'model/fileURL'], function (ex
         if (e.keyCode == 13) {
           var newURL = $(this).val();
           _fileURL.fileURL.setURL(newURL);
-          app.showLoading();
           _recordData.recordData.loadFile();
           _recordData.recordData.loadTopics();
           _recordData.recordData.loadRelations();
@@ -49,10 +48,10 @@ define(['exports', 'model/recordData/recordData', 'model/fileURL'], function (ex
         points.forEach(function (point) {
           $('#points').append(point);
         });
+        $('#points .point').sort(function (a, b) {
+          return $(a).data('timestamp') > $(b).data('timestamp');
+        }).appendTo('#points');
       });
-    },
-    showLoading: function showLoading() {
-      $('#file-status').parent().empty().html('\n      <p id="file-status" class="status" style="display: block;">\n        Loading file...\n      </p>\n    ');
     }
   };
   $(function () {

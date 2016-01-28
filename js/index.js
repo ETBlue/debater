@@ -696,7 +696,7 @@ define('model/recordData/professions',['exports', 'model/recordData/file'], func
     _createClass(Profession, [{
       key: 'toHTML',
       value: function toHTML() {
-        return '\n      <li>\n        <a>' + this._data + '\n        </a>\n      </li>';
+        return '\n      <li>\n        <a data-profession=\'' + this._data + '\'>' + this._data + '\n        </a>\n      </li>';
       }
     }]);
 
@@ -766,7 +766,7 @@ define('model/recordData/relations',['exports', 'model/recordData/file'], functi
     _createClass(Relation, [{
       key: 'toHTML',
       value: function toHTML() {
-        return '\n      <li>\n        <a>' + this._data + '\n        </a>\n      </li>';
+        return '\n      <li>\n        <a data-relation=\'' + this._data + '\'>' + this._data + '\n        </a>\n      </li>';
       }
     }]);
 
@@ -836,7 +836,7 @@ define('model/recordData/topics',['exports', 'model/recordData/file'], function 
     _createClass(Topic, [{
       key: 'toHTML',
       value: function toHTML() {
-        return '\n      <li>\n        <a>' + this._data + '\n        </a>\n      </li>';
+        return '\n      <li>\n        <a data-topic=\'' + this._data + '\'>' + this._data + '\n        </a>\n      </li>';
       }
     }]);
 
@@ -907,18 +907,18 @@ define('model/recordData/points',['exports', 'model/recordData/file'], function 
       key: 'toHTML',
       value: function toHTML() {
         var topics = this._data.topics.map(function (topic) {
-          return '<span class="label label-light">#' + topic + '</span>';
-        });
+          return '<span data-topic=\'' + topic + '\'></span>';
+        }).join("");
 
         var relations = this._data.relations.map(function (relation) {
-          return '<span class="label label-light">@' + relation + '</span>';
-        });
+          return '<span data-relation=\'' + relation + '\'></span>';
+        }).join("");
 
         var professions = this._data.professions.map(function (profession) {
-          return '<span class="label label-light">@' + profession + '</span>';
-        });
+          return '<span data-profession=\'' + profession + '\'></span>';
+        }).join("");
 
-        return '\n      <blockquote cite="' + this._data.url + '">\n        <p>' + this._data.content + '</p>\n        <div class="align-right small">\n          <a href="' + this._data.url + '">' + this._data.timestamp + '</a> by <a href="">' + this._data.author + '</a>\n        </div>\n        <div class="align-right clear">\n        </div>\n      </blockquote>\n    ';
+        return '\n      <blockquote class=\'point\' data-timestamp="' + this._data.timestamp + '" cite="' + this._data.url + '">\n        <p>' + this._data.content + '</p>\n        <div class="align-right small">\n          <a href="' + this._data.url + '">' + this._data.timestamp + '</a> by <a href="">' + this._data.author + '</a>\n        </div>\n        <div class="align-right clear">\n          ' + topics + '\n          ' + relations + '\n          ' + professions + '\n        </div>\n      </blockquote>\n    ';
       }
     }]);
 
@@ -1006,7 +1006,6 @@ define('view/home',['exports', 'model/recordData/recordData', 'model/fileURL'], 
         if (e.keyCode == 13) {
           var newURL = $(this).val();
           _fileURL.fileURL.setURL(newURL);
-          app.showLoading();
           _recordData.recordData.loadFile();
           _recordData.recordData.loadTopics();
           _recordData.recordData.loadRelations();
@@ -1036,10 +1035,10 @@ define('view/home',['exports', 'model/recordData/recordData', 'model/fileURL'], 
         points.forEach(function (point) {
           $('#points').append(point);
         });
+        $('#points .point').sort(function (a, b) {
+          return $(a).data('timestamp') > $(b).data('timestamp');
+        }).appendTo('#points');
       });
-    },
-    showLoading: function showLoading() {
-      $('#file-status').parent().empty().html('\n      <p id="file-status" class="status" style="display: block;">\n        Loading file...\n      </p>\n    ');
     }
   };
   $(function () {
@@ -1050,18 +1049,56 @@ define('view/home',['exports', 'model/recordData/recordData', 'model/fileURL'], 
 
 define('index.js',['view/home'], function (_home) {
   $(function () {
-    $('#tabs').tab();
-    $('body').on('mouseenter', '*[data-toggle="tooltip"]', function () {
-      $(this).tooltip('show');
-    });
-    $('body').on('mouseleave', '*[data-toggle="tooltip"]', function () {
-      $(this).tooltip('hide');
-    });
-    $('.tab-pane [data-subset]').on('click tap', function () {
-      $(this).parents('.tab-pane').children('.subset').removeClass('active').filter('#' + $(this).attr('data-subset')).addClass('active');
-    });
     $('[data-click="toggleAbout"]').on('click tap', function () {
       $('#about').slideToggle();
+    });
+
+    function filterPoints(filters) {
+      $('#points .point').show();
+      Object.keys(filters).forEach(function (key) {
+        $('#points .point').not($('#points .point').has('[data-' + key + '="' + filters[key] + '"]')).hide();
+      });
+    }
+
+    var filters = {};
+    $('#topics').on('click tap', '[data-topic]', function () {
+      var topic = $(this).attr('data-topic');
+
+      if (topic.length > 0) {
+        filters.topic = topic;
+      } else {
+        delete filters.topic;
+      }
+
+      $('#topics li').removeClass('active');
+      $(this).parents('li').addClass('active');
+      filterPoints(filters);
+    });
+    $('#relations').on('click tap', '[data-relation]', function () {
+      var relation = $(this).attr('data-relation');
+
+      if (relation.length > 0) {
+        filters.relation = relation;
+      } else {
+        delete filters.relation;
+      }
+
+      $('#relations li').removeClass('active');
+      $(this).parents('li').addClass('active');
+      filterPoints(filters);
+    });
+    $('#professions').on('click tap', '[data-profession]', function () {
+      var profession = $(this).attr('data-profession');
+
+      if (profession.length > 0) {
+        filters.profession = profession;
+      } else {
+        delete filters.profession;
+      }
+
+      $('#professions li').removeClass('active');
+      $(this).parents('li').addClass('active');
+      filterPoints(filters);
     });
   });
 });

@@ -61,7 +61,7 @@ define(['exports', 'model/recordData/file'], function (exports, _file) {
     _createClass(Profession, [{
       key: 'toHTML',
       value: function toHTML() {
-        return '\n      <li>\n        <a>' + this._data + '\n        </a>\n      </li>';
+        return '\n      <li>\n        <a data-profession=\'' + this._data + '\'>' + this._data + '\n        </a>\n      </li>';
       }
     }]);
 

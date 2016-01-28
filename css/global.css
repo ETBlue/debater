@@ -35,8 +35,8 @@ blockquote .label {
   color: rgba(0, 0, 0, 0.4);
 }
 
-address {
-  display: inline;
+[data-topic], [data-relation], [data-profession] {
+  cursor: pointer;
 }
 
 .panel {
