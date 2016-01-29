@@ -30,7 +30,8 @@ class Topic {
   toHTML() {
     return `
       <li class='topic' data-topic='${this._data}'>
-        <a>${this._data}
+        <a>${this._data} 
+          <span class='badge badge-light'></span>
         </a>
       </li>`;
   }

@@ -127,6 +127,10 @@ export const app = {
       $('#points .point').sort(function(a,b) {
         return $(a).data('timestamp') > $(b).data('timestamp');
       }).appendTo('#points');
+      $('#topics .topic').each(function(){
+        const count = $('#points .point [data-topic="' + $(this).data('topic') + '"]').length;
+        $(this).find('.badge').html(count);
+      });
     });
   }
 };
