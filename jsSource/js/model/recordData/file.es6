@@ -92,10 +92,12 @@ function getFileJSON(fileData) {
           }
           let topics = [];
           if (line.indexOf('#') > 0) {
-            topics = line.substring(line.indexOf('#') + 1).split('#');
+            topics = line.substring(line.indexOf('#') + 1).split('#').map((topic) => {
+              return topic.trim();
+            });
           }
-          const relations = file.authors[file.authors.length - 1]['relations'];
-          const professions = file.authors[file.authors.length - 1]['professions'];
+          const relations = file.authors[file.authors.length - 1]['relations'] || '';
+          const professions = file.authors[file.authors.length - 1]['professions'] || '';
           const point = {
             author: file.authors[file.authors.length - 1].name,
             timestamp: file.authors[file.authors.length - 1]['posts'][file.authors[file.authors.length - 1]['posts'].length - 1].timestamp,

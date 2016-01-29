@@ -31,7 +31,7 @@ $(() => {
       delete filters.topic;
     }
     $('#topics li').removeClass('active');
-    $(this).parents('li').addClass('active');
+    $(this).addClass('active');
     filterPoints(filters);
   });
   $('#relations').on('click tap', '[data-relation]', function () {

@@ -12,7 +12,8 @@ export const relations = {
     const waiting = [];
     waiting.push(file.load());
     $.when.apply($.when, waiting).done(() => {
-      dataRef = file.get('relations').map((relationData) => {
+      const relations = file.get('relations') || [];
+      dataRef = relations.map((relationData) => {
         const relation = new Relation(relationData);
         return relation.toHTML();
       });

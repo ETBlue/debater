@@ -12,7 +12,8 @@ export const professions = {
     const waiting = [];
     waiting.push(file.load());
     $.when.apply($.when, waiting).done(() => {
-      dataRef = file.get('professions').map((professionData) => {
+      const professions = file.get('professions') || [];
+      dataRef = professions.map((professionData) => {
         const profession = new Profession(professionData);
         return profession.toHTML();
       });

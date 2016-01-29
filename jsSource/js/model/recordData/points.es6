@@ -28,13 +28,16 @@ class Point {
     return this;
   }
   toHTML() {
-    const topics = this._data.topics.map((topic) => {
+    let topics = this._data.topics || [];
+    topics = topics.map((topic) => {
       return `<span data-topic='${topic}'></span>`;
     }).join("");
-    const relations = this._data.relations.map((relation) => {
+    let relations = this._data.relations || [];
+    relations = relations.map((relation) => {
       return `<span data-relation='${relation}'></span>`;
     }).join("");
-    const professions = this._data.professions.map((profession) => {
+    let professions = this._data.professions || [];
+    professions = professions.map((profession) => {
       return `<span data-profession='${profession}'></span>`;
     }).join("");
     return `

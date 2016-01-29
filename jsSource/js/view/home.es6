@@ -106,6 +106,9 @@ export const app = {
       topics.forEach((topic) => {
         $('#topics').append(topic);
       });
+      $('#topics .topic').sort(function(a,b) {
+        return $(a).data('topic') > $(b).data('topic');
+      }).appendTo('#topics');
     });
     recordData.on('loaded:relations', (relations) => {
       relations.forEach((relation) => {

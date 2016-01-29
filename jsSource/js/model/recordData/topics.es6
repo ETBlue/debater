@@ -29,8 +29,8 @@ class Topic {
   }
   toHTML() {
     return `
-      <li>
-        <a data-topic='${this._data}'>${this._data}
+      <li class='topic' data-topic='${this._data}'>
+        <a>${this._data}
         </a>
       </li>`;
   }
