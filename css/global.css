@@ -91,8 +91,11 @@ blockquote .label {
 .navbar .btn {
   background-color: transparent;
 }
-.navbar .btn-default {
-  background-color: #fff;
+.navbar .btn-active {
+  border-bottom: 0.2em #40bfbf solid;
+  color: #40bfbf;
+  font-weight: bold;
+  border-radius: 0;
 }
 .navbar.large .navbar-brand, .navbar.large li a, .navbar.large .navbar-toggle {
   font-size: 1.2rem;

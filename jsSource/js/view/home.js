@@ -48,6 +48,7 @@ define(['exports', 'model/recordData/recordData', 'model/fileURL', 'model/fileSo
         });
       }
 
+      // source: web
       $('#fileURL #current').keypress(function (e) {
         if (e.keyCode == 13) {
           _fileSource.fileSource.set('web');
@@ -56,18 +57,21 @@ define(['exports', 'model/recordData/recordData', 'model/fileURL', 'model/fileSo
           loadPage();
         }
       });
+      // retrive history
       $('#fileURL #recent').on('click tap', '[data-url]', function (e) {
         newURL = $(this).attr('data-url');
         $('#fileURL #current').val(newURL);
         _fileURL.fileURL.setKey(newURL);
         loadpage();
       });
+      // clear history
       $('#fileURL #recent').on('click tap', '[data-action="clear"]', function (e) {
         $('#fileURL #current').val('');
         _fileURL.fileURL.clearHistory();
         $('#fileURL #recent').html('<li><a>Hmmm. No history yet.</a></li>');
       });
 
+      // source: local
       $('#fileChooser input').change(function (e) {
         _fileSource.fileSource.set('local');
         var file = e.target.files[0];
