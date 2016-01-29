@@ -37,6 +37,11 @@ p:last-child {
   margin-bottom: 0;
 }
 
+.badge-light {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: #999;
+}
+
 .container {
   padding-left: 1rem;
   padding-right: 1rem;

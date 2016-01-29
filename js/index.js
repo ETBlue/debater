@@ -919,7 +919,7 @@ define('model/recordData/topics',['exports', 'model/recordData/file'], function 
     _createClass(Topic, [{
       key: 'toHTML',
       value: function toHTML() {
-        return '\n      <li class=\'topic\' data-topic=\'' + this._data + '\'>\n        <a>' + this._data + '\n        </a>\n      </li>';
+        return '\n      <li class=\'topic\' data-topic=\'' + this._data + '\'>\n        <a>' + this._data + ' \n          <span class=\'badge badge-light\'></span>\n        </a>\n      </li>';
       }
     }]);
 
@@ -1182,6 +1182,10 @@ define('view/home',['exports', 'model/recordData/recordData', 'model/fileURL', '
         $('#points .point').sort(function (a, b) {
           return $(a).data('timestamp') > $(b).data('timestamp');
         }).appendTo('#points');
+        $('#topics .topic').each(function () {
+          var count = $('#points .point [data-topic="' + $(this).data('topic') + '"]').length;
+          $(this).find('.badge').html(count);
+        });
       });
     }
   };

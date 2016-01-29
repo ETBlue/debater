@@ -62,7 +62,7 @@ define(['exports', 'model/recordData/file'], function (exports, _file) {
     _createClass(Topic, [{
       key: 'toHTML',
       value: function toHTML() {
-        return '\n      <li class=\'topic\' data-topic=\'' + this._data + '\'>\n        <a>' + this._data + '\n        </a>\n      </li>';
+        return '\n      <li class=\'topic\' data-topic=\'' + this._data + '\'>\n        <a>' + this._data + ' \n          <span class=\'badge badge-light\'></span>\n        </a>\n      </li>';
       }
     }]);
 

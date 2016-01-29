@@ -111,6 +111,10 @@ define(['exports', 'model/recordData/recordData', 'model/fileURL', 'model/fileSo
         $('#points .point').sort(function (a, b) {
           return $(a).data('timestamp') > $(b).data('timestamp');
         }).appendTo('#points');
+        $('#topics .topic').each(function () {
+          var count = $('#points .point [data-topic="' + $(this).data('topic') + '"]').length;
+          $(this).find('.badge').html(count);
+        });
       });
     }
   };
