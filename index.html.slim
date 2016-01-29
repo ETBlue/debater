@@ -61,14 +61,14 @@ html lang='en'
         #navbar-collapse-level1.collapse.navbar-collapse
           .navbar-form.navbar-right role=''
             .btn-group role='group' aria-label=''
-              button.btn.btn-default data-source='web' Web
-              button.btn data-source='local' Local
+              span.btn.btn-active data-source='web' Web
+              span.btn data-source='local' Local
             #fileURL.form-group
               //span.input-group-addon File URL
               //span data-source='web' Web
               input#current.form-control autofocus='true' type='text' placeholder='Your file URL here...' aria-describedby='' size='27'
               span.input-group-btn
-                button#fileURL-menu.btn.dropdown-toggle data-toggle='dropdown' aria-haspopup='true' aria-expanded='true' type='button'
+                span#fileURL-menu.btn.dropdown-toggle data-toggle='dropdown' aria-haspopup='true' aria-expanded='true' type='button'
                   | Recent 
                   span.caret
                 ul#recent.dropdown-menu.dropdown-menu-right aria-labelledby='fileURL-menu'

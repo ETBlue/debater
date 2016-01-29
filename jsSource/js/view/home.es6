@@ -64,6 +64,7 @@ export const app = {
       });
     }
 
+    // source: web
     $('#fileURL #current').keypress(function(e) {
       if (e.keyCode == 13) {
         fileSource.set('web');
@@ -72,23 +73,26 @@ export const app = {
         loadPage();
       }
     });
+    // retrive history
     $('#fileURL #recent').on('click tap', '[data-url]', function(e) {
       newURL = $(this).attr('data-url');
       $('#fileURL #current').val(newURL);
       fileURL.setKey(newURL);
       loadpage();
     });
+    // clear history
     $('#fileURL #recent').on('click tap', '[data-action="clear"]', function(e) {
       $('#fileURL #current').val('');
       fileURL.clearHistory();
       $('#fileURL #recent').html('<li><a>Hmmm. No history yet.</a></li>');
     });
 
+    // source: local
     $('#fileChooser input').change((e) => {
-        fileSource.set('local');
-        let file = e.target.files[0];
-        fileUploaded.set(file);
-        loadPage();
+      fileSource.set('local');
+      let file = e.target.files[0];
+      fileUploaded.set(file);
+      loadPage();
     });
     
     recordData.on('loaded:file', (file) => {

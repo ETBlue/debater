@@ -10,7 +10,7 @@ $(() => {
   // toggle file section
   $('[data-source]').on('click tap', function (e) {
     $('#fileURL, #fileChooser').toggle();
-    $('[data-source]').toggleClass('btn-default');
+    $('[data-source]').toggleClass('btn-active');
   });
 
   // initialize filter
