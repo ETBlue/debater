@@ -41,7 +41,8 @@ define(['exports', 'model/recordData/file'], function (exports, _file) {
       var waiting = [];
       waiting.push(_file.file.load());
       $.when.apply($.when, waiting).done(function () {
-        dataRef = _file.file.get('professions').map(function (professionData) {
+        var professions = _file.file.get('professions') || [];
+        dataRef = professions.map(function (professionData) {
           var profession = new Profession(professionData);
           return profession.toHTML();
         });

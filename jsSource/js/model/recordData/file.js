@@ -132,11 +132,13 @@ define(['exports', 'model/fileURL', 'model/fileSource', 'model/fileUploaded'], f
             var topics = [];
 
             if (line.indexOf('#') > 0) {
-              topics = line.substring(line.indexOf('#') + 1).split('#');
+              topics = line.substring(line.indexOf('#') + 1).split('#').map(function (topic) {
+                return topic.trim();
+              });
             }
 
-            var relations = file.authors[file.authors.length - 1]['relations'];
-            var professions = file.authors[file.authors.length - 1]['professions'];
+            var relations = file.authors[file.authors.length - 1]['relations'] || '';
+            var professions = file.authors[file.authors.length - 1]['professions'] || '';
             var point = {
               author: file.authors[file.authors.length - 1].name,
               timestamp: file.authors[file.authors.length - 1]['posts'][file.authors[file.authors.length - 1]['posts'].length - 1].timestamp,

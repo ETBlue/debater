@@ -573,11 +573,13 @@ define('model/recordData/file',['exports', 'model/fileURL', 'model/fileSource', 
             var topics = [];
 
             if (line.indexOf('#') > 0) {
-              topics = line.substring(line.indexOf('#') + 1).split('#');
+              topics = line.substring(line.indexOf('#') + 1).split('#').map(function (topic) {
+                return topic.trim();
+              });
             }
 
-            var relations = file.authors[file.authors.length - 1]['relations'];
-            var professions = file.authors[file.authors.length - 1]['professions'];
+            var relations = file.authors[file.authors.length - 1]['relations'] || '';
+            var professions = file.authors[file.authors.length - 1]['professions'] || '';
             var point = {
               author: file.authors[file.authors.length - 1].name,
               timestamp: file.authors[file.authors.length - 1]['posts'][file.authors[file.authors.length - 1]['posts'].length - 1].timestamp,
@@ -752,7 +754,8 @@ define('model/recordData/professions',['exports', 'model/recordData/file'], func
       var waiting = [];
       waiting.push(_file.file.load());
       $.when.apply($.when, waiting).done(function () {
-        dataRef = _file.file.get('professions').map(function (professionData) {
+        var professions = _file.file.get('professions') || [];
+        dataRef = professions.map(function (professionData) {
           var profession = new Profession(professionData);
           return profession.toHTML();
         });
@@ -823,7 +826,8 @@ define('model/recordData/relations',['exports', 'model/recordData/file'], functi
       var waiting = [];
       waiting.push(_file.file.load());
       $.when.apply($.when, waiting).done(function () {
-        dataRef = _file.file.get('relations').map(function (relationData) {
+        var relations = _file.file.get('relations') || [];
+        dataRef = relations.map(function (relationData) {
           var relation = new Relation(relationData);
           return relation.toHTML();
         });
@@ -915,7 +919,7 @@ define('model/recordData/topics',['exports', 'model/recordData/file'], function 
     _createClass(Topic, [{
       key: 'toHTML',
       value: function toHTML() {
-        return '\n      <li>\n        <a data-topic=\'' + this._data + '\'>' + this._data + '\n        </a>\n      </li>';
+        return '\n      <li class=\'topic\' data-topic=\'' + this._data + '\'>\n        <a>' + this._data + '\n        </a>\n      </li>';
       }
     }]);
 
@@ -986,18 +990,18 @@ define('model/recordData/points',['exports', 'model/recordData/file'], function 
     _createClass(Point, [{
       key: 'toHTML',
       value: function toHTML() {
-        var topics = this._data.topics.map(function (topic) {
+        var topics = this._data.topics || [];
+        topics = topics.map(function (topic) {
           return '<span data-topic=\'' + topic + '\'></span>';
         }).join("");
-
-        var relations = this._data.relations.map(function (relation) {
+        var relations = this._data.relations || [];
+        relations = relations.map(function (relation) {
           return '<span data-relation=\'' + relation + '\'></span>';
         }).join("");
-
-        var professions = this._data.professions.map(function (profession) {
+        var professions = this._data.professions || [];
+        professions = professions.map(function (profession) {
           return '<span data-profession=\'' + profession + '\'></span>';
         }).join("");
-
         return '\n      <blockquote class=\'point\' data-timestamp="' + this._data.timestamp + '" cite="' + this._data.url + '">\n        <p>' + this._data.content + '</p>\n        <div class="align-right small">\n          <a href="' + this._data.url + '">' + this._data.timestamp + '</a> by <a href="">' + this._data.author + '</a>\n        </div>\n        <div class="align-right clear">\n          ' + topics + '\n          ' + relations + '\n          ' + professions + '\n        </div>\n      </blockquote>\n    ';
       }
     }]);
@@ -1157,6 +1161,9 @@ define('view/home',['exports', 'model/recordData/recordData', 'model/fileURL', '
         topics.forEach(function (topic) {
           $('#topics').append(topic);
         });
+        $('#topics .topic').sort(function (a, b) {
+          return $(a).data('topic') > $(b).data('topic');
+        }).appendTo('#topics');
       });
       _recordData.recordData.on('loaded:relations', function (relations) {
         relations.forEach(function (relation) {
@@ -1213,7 +1220,7 @@ define('index.js',['view/home'], function (_home) {
       }
 
       $('#topics li').removeClass('active');
-      $(this).parents('li').addClass('active');
+      $(this).addClass('active');
       filterPoints(filters);
     });
     $('#relations').on('click tap', '[data-relation]', function () {

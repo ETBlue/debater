@@ -90,6 +90,9 @@ define(['exports', 'model/recordData/recordData', 'model/fileURL', 'model/fileSo
         topics.forEach(function (topic) {
           $('#topics').append(topic);
         });
+        $('#topics .topic').sort(function (a, b) {
+          return $(a).data('topic') > $(b).data('topic');
+        }).appendTo('#topics');
       });
       _recordData.recordData.on('loaded:relations', function (relations) {
         relations.forEach(function (relation) {

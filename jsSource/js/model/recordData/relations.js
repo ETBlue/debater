@@ -41,7 +41,8 @@ define(['exports', 'model/recordData/file'], function (exports, _file) {
       var waiting = [];
       waiting.push(_file.file.load());
       $.when.apply($.when, waiting).done(function () {
-        dataRef = _file.file.get('relations').map(function (relationData) {
+        var relations = _file.file.get('relations') || [];
+        dataRef = relations.map(function (relationData) {
           var relation = new Relation(relationData);
           return relation.toHTML();
         });

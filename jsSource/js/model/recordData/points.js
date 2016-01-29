@@ -62,18 +62,18 @@ define(['exports', 'model/recordData/file'], function (exports, _file) {
     _createClass(Point, [{
       key: 'toHTML',
       value: function toHTML() {
-        var topics = this._data.topics.map(function (topic) {
+        var topics = this._data.topics || [];
+        topics = topics.map(function (topic) {
           return '<span data-topic=\'' + topic + '\'></span>';
         }).join("");
-
-        var relations = this._data.relations.map(function (relation) {
+        var relations = this._data.relations || [];
+        relations = relations.map(function (relation) {
           return '<span data-relation=\'' + relation + '\'></span>';
         }).join("");
-
-        var professions = this._data.professions.map(function (profession) {
+        var professions = this._data.professions || [];
+        professions = professions.map(function (profession) {
           return '<span data-profession=\'' + profession + '\'></span>';
         }).join("");
-
         return '\n      <blockquote class=\'point\' data-timestamp="' + this._data.timestamp + '" cite="' + this._data.url + '">\n        <p>' + this._data.content + '</p>\n        <div class="align-right small">\n          <a href="' + this._data.url + '">' + this._data.timestamp + '</a> by <a href="">' + this._data.author + '</a>\n        </div>\n        <div class="align-right clear">\n          ' + topics + '\n          ' + relations + '\n          ' + professions + '\n        </div>\n      </blockquote>\n    ';
       }
     }]);
