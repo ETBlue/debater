@@ -1128,6 +1128,7 @@ define('view/home',['exports', 'model/recordData/recordData', 'model/fileURL', '
       });
       // retrive history
       $('#fileURL #recent').on('click tap', '[data-url]', function (e) {
+        _fileSource.fileSource.set('web');
         newURL = $(this).attr('data-url');
         $('#fileURL #current').val(newURL);
         _fileURL.fileURL.setURL(newURL);
