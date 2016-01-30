@@ -83,6 +83,9 @@ blockquote .label {
   margin-top: 0;
   margin-bottom: 0;
 }
+.navbar .navbar-brand[data-click] {
+  cursor: pointer;
+}
 .navbar .navbar-brand, .navbar li a, .navbar .navbar-toggle {
   line-height: 1em;
   height: auto;
