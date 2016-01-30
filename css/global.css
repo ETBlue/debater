@@ -166,6 +166,10 @@ input[type=file] {
   color: #fff;
   background-color: #337ab7;
 }
+.nav-pills-nested li.active > a > .badge {
+  color: #337ab7;
+  background-color: #fff;
+}
 .nav-pills-nested a {
   padding: 10px 15px;
   display: block;
