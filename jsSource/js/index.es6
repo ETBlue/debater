@@ -1,4 +1,15 @@
 $(() => {
+  // 爭點太少的自動定位到右方畫面
+  const fixPoints = () => {
+    const scrollHeight = $(window).scrollTop();
+    const divHeight = $('#points').height();
+
+    if (scrollHeight > divHeight) {
+      $('#points').css('position', 'fixed').css('top', '15px');
+    } else {
+      $('#points').css('position', 'initial').css('top', 'initial');
+    }
+  };
 
   $('#fileChooser').toggle();
 
@@ -33,6 +44,7 @@ $(() => {
     $('#topics [data-topic]').removeClass('active');
     $(this).addClass('active');
     filterPoints(filters);
+    fixPoints();
   });
   $('#relations').on('click tap', '[data-relation]', function () {
     const relation = $(this).attr('data-relation');
@@ -57,6 +69,8 @@ $(() => {
     filterPoints(filters);
   });
 
+  // 捲動調整爭點位置
+  $(window).scroll(fixPoints);
 });
 
 
