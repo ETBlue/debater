@@ -25,6 +25,7 @@ export const fileURL = {
     }
     url.current = fileURL;
     localStorage.setItem('debaterData', JSON.stringify(url));
+    history.pushState({},'','?source=' + fileURL);
   },
   getHistory() {
     return url.recent;

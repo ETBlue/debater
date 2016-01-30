@@ -34,6 +34,7 @@ define(['exports'], function (exports) {
       }
       url.current = fileURL;
       localStorage.setItem('debaterData', JSON.stringify(url));
+      history.pushState({}, '', '?source=' + fileURL);
     },
     getHistory: function getHistory() {
       return url.recent;
