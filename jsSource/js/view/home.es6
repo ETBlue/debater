@@ -56,6 +56,7 @@ export const app = {
     });
     // retrive history
     $('#fileURL #recent').on('click tap', '[data-url]', function(e) {
+      fileSource.set('web');
       newURL = $(this).attr('data-url');
       $('#fileURL #current').val(newURL);
       fileURL.setURL(newURL);
