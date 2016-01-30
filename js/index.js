@@ -825,6 +825,9 @@ define('model/recordData/professions',['exports', 'model/recordData/file'], func
         });
         loadDeferred.resolve(dataRef);
       });
+      if (dataRef.length == 0) {
+        $('#professions').html('');
+      }
       return loadDeferred;
     }
   };
@@ -898,6 +901,9 @@ define('model/recordData/relations',['exports', 'model/recordData/file'], functi
         });
         loadDeferred.resolve(dataRef);
       });
+      if (dataRef.length == 0) {
+        $('#relations').html('');
+      }
       return loadDeferred;
     }
   };

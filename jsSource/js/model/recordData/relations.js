@@ -49,6 +49,9 @@ define(['exports', 'model/recordData/file'], function (exports, _file) {
         });
         loadDeferred.resolve(dataRef);
       });
+      if (dataRef.length == 0) {
+        $('#relations').html('');
+      }
       return loadDeferred;
     }
   };
