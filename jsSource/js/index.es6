@@ -30,7 +30,7 @@ $(() => {
     } else {
       delete filters.topic;
     }
-    $('#topics li').removeClass('active');
+    $('#topics [data-topic]').removeClass('active');
     $(this).addClass('active');
     filterPoints(filters);
   });
