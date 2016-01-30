@@ -9,6 +9,7 @@ export const file = {
     return dataRef[key];
   },
   load() {
+    dataRef = {};
     const loadDeferred = new $.Deferred();
     if (fileSource.get() == 'web') {
       const url = fileURL.getURL();

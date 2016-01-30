@@ -7,6 +7,7 @@ export const relations = {
     return dataRef;
   },
   load() {
+    dataRef = [];
     $('#relations').html('<li class="active"><a data-relation="">所有關係人</a></li>');
     const loadDeferred = new $.Deferred();
     const waiting = [];

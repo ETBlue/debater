@@ -7,6 +7,7 @@ export const professions = {
     return dataRef;
   },
   load() {
+    dataRef = [];
     $('#professions').html('<li class="active"><a data-profession="">所有職業</a></li>');
     const loadDeferred = new $.Deferred();
     const waiting = [];
