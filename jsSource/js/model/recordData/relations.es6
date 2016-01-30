@@ -14,15 +14,24 @@ export const relations = {
     waiting.push(file.load());
     $.when.apply($.when, waiting).done(() => {
       const relations = file.get('relations') || [];
+      function remove(arr, what) {
+          var found = arr.indexOf(what);
+
+          while (found !== -1) {
+              arr.splice(found, 1);
+              found = arr.indexOf(what);
+          }
+      }
+      remove(relations, "");
       dataRef = relations.map((relationData) => {
         const relation = new Relation(relationData);
         return relation.toHTML();
       });
       loadDeferred.resolve(dataRef);
+      if (dataRef.length == 0) {
+        $('#relations').html('');
+      }
     });
-    if (dataRef.length == 0) {
-      $('#relations').html('');
-    }
     return loadDeferred;
   }
 };

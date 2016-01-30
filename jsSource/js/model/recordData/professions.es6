@@ -14,15 +14,24 @@ export const professions = {
     waiting.push(file.load());
     $.when.apply($.when, waiting).done(() => {
       const professions = file.get('professions') || [];
+      function remove(arr, what) {
+          var found = arr.indexOf(what);
+
+          while (found !== -1) {
+              arr.splice(found, 1);
+              found = arr.indexOf(what);
+          }
+      }
+      remove(professions, "");
       dataRef = professions.map((professionData) => {
         const profession = new Profession(professionData);
         return profession.toHTML();
       });
       loadDeferred.resolve(dataRef);
+      if (dataRef.length == 0) {
+        $('#professions').html('');
+      }
     });
-    if (dataRef.length == 0) {
-      $('#professions').html('');
-    }
     return loadDeferred;
   }
 };
