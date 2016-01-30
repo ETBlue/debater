@@ -1338,7 +1338,13 @@ define('index.js',['view/home'], function (_home) {
 
       $('#topics [data-topic]').removeClass('active');
       $(this).addClass('active');
-      filterPoints(filters);
+
+      if ($(this).text() === $('#topics li').first().text()) {
+        $('#points .point').css('display', 'block');
+      } else {
+        filterPoints(filters);
+      }
+
       fixPoints();
     });
     $('#relations').on('click tap', '[data-relation]', function () {
