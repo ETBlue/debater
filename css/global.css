@@ -157,3 +157,18 @@ input[type=file] {
 [data-topic], [data-relation], [data-profession] {
   cursor: pointer;
 }
+
+.nav-pills-nested {
+  list-style: none;
+  padding-left: 1em;
+}
+.nav-pills-nested li.active > a {
+  color: #fff;
+  background-color: #337ab7;
+}
+.nav-pills-nested a {
+  padding: 10px 15px;
+  display: block;
+  border-radius: 4px;
+  text-decoration: none;
+}

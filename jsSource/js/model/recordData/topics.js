@@ -43,8 +43,8 @@ define(['exports', 'model/recordData/file'], function (exports, _file) {
       waiting.push(_file.file.load());
       $.when.apply($.when, waiting).done(function () {
         var topics = _file.file.get('topics');
-        Object.keys(topics).forEach(function (topicData) {
-          var topic = new Topic(topics[topicData], topicData);
+        Object.keys(topics).forEach(function (topicName) {
+          var topic = new Topic(topics[topicName].count, topics[topicName].name, topics[topicName].parent);
           dataRef.push(topic.toHTML());
         });
         loadDeferred.resolve(dataRef);
@@ -54,18 +54,19 @@ define(['exports', 'model/recordData/file'], function (exports, _file) {
   };
 
   var Topic = (function () {
-    function Topic(count, data) {
+    function Topic(count, name, parent) {
       _classCallCheck(this, Topic);
 
-      this._data = data;
+      this._name = name;
       this._count = count;
+      this._parent = parent || '';
       return this;
     }
 
     _createClass(Topic, [{
       key: 'toHTML',
       value: function toHTML() {
-        return '\n      <li class=\'topic\' data-topic=\'' + this._data + '\'>\n        <a>' + this._data + ' \n          <span class=\'badge badge-light\'>' + this._count + '</span>\n        </a>\n      </li>';
+        return '\n      <li class=\'topic\' data-topic=\'' + this._name + '\' data-parent=\'' + this._parent + '\'>\n        <a>' + this._name + ' \n          <span class=\'badge badge-light\'>' + this._count + '</span>\n        </a>\n      </li>';
       }
     }]);
 

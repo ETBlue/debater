@@ -539,6 +539,23 @@ define('model/recordData/file',['exports', 'model/fileURL', 'model/fileSource', 
     };
     var lines = fileData.split("\n");
     var meta = '';
+    var parents = [];
+
+    function setParent(topic, level) {
+      if (file.topics[topic]) {
+        file.topics[topic].parent = parents[level];
+      } else {
+        file.topics[topic] = {
+          name: topic,
+          count: 0,
+          parent: parents[level]
+        };
+      }
+
+      parents[level + 1] = topic;
+    }
+
+    ;
     $.each(lines, function (index, line) {
       if (line) {
         if (file.title.length == 0 && line[0] != '#') {
@@ -565,6 +582,8 @@ define('model/recordData/file',['exports', 'model/fileURL', 'model/fileSource', 
             url: line.substring(line.indexOf('http')).trim()
           };
           file.authors[file.authors.length - 1]['posts'].push(post);
+        } else if (line.startsWith('___')) {
+          meta = 'structure';
         } else if (line.startsWith('- ')) {
           if (meta == 'posts') {
             if (!line.includes('#')) {
@@ -593,9 +612,12 @@ define('model/recordData/file',['exports', 'model/fileURL', 'model/fileSource', 
             file.points.push(point);
             topics.forEach(function (topic) {
               if (file.topics[topic]) {
-                file.topics[topic] += 1;
+                file.topics[topic].count += 1;
               } else {
-                file.topics[topic] = 1;
+                file.topics[topic] = {
+                  name: topic,
+                  count: 1
+                };
               }
             });
             file.relations = file.relations.concat(relations).filter(function (item, pos, self) {
@@ -606,10 +628,45 @@ define('model/recordData/file',['exports', 'model/fileURL', 'model/fileSource', 
               return self.indexOf(item) == pos;
             });
             ;
+          } else if (meta == 'structure') {
+            var current = line.replace('- ', '').trim();
+
+            if (file.topics[current]) {
+              file.topics[current].parent = '';
+            } else {
+              file.topics[current] = {
+                name: current,
+                count: 0,
+                parent: ''
+              };
+            }
+
+            parents[0] = current;
+            return;
           } else {
             file.authors[file.authors.length - 1][meta].push(line.substring(2));
           }
-        }
+        } else if (line.startsWith('  - ')) {
+          if (meta == 'structure') {
+            var current = line.replace('  - ', '').trim();
+            setParent(current, 0);
+          }
+        } else if (line.startsWith('    - ')) {
+          if (meta == 'structure') {
+            var current = line.replace('    - ', '').trim();
+            setParent(current, 1);
+          }
+        } else if (line.startsWith('      - ')) {
+          if (meta == 'structure') {
+            var current = line.replace('      - ', '').trim();
+            setParent(current, 2);
+          }
+        } else if (line.startsWith('        - ')) {
+          if (meta == 'structure') {
+            var current = line.replace('        - ', '').trim();
+            setParent(current, 3);
+          }
+        } else {}
       }
     });
     return file;
@@ -907,8 +964,8 @@ define('model/recordData/topics',['exports', 'model/recordData/file'], function 
       waiting.push(_file.file.load());
       $.when.apply($.when, waiting).done(function () {
         var topics = _file.file.get('topics');
-        Object.keys(topics).forEach(function (topicData) {
-          var topic = new Topic(topics[topicData], topicData);
+        Object.keys(topics).forEach(function (topicName) {
+          var topic = new Topic(topics[topicName].count, topics[topicName].name, topics[topicName].parent);
           dataRef.push(topic.toHTML());
         });
         loadDeferred.resolve(dataRef);
@@ -918,18 +975,19 @@ define('model/recordData/topics',['exports', 'model/recordData/file'], function 
   };
 
   var Topic = (function () {
-    function Topic(count, data) {
+    function Topic(count, name, parent) {
       _classCallCheck(this, Topic);
 
-      this._data = data;
+      this._name = name;
       this._count = count;
+      this._parent = parent || '';
       return this;
     }
 
     _createClass(Topic, [{
       key: 'toHTML',
       value: function toHTML() {
-        return '\n      <li class=\'topic\' data-topic=\'' + this._data + '\'>\n        <a>' + this._data + ' \n          <span class=\'badge badge-light\'>' + this._count + '</span>\n        </a>\n      </li>';
+        return '\n      <li class=\'topic\' data-topic=\'' + this._name + '\' data-parent=\'' + this._parent + '\'>\n        <a>' + this._name + ' \n          <span class=\'badge badge-light\'>' + this._count + '</span>\n        </a>\n      </li>';
       }
     }]);
 
@@ -1164,9 +1222,17 @@ define('view/home',['exports', 'model/recordData/recordData', 'model/fileURL', '
         topics.forEach(function (topic) {
           $('#topics').append(topic);
         });
-        $('#topics .topic').sort(function (a, b) {
-          return $(a).data('topic') > $(b).data('topic');
-        }).appendTo('#topics');
+        //$('#topics .topic').sort(function(a,b) {
+        //  return $(a).data('topic') > $(b).data('topic');
+        //}).appendTo('#topics');
+        $('#topics .topic').each(function (index, element) {
+          var parent = $(element).data('parent');
+          var selector = '#topics .topic[data-topic="' + parent + '"]';
+          if ($(selector + ' ul').length == 0) {
+            $(selector).append('<ul class="nav-pills-nested"></ul>');
+          }
+          $(selector + ' ul').append(element);
+        });
       });
       _recordData.recordData.on('loaded:relations', function (relations) {
         relations.forEach(function (relation) {
@@ -1214,7 +1280,8 @@ define('index.js',['view/home'], function (_home) {
     }
 
     var filters = {};
-    $('#topics').on('click tap', '[data-topic]', function () {
+    $('#topics').on('click tap', '[data-topic]', function (e) {
+      e.stopPropagation();
       var topic = $(this).attr('data-topic');
 
       if (topic.length > 0) {
