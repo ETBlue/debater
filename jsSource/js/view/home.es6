@@ -85,8 +85,10 @@ export const app = {
       loadPage();
     });
     
+    // data processing
     recordData.on('loaded:file', (file) => {
       $('#title').html(file.title);
+      $('title').prepend(file.title + ' | ');
       if (fileSource.get() == 'web') {
         fileURL.setHistory(newURL, file.title);
         this.drawHistory();

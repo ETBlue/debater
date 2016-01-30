@@ -80,8 +80,10 @@ define(['exports', 'model/recordData/recordData', 'model/fileURL', 'model/fileSo
         loadPage();
       });
 
+      // data processing
       _recordData.recordData.on('loaded:file', function (file) {
         $('#title').html(file.title);
+        $('title').prepend(file.title + ' | ');
         if (_fileSource.fileSource.get() == 'web') {
           _fileURL.fileURL.setHistory(newURL, file.title);
           _this.drawHistory();
