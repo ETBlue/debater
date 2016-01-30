@@ -15,11 +15,10 @@ $(() => {
 
   // initialize filter
   function filterPoints(filters) {
-    $('#points .point').slideDown('fast');
     Object.keys(filters).forEach((key) => {
-      $('#points .point').not($('#points .point').has('[data-' + key + '="' + filters[key] + '"]')).slideUp('fast');
+      $('#points .point').has('[data-' + key + '="' + filters[key] + '"]').css('display', 'block');
+      $('#points .point').not($('#points .point').has('[data-' + key + '="' + filters[key] + '"]')).css('display', 'none');
     });
-    //$('#points .point').has('[data-topic="'+filters.topic+'"]').show();
   }
 
   let filters = {};
