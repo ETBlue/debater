@@ -36,6 +36,7 @@ define(['exports', 'model/recordData/file'], function (exports, _file) {
       return dataRef;
     },
     load: function load() {
+      dataRef = [];
       $('#professions').html('<li class="active"><a data-profession="">所有職業</a></li>');
       var loadDeferred = new $.Deferred();
       var waiting = [];

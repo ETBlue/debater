@@ -30,12 +30,13 @@ define(['exports', 'model/recordData/file'], function (exports, _file) {
     };
   })();
 
-  var dataRef = [];
+  var dataRef = undefined;
   var topics = exports.topics = {
     get: function get() {
       return dataRef;
     },
     load: function load() {
+      dataRef = [];
       $('#topics').html('<li data-topic="" class="active"><a>所有主題 <span class="badge badge-light"></span></a></li>');
       var loadDeferred = new $.Deferred();
       var waiting = [];

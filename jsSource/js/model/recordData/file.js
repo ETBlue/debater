@@ -36,6 +36,7 @@ define(['exports', 'model/fileURL', 'model/fileSource', 'model/fileUploaded'], f
       return dataRef[key];
     },
     load: function load() {
+      dataRef = {};
       var loadDeferred = new $.Deferred();
       if (_fileSource.fileSource.get() == 'web') {
         var url = _fileURL.fileURL.getURL();

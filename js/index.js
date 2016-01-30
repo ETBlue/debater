@@ -477,6 +477,7 @@ define('model/recordData/file',['exports', 'model/fileURL', 'model/fileSource', 
       return dataRef[key];
     },
     load: function load() {
+      dataRef = {};
       var loadDeferred = new $.Deferred();
       if (_fileSource.fileSource.get() == 'web') {
         var url = _fileURL.fileURL.getURL();
@@ -753,6 +754,7 @@ define('model/recordData/professions',['exports', 'model/recordData/file'], func
       return dataRef;
     },
     load: function load() {
+      dataRef = [];
       $('#professions').html('<li class="active"><a data-profession="">所有職業</a></li>');
       var loadDeferred = new $.Deferred();
       var waiting = [];
@@ -825,6 +827,7 @@ define('model/recordData/relations',['exports', 'model/recordData/file'], functi
       return dataRef;
     },
     load: function load() {
+      dataRef = [];
       $('#relations').html('<li class="active"><a data-relation="">所有關係人</a></li>');
       var loadDeferred = new $.Deferred();
       var waiting = [];
@@ -891,12 +894,13 @@ define('model/recordData/topics',['exports', 'model/recordData/file'], function 
     };
   })();
 
-  var dataRef = [];
+  var dataRef = undefined;
   var topics = exports.topics = {
     get: function get() {
       return dataRef;
     },
     load: function load() {
+      dataRef = [];
       $('#topics').html('<li data-topic="" class="active"><a>所有主題 <span class="badge badge-light"></span></a></li>');
       var loadDeferred = new $.Deferred();
       var waiting = [];
