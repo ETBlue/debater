@@ -93,7 +93,7 @@ define(['exports', 'model/fileURL', 'model/fileSource', 'model/fileUploaded'], f
       points: [],
       professions: [],
       relations: [],
-      topics: []
+      topics: {}
     };
     var lines = fileData.split("\n");
     var meta = '';
@@ -149,8 +149,12 @@ define(['exports', 'model/fileURL', 'model/fileSource', 'model/fileUploaded'], f
               content: line.substring(2, line.indexOf('#'))
             };
             file.points.push(point);
-            file.topics = file.topics.concat(topics).filter(function (item, pos, self) {
-              return self.indexOf(item) == pos;
+            topics.forEach(function (topic) {
+              if (file.topics[topic]) {
+                file.topics[topic] += 1;
+              } else {
+                file.topics[topic] = 1;
+              }
             });
             file.relations = file.relations.concat(relations).filter(function (item, pos, self) {
               return self.indexOf(item) == pos;

@@ -534,7 +534,7 @@ define('model/recordData/file',['exports', 'model/fileURL', 'model/fileSource', 
       points: [],
       professions: [],
       relations: [],
-      topics: []
+      topics: {}
     };
     var lines = fileData.split("\n");
     var meta = '';
@@ -590,8 +590,12 @@ define('model/recordData/file',['exports', 'model/fileURL', 'model/fileSource', 
               content: line.substring(2, line.indexOf('#'))
             };
             file.points.push(point);
-            file.topics = file.topics.concat(topics).filter(function (item, pos, self) {
-              return self.indexOf(item) == pos;
+            topics.forEach(function (topic) {
+              if (file.topics[topic]) {
+                file.topics[topic] += 1;
+              } else {
+                file.topics[topic] = 1;
+              }
             });
             file.relations = file.relations.concat(relations).filter(function (item, pos, self) {
               return self.indexOf(item) == pos;
@@ -887,20 +891,21 @@ define('model/recordData/topics',['exports', 'model/recordData/file'], function 
     };
   })();
 
-  var dataRef = undefined;
+  var dataRef = [];
   var topics = exports.topics = {
     get: function get() {
       return dataRef;
     },
     load: function load() {
-      $('#topics').html('<li class="active"><a data-topic="">所有主題</a></li>');
+      $('#topics').html('<li data-topic="" class="active"><a>所有主題 <span class="badge badge-light"></span></a></li>');
       var loadDeferred = new $.Deferred();
       var waiting = [];
       waiting.push(_file.file.load());
       $.when.apply($.when, waiting).done(function () {
-        dataRef = _file.file.get('topics').map(function (topicData) {
-          var topic = new Topic(topicData);
-          return topic.toHTML();
+        var topics = _file.file.get('topics');
+        Object.keys(topics).forEach(function (topicData) {
+          var topic = new Topic(topics[topicData], topicData);
+          dataRef.push(topic.toHTML());
         });
         loadDeferred.resolve(dataRef);
       });
@@ -909,17 +914,18 @@ define('model/recordData/topics',['exports', 'model/recordData/file'], function 
   };
 
   var Topic = (function () {
-    function Topic(data) {
+    function Topic(count, data) {
       _classCallCheck(this, Topic);
 
       this._data = data;
+      this._count = count;
       return this;
     }
 
     _createClass(Topic, [{
       key: 'toHTML',
       value: function toHTML() {
-        return '\n      <li class=\'topic\' data-topic=\'' + this._data + '\'>\n        <a>' + this._data + ' \n          <span class=\'badge badge-light\'></span>\n        </a>\n      </li>';
+        return '\n      <li class=\'topic\' data-topic=\'' + this._data + '\'>\n        <a>' + this._data + ' \n          <span class=\'badge badge-light\'>' + this._count + '</span>\n        </a>\n      </li>';
       }
     }]);
 
@@ -1082,21 +1088,26 @@ define('view/home',['exports', 'model/recordData/recordData', 'model/fileURL', '
       var savedURL = _fileURL.fileURL.getURL();
       if (savedURL) {
         $('#fileURL #current').val(savedURL);
-        $('#fileURL #recent').html(function () {
-          var savedURLHistory = _fileURL.fileURL.getHistory();
-          if (savedURLHistory) {
-            var html = '';
-            Object.keys(savedURLHistory).forEach(function (key) {
-              html += '\n              <li>\n                <a data-url=\'' + key + '\'>' + savedURLHistory[key] + '</a>\n              </li>\n            ';
-            });
-            html += '\n              <li role="separator" class="divider"></li>\n              <li>\n                <a data-action="clear">Clear Hostory</a>\n              </li>\n          ';
-            return html;
-          }
-        });
+        this.drawHistory();
       }
       this.bindEvents();
     },
+    drawHistory: function drawHistory() {
+      $('#fileURL #recent').html(function () {
+        var savedURLHistory = _fileURL.fileURL.getHistory();
+        if (savedURLHistory) {
+          var html = '';
+          Object.keys(savedURLHistory).forEach(function (key) {
+            html += '\n            <li>\n              <a data-url=\'' + key + '\'>' + savedURLHistory[key] + '</a>\n            </li>\n          ';
+          });
+          html += '\n            <li role="separator" class="divider"></li>\n            <li>\n              <a data-action="clear">Clear Hostory</a>\n            </li>\n        ';
+          return html;
+        }
+      });
+    },
     bindEvents: function bindEvents() {
+      var _this = this;
+
       var newURL = undefined;
       function loadPage() {
         _recordData.recordData.loadFile();
@@ -1104,19 +1115,6 @@ define('view/home',['exports', 'model/recordData/recordData', 'model/fileURL', '
         _recordData.recordData.loadRelations();
         _recordData.recordData.loadProfessions();
         _recordData.recordData.loadPoints();
-      }
-      function drawHistory() {
-        $('#fileURL #recent').html(function () {
-          var savedURLHistory = _fileURL.fileURL.getHistory();
-          if (savedURLHistory) {
-            var html = '';
-            Object.keys(savedURLHistory).forEach(function (key) {
-              html += '\n              <li>\n                <a data-url=\'' + key + '\'>' + savedURLHistory[key] + '</a>\n              </li>\n            ';
-            });
-            html += '\n              <li role="separator" class="divider"></li>\n              <li>\n                <a data-action="clear">Clear Hostory</a>\n              </li>\n          ';
-            return html;
-          }
-        });
       }
 
       // source: web
@@ -1132,8 +1130,8 @@ define('view/home',['exports', 'model/recordData/recordData', 'model/fileURL', '
       $('#fileURL #recent').on('click tap', '[data-url]', function (e) {
         newURL = $(this).attr('data-url');
         $('#fileURL #current').val(newURL);
-        _fileURL.fileURL.setKey(newURL);
-        loadpage();
+        _fileURL.fileURL.setURL(newURL);
+        loadPage();
       });
       // clear history
       $('#fileURL #recent').on('click tap', '[data-action="clear"]', function (e) {
@@ -1154,7 +1152,7 @@ define('view/home',['exports', 'model/recordData/recordData', 'model/fileURL', '
         $('#title').html(file.title);
         if (_fileSource.fileSource.get() == 'web') {
           _fileURL.fileURL.setHistory(newURL, file.title);
-          drawHistory();
+          _this.drawHistory();
         }
       });
       _recordData.recordData.on('loaded:topics', function (topics) {
@@ -1182,10 +1180,7 @@ define('view/home',['exports', 'model/recordData/recordData', 'model/fileURL', '
         $('#points .point').sort(function (a, b) {
           return $(a).data('timestamp') > $(b).data('timestamp');
         }).appendTo('#points');
-        $('#topics .topic').each(function () {
-          var count = $('#points .point [data-topic="' + $(this).data('topic') + '"]').length;
-          $(this).find('.badge').html(count);
-        });
+        $('#topics [data-topic=""] .badge').html($('#points .point').length);
       });
     }
   };
@@ -1223,7 +1218,7 @@ define('index.js',['view/home'], function (_home) {
         delete filters.topic;
       }
 
-      $('#topics li').removeClass('active');
+      $('#topics [data-topic]').removeClass('active');
       $(this).addClass('active');
       filterPoints(filters);
     });

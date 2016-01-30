@@ -11,21 +11,26 @@ define(['exports', 'model/recordData/recordData', 'model/fileURL', 'model/fileSo
       var savedURL = _fileURL.fileURL.getURL();
       if (savedURL) {
         $('#fileURL #current').val(savedURL);
-        $('#fileURL #recent').html(function () {
-          var savedURLHistory = _fileURL.fileURL.getHistory();
-          if (savedURLHistory) {
-            var html = '';
-            Object.keys(savedURLHistory).forEach(function (key) {
-              html += '\n              <li>\n                <a data-url=\'' + key + '\'>' + savedURLHistory[key] + '</a>\n              </li>\n            ';
-            });
-            html += '\n              <li role="separator" class="divider"></li>\n              <li>\n                <a data-action="clear">Clear Hostory</a>\n              </li>\n          ';
-            return html;
-          }
-        });
+        this.drawHistory();
       }
       this.bindEvents();
     },
+    drawHistory: function drawHistory() {
+      $('#fileURL #recent').html(function () {
+        var savedURLHistory = _fileURL.fileURL.getHistory();
+        if (savedURLHistory) {
+          var html = '';
+          Object.keys(savedURLHistory).forEach(function (key) {
+            html += '\n            <li>\n              <a data-url=\'' + key + '\'>' + savedURLHistory[key] + '</a>\n            </li>\n          ';
+          });
+          html += '\n            <li role="separator" class="divider"></li>\n            <li>\n              <a data-action="clear">Clear Hostory</a>\n            </li>\n        ';
+          return html;
+        }
+      });
+    },
     bindEvents: function bindEvents() {
+      var _this = this;
+
       var newURL = undefined;
       function loadPage() {
         _recordData.recordData.loadFile();
@@ -33,19 +38,6 @@ define(['exports', 'model/recordData/recordData', 'model/fileURL', 'model/fileSo
         _recordData.recordData.loadRelations();
         _recordData.recordData.loadProfessions();
         _recordData.recordData.loadPoints();
-      }
-      function drawHistory() {
-        $('#fileURL #recent').html(function () {
-          var savedURLHistory = _fileURL.fileURL.getHistory();
-          if (savedURLHistory) {
-            var html = '';
-            Object.keys(savedURLHistory).forEach(function (key) {
-              html += '\n              <li>\n                <a data-url=\'' + key + '\'>' + savedURLHistory[key] + '</a>\n              </li>\n            ';
-            });
-            html += '\n              <li role="separator" class="divider"></li>\n              <li>\n                <a data-action="clear">Clear Hostory</a>\n              </li>\n          ';
-            return html;
-          }
-        });
       }
 
       // source: web
@@ -61,8 +53,8 @@ define(['exports', 'model/recordData/recordData', 'model/fileURL', 'model/fileSo
       $('#fileURL #recent').on('click tap', '[data-url]', function (e) {
         newURL = $(this).attr('data-url');
         $('#fileURL #current').val(newURL);
-        _fileURL.fileURL.setKey(newURL);
-        loadpage();
+        _fileURL.fileURL.setURL(newURL);
+        loadPage();
       });
       // clear history
       $('#fileURL #recent').on('click tap', '[data-action="clear"]', function (e) {
@@ -83,7 +75,7 @@ define(['exports', 'model/recordData/recordData', 'model/fileURL', 'model/fileSo
         $('#title').html(file.title);
         if (_fileSource.fileSource.get() == 'web') {
           _fileURL.fileURL.setHistory(newURL, file.title);
-          drawHistory();
+          _this.drawHistory();
         }
       });
       _recordData.recordData.on('loaded:topics', function (topics) {
@@ -111,10 +103,7 @@ define(['exports', 'model/recordData/recordData', 'model/fileURL', 'model/fileSo
         $('#points .point').sort(function (a, b) {
           return $(a).data('timestamp') > $(b).data('timestamp');
         }).appendTo('#points');
-        $('#topics .topic').each(function () {
-          var count = $('#points .point [data-topic="' + $(this).data('topic') + '"]').length;
-          $(this).find('.badge').html(count);
-        });
+        $('#topics [data-topic=""] .badge').html($('#points .point').length);
       });
     }
   };
