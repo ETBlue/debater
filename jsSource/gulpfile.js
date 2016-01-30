@@ -12,6 +12,9 @@ const path = require('path');
 const projectPath = path.join(process.cwd(), '../');
 const sourcePath = path.join(projectPath, 'jsSource');
 const jsPath = path.join(sourcePath, 'js');
+const connectLivereload = require('connect-livereload');
+const livereload = require('gulp-livereload');
+const util = require('gulp-util');
 
 gulp.task('es6', function() {
   return gulp
@@ -69,12 +72,29 @@ gulp.task('js', ['es6'], function() {
     )
     .pipe(
       gulp.dest('../js')
+    )
+    .pipe(
+      livereload()
     );
 });
 
 
 gulp.task('default', ['js', 'watch']);
 
-gulp.task('watch', function() {
+gulp.task('watch', ['server'], function() {
+  livereload.listen({silent: true});
   gulp.watch(['js/**/*.es6'], ['js']);
+});
+
+gulp.task('server', function() {
+  const http = require('http');
+  const path = require('path');
+  const connect = require('connect');
+  const serveStatic = require('serve-static');
+  const app = connect();
+
+  app.use(connectLivereload());
+  app.use(serveStatic(path.join(process.cwd(), '../')));
+  app.listen(3000);
+  util.log(util.colors.bold.inverse('Listening on port ' + 3000));
 });
