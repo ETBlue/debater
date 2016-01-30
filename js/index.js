@@ -1298,6 +1298,17 @@ define('view/home',['exports', 'model/recordData/recordData', 'model/fileURL', '
 
 define('index.js',['view/home'], function (_home) {
   $(function () {
+    var fixPoints = function fixPoints() {
+      var scrollHeight = $(window).scrollTop();
+      var divHeight = $('#points').height();
+
+      if (scrollHeight > divHeight) {
+        $('#points').css('position', 'fixed').css('top', '15px');
+      } else {
+        $('#points').css('position', 'initial').css('top', 'initial');
+      }
+    };
+
     $('#fileChooser').toggle();
     $('[data-click="toggleAbout"]').on('click tap', function () {
       $('#about').slideToggle();
@@ -1328,6 +1339,7 @@ define('index.js',['view/home'], function (_home) {
       $('#topics [data-topic]').removeClass('active');
       $(this).addClass('active');
       filterPoints(filters);
+      fixPoints();
     });
     $('#relations').on('click tap', '[data-relation]', function () {
       var relation = $(this).attr('data-relation');
@@ -1355,6 +1367,7 @@ define('index.js',['view/home'], function (_home) {
       $(this).parents('li').addClass('active');
       filterPoints(filters);
     });
+    $(window).scroll(fixPoints);
   });
 });
 
