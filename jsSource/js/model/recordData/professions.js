@@ -43,15 +43,24 @@ define(['exports', 'model/recordData/file'], function (exports, _file) {
       waiting.push(_file.file.load());
       $.when.apply($.when, waiting).done(function () {
         var professions = _file.file.get('professions') || [];
+        function remove(arr, what) {
+          var found = arr.indexOf(what);
+
+          while (found !== -1) {
+            arr.splice(found, 1);
+            found = arr.indexOf(what);
+          }
+        }
+        remove(professions, "");
         dataRef = professions.map(function (professionData) {
           var profession = new Profession(professionData);
           return profession.toHTML();
         });
         loadDeferred.resolve(dataRef);
+        if (dataRef.length == 0) {
+          $('#professions').html('');
+        }
       });
-      if (dataRef.length == 0) {
-        $('#professions').html('');
-      }
       return loadDeferred;
     }
   };

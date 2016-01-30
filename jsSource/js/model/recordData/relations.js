@@ -43,15 +43,24 @@ define(['exports', 'model/recordData/file'], function (exports, _file) {
       waiting.push(_file.file.load());
       $.when.apply($.when, waiting).done(function () {
         var relations = _file.file.get('relations') || [];
+        function remove(arr, what) {
+          var found = arr.indexOf(what);
+
+          while (found !== -1) {
+            arr.splice(found, 1);
+            found = arr.indexOf(what);
+          }
+        }
+        remove(relations, "");
         dataRef = relations.map(function (relationData) {
           var relation = new Relation(relationData);
           return relation.toHTML();
         });
         loadDeferred.resolve(dataRef);
+        if (dataRef.length == 0) {
+          $('#relations').html('');
+        }
       });
-      if (dataRef.length == 0) {
-        $('#relations').html('');
-      }
       return loadDeferred;
     }
   };

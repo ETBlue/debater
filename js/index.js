@@ -819,15 +819,24 @@ define('model/recordData/professions',['exports', 'model/recordData/file'], func
       waiting.push(_file.file.load());
       $.when.apply($.when, waiting).done(function () {
         var professions = _file.file.get('professions') || [];
+        function remove(arr, what) {
+          var found = arr.indexOf(what);
+
+          while (found !== -1) {
+            arr.splice(found, 1);
+            found = arr.indexOf(what);
+          }
+        }
+        remove(professions, "");
         dataRef = professions.map(function (professionData) {
           var profession = new Profession(professionData);
           return profession.toHTML();
         });
         loadDeferred.resolve(dataRef);
+        if (dataRef.length == 0) {
+          $('#professions').html('');
+        }
       });
-      if (dataRef.length == 0) {
-        $('#professions').html('');
-      }
       return loadDeferred;
     }
   };
@@ -895,15 +904,24 @@ define('model/recordData/relations',['exports', 'model/recordData/file'], functi
       waiting.push(_file.file.load());
       $.when.apply($.when, waiting).done(function () {
         var relations = _file.file.get('relations') || [];
+        function remove(arr, what) {
+          var found = arr.indexOf(what);
+
+          while (found !== -1) {
+            arr.splice(found, 1);
+            found = arr.indexOf(what);
+          }
+        }
+        remove(relations, "");
         dataRef = relations.map(function (relationData) {
           var relation = new Relation(relationData);
           return relation.toHTML();
         });
         loadDeferred.resolve(dataRef);
+        if (dataRef.length == 0) {
+          $('#relations').html('');
+        }
       });
-      if (dataRef.length == 0) {
-        $('#relations').html('');
-      }
       return loadDeferred;
     }
   };
