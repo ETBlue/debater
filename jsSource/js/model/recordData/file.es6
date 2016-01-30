@@ -57,7 +57,7 @@ function getFileJSON(fileData) {
     points: [],
     professions: [],
     relations: [],
-    topics: []
+    topics: {}
   };
   let lines = fileData.split("\n");
   let meta = '';
@@ -108,8 +108,12 @@ function getFileJSON(fileData) {
             content: line.substring(2, line.indexOf('#'))
           }
           file.points.push(point);
-          file.topics = file.topics.concat(topics).filter(function(item, pos, self) {
-            return self.indexOf(item) == pos;
+          topics.forEach((topic) => {
+            if (file.topics[topic]) {
+              file.topics[topic] += 1;
+            } else {
+              file.topics[topic] = 1;
+            }
           });
           file.relations = file.relations.concat(relations).filter(function(item, pos, self) {
             return self.indexOf(item) == pos;
