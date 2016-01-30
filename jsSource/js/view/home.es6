@@ -48,7 +48,7 @@ export const app = {
     let matchQuery;
     if (matchQuery = location.href.match(/(s|source)=(http.*)/)) {
         fileSource.set('web');
-        newURL=matchQuery[2];
+        newURL = decodeURIComponent(matchQuery[2]);
         fileURL.setURL(newURL);
         loadPage();
     }
