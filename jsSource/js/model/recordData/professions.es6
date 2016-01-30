@@ -20,6 +20,9 @@ export const professions = {
       });
       loadDeferred.resolve(dataRef);
     });
+    if (dataRef.length == 0) {
+      $('#professions').html('');
+    }
     return loadDeferred;
   }
 };
