@@ -9,28 +9,31 @@ export const app = {
     const savedURL = fileURL.getURL();
     if (savedURL) {
       $('#fileURL #current').val(savedURL);
-      $('#fileURL #recent').html(function() {
-        const savedURLHistory = fileURL.getHistory();
-        if (savedURLHistory) {
-          let html = '';
-          Object.keys(savedURLHistory).forEach((key) => {
-            html += `
-              <li>
-                <a data-url='${key}'>${savedURLHistory[key]}</a>
-              </li>
-            `;
-          });
-          html += `
-              <li role="separator" class="divider"></li>
-              <li>
-                <a data-action="clear">Clear Hostory</a>
-              </li>
-          `;
-          return html;
-        }
-      });
+      this.drawHistory();
     }
     this.bindEvents();
+  },
+  drawHistory() {
+    $('#fileURL #recent').html(function() {
+      const savedURLHistory = fileURL.getHistory();
+      if (savedURLHistory) {
+        let html = '';
+        Object.keys(savedURLHistory).forEach((key) => {
+          html += `
+            <li>
+              <a data-url='${key}'>${savedURLHistory[key]}</a>
+            </li>
+          `;
+        });
+        html += `
+            <li role="separator" class="divider"></li>
+            <li>
+              <a data-action="clear">Clear Hostory</a>
+            </li>
+        `;
+        return html;
+      }
+    });
   },
   bindEvents() {
     let newURL;
@@ -40,28 +43,6 @@ export const app = {
       recordData.loadRelations();
       recordData.loadProfessions();
       recordData.loadPoints();
-    }
-    function drawHistory() {
-      $('#fileURL #recent').html(function() {
-        const savedURLHistory = fileURL.getHistory();
-        if (savedURLHistory) {
-          let html = '';
-          Object.keys(savedURLHistory).forEach((key) => {
-            html += `
-              <li>
-                <a data-url='${key}'>${savedURLHistory[key]}</a>
-              </li>
-            `;
-          });
-          html += `
-              <li role="separator" class="divider"></li>
-              <li>
-                <a data-action="clear">Clear Hostory</a>
-              </li>
-          `;
-          return html;
-        }
-      });
     }
 
     // source: web
@@ -77,8 +58,8 @@ export const app = {
     $('#fileURL #recent').on('click tap', '[data-url]', function(e) {
       newURL = $(this).attr('data-url');
       $('#fileURL #current').val(newURL);
-      fileURL.setKey(newURL);
-      loadpage();
+      fileURL.setURL(newURL);
+      loadPage();
     });
     // clear history
     $('#fileURL #recent').on('click tap', '[data-action="clear"]', function(e) {
@@ -99,7 +80,7 @@ export const app = {
       $('#title').html(file.title);
       if (fileSource.get() == 'web') {
         fileURL.setHistory(newURL, file.title);
-        drawHistory();
+        this.drawHistory();
       }
     });
     recordData.on('loaded:topics', (topics) => {
@@ -127,10 +108,7 @@ export const app = {
       $('#points .point').sort(function(a,b) {
         return $(a).data('timestamp') > $(b).data('timestamp');
       }).appendTo('#points');
-      $('#topics .topic').each(function(){
-        const count = $('#points .point [data-topic="' + $(this).data('topic') + '"]').length;
-        $(this).find('.badge').html(count);
-      });
+      $('#topics [data-topic=""] .badge').html($('#points .point').length);
     });
   }
 };
