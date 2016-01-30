@@ -83,7 +83,7 @@ define(['exports', 'model/recordData/recordData', 'model/fileURL', 'model/fileSo
       // data processing
       _recordData.recordData.on('loaded:file', function (file) {
         $('#title').html(file.title);
-        $('title').prepend(file.title + ' | ');
+        $('title').html(file.title + ' | Debater: online opinions organizer (BETA)');
         if (_fileSource.fileSource.get() == 'web') {
           _fileURL.fileURL.setHistory(newURL, file.title);
           _this.drawHistory();
