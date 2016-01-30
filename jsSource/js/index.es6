@@ -23,7 +23,8 @@ $(() => {
   }
 
   let filters = {};
-  $('#topics').on('click tap', '[data-topic]', function () {
+  $('#topics').on('click tap', '[data-topic]', function (e) {
+    e.stopPropagation();
     const topic = $(this).attr('data-topic');
     if (topic.length > 0) {
       filters.topic = topic;

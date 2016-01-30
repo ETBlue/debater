@@ -14,8 +14,8 @@ export const topics = {
     waiting.push(file.load());
     $.when.apply($.when, waiting).done(() => {
       const topics = file.get('topics');
-      Object.keys(topics).forEach((topicData) => {
-        const topic = new Topic(topics[topicData],topicData);
+      Object.keys(topics).forEach((topicName) => {
+        const topic = new Topic( topics[topicName].count, topics[topicName].name, topics[topicName].parent);
         dataRef.push(topic.toHTML());
       });
       loadDeferred.resolve(dataRef);
@@ -25,15 +25,16 @@ export const topics = {
 };
 
 class Topic {
-  constructor(count,data) {
-    this._data = data;
+  constructor(count,name,parent) {
+    this._name = name;
     this._count = count;
+    this._parent = parent || '';
     return this;
   }
   toHTML() {
     return `
-      <li class='topic' data-topic='${this._data}'>
-        <a>${this._data} 
+      <li class='topic' data-topic='${this._name}' data-parent='${this._parent}'>
+        <a>${this._name} 
           <span class='badge badge-light'>${this._count}</span>
         </a>
       </li>`;

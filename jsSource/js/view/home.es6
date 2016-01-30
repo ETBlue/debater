@@ -88,9 +88,17 @@ export const app = {
       topics.forEach((topic) => {
         $('#topics').append(topic);
       });
-      $('#topics .topic').sort(function(a,b) {
-        return $(a).data('topic') > $(b).data('topic');
-      }).appendTo('#topics');
+      //$('#topics .topic').sort(function(a,b) {
+      //  return $(a).data('topic') > $(b).data('topic');
+      //}).appendTo('#topics');
+      $('#topics .topic').each((index, element) => {
+        const parent = $(element).data('parent');
+        const selector = '#topics .topic[data-topic="' + parent + '"]';
+        if ( $(selector + ' ul').length == 0 ) {
+          $(selector).append('<ul class="nav-pills-nested"></ul>');
+        }
+        $(selector + ' ul').append(element);
+      });
     });
     recordData.on('loaded:relations', (relations) => {
       relations.forEach((relation) => {
