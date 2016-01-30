@@ -45,6 +45,14 @@ export const app = {
       recordData.loadPoints();
     }
 
+    let matchQuery;
+    if (matchQuery = location.href.match(/(s|source)=(http.*)/)) {
+        fileSource.set('web');
+        newURL=matchQuery[2];
+        fileURL.setURL(newURL);
+        loadPage();
+    }
+
     // source: web
     $('#fileURL #current').keypress(function(e) {
       if (e.keyCode == 13) {

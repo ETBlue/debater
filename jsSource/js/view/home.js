@@ -40,6 +40,14 @@ define(['exports', 'model/recordData/recordData', 'model/fileURL', 'model/fileSo
         _recordData.recordData.loadPoints();
       }
 
+      var matchQuery = undefined;
+      if (matchQuery = location.href.match(/(s|source)=(http.*)/)) {
+        _fileSource.fileSource.set('web');
+        newURL = matchQuery[2];
+        _fileURL.fileURL.setURL(newURL);
+        loadPage();
+      }
+
       // source: web
       $('#fileURL #current').keypress(function (e) {
         if (e.keyCode == 13) {
