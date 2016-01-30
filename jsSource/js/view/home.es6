@@ -88,7 +88,7 @@ export const app = {
     // data processing
     recordData.on('loaded:file', (file) => {
       $('#title').html(file.title);
-      $('title').prepend(file.title + ' | ');
+      $('title').html(file.title + ' | Debater: online opinions organizer (BETA)');
       if (fileSource.get() == 'web') {
         fileURL.setHistory(newURL, file.title);
         this.drawHistory();
