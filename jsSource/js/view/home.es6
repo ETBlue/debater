@@ -125,7 +125,7 @@ export const app = {
         $('#points').append(point);
       });
       $('#points .point').sort(function(a,b) {
-        return $(a).data('timestamp') > $(b).data('timestamp');
+        return $(a).data('timestamp') > $(b).data('timestamp') ? 1 : -1;
       }).appendTo('#points');
       $('#topics [data-topic=""] .badge').html($('#points .point').length);
     });
