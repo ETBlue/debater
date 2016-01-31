@@ -33,7 +33,7 @@ class Topic {
   }
   toHTML() {
     return `
-      <li class='topic' data-topic='${this._name}' data-parent='${this._parent}'>
+      <li class='topic' data-topic='${this._name}' data-parent='${this._parent}' data-count='${this._count}'>
         <a>${this._name} 
           <span class='badge badge-light'>${this._count}</span>
         </a>
