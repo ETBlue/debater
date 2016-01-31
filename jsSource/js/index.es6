@@ -25,14 +25,15 @@ $(() => {
   });
 
   // initialize filter
+
+  let filters = {};
   function filterPoints(filters) {
+    $('#points .point').css('display', 'block');
     Object.keys(filters).forEach((key) => {
-      $('#points .point').has('[data-' + key + '="' + filters[key] + '"]').css('display', 'block');
       $('#points .point').not($('#points .point').has('[data-' + key + '="' + filters[key] + '"]')).css('display', 'none');
     });
   }
 
-  let filters = {};
   $('#topics').on('click tap', '[data-topic]', function (e) {
     e.stopPropagation();
     const topic = $(this).attr('data-topic');
@@ -41,13 +42,14 @@ $(() => {
     } else {
       delete filters.topic;
     }
+    filterPoints(filters);
     $('#topics [data-topic]').removeClass('active');
     $(this).addClass('active');
-    if ($(this).text() === $('#topics li').first().text()) {
-      $('#points .point').css('display', 'block');
-    } else {
-      filterPoints(filters);
-    }
+    //if ($(this).text() === $('#topics li').first().text()) {
+    //  $('#points .point').css('display', 'block');
+    //} else {
+    //  filterPoints(filters);
+    //}
     fixPoints();
   });
   $('#relations').on('click tap', '[data-relation]', function () {
@@ -70,6 +72,18 @@ $(() => {
     }
     $('#professions li').removeClass('active');
     $(this).parents('li').addClass('active');
+    filterPoints(filters);
+  });
+
+  $('#points').on('click tap', '[data-author]', function () {
+    const author = $(this).attr('data-author');
+    if (author == filters.author) {
+      delete filters.author;
+    } else if (author.length > 0) {
+      filters.author = author;
+    } else {
+      delete filters.author;
+    }
     filterPoints(filters);
   });
 
