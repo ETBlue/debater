@@ -37,7 +37,7 @@ define(['exports', 'model/recordData/file'], function (exports, _file) {
     },
     load: function load() {
       dataRef = [];
-      $('#relations').html('<li class="active"><a data-relation="">所有關係人</a></li>');
+      $('#relations').html('<li class="active"><a data-relation="">All Relations</a></li>');
       var loadDeferred = new $.Deferred();
       var waiting = [];
       waiting.push(_file.file.load());

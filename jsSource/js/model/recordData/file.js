@@ -123,16 +123,16 @@ define(['exports', 'model/fileURL', 'model/fileSource', 'model/fileUploaded'], f
           file.authors.push({
             name: line.substring(2)
           });
-        } else if (line.startsWith('## 個人頁面')) {
+        } else if (line.startsWith('## profiles')) {
           meta = 'profiles';
           file.authors[file.authors.length - 1][meta] = [];
-        } else if (line.startsWith('## 關係')) {
+        } else if (line.startsWith('## relations')) {
           meta = 'relations';
           file.authors[file.authors.length - 1][meta] = [];
-        } else if (line.startsWith('## 職業')) {
+        } else if (line.startsWith('## backgrounds')) {
           meta = 'professions';
           file.authors[file.authors.length - 1][meta] = [];
-        } else if (line.startsWith('## 文章')) {
+        } else if (line.startsWith('## articles')) {
           meta = 'posts';
           file.authors[file.authors.length - 1][meta] = [];
         } else if (line.startsWith('### ')) {

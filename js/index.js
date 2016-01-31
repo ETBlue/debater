@@ -1013,7 +1013,7 @@ define('model/recordData/topics',['exports', 'model/recordData/file'], function 
     _createClass(Topic, [{
       key: 'toHTML',
       value: function toHTML() {
-        return '\n      <li class=\'topic\' data-topic=\'' + this._name + '\' data-parent=\'' + this._parent + '\'>\n        <a>' + this._name + ' \n          <span class=\'badge badge-light\'>' + this._count + '</span>\n        </a>\n      </li>';
+        return '\n      <li class=\'topic\' data-topic=\'' + this._name + '\' data-parent=\'' + this._parent + '\' data-count=\'' + this._count + '\'>\n        <a>' + this._name + ' \n          <span class=\'badge badge-light\'>' + this._count + '</span>\n        </a>\n      </li>';
       }
     }]);
 
@@ -1258,9 +1258,9 @@ define('view/home',['exports', 'model/recordData/recordData', 'model/fileURL', '
         topics.forEach(function (topic) {
           $('#topics').append(topic);
         });
-        //$('#topics .topic').sort(function(a,b) {
-        //  return $(a).data('topic') > $(b).data('topic');
-        //}).appendTo('#topics');
+        $('#topics .topic').sort(function (a, b) {
+          return parseInt($(a).data('count')) < parseInt($(b).data('count')) ? 1 : -1;
+        }).appendTo('#topics');
         $('#topics .topic').each(function (index, element) {
           var parent = $(element).data('parent');
           var selector = '#topics .topic[data-topic="' + parent + '"]';

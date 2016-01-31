@@ -93,9 +93,9 @@ define(['exports', 'model/recordData/recordData', 'model/fileURL', 'model/fileSo
         topics.forEach(function (topic) {
           $('#topics').append(topic);
         });
-        //$('#topics .topic').sort(function(a,b) {
-        //  return $(a).data('topic') > $(b).data('topic');
-        //}).appendTo('#topics');
+        $('#topics .topic').sort(function (a, b) {
+          return parseInt($(a).data('count')) < parseInt($(b).data('count')) ? 1 : -1;
+        }).appendTo('#topics');
         $('#topics .topic').each(function (index, element) {
           var parent = $(element).data('parent');
           var selector = '#topics .topic[data-topic="' + parent + '"]';
