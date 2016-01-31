@@ -27,6 +27,7 @@ define(['exports'], function (exports) {
             //console.log(loadDeferred);
           };
           reader.readAsText(file);
+          history.pushState({}, '', '/');
           return loadDeferred;
         } else {
           return;

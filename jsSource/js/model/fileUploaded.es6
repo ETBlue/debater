@@ -22,6 +22,7 @@ export const fileUploaded = {
           //console.log(loadDeferred);
         }
         reader.readAsText(file);
+        history.pushState({},'','/');
         return loadDeferred;        
       } else {
         return;
