@@ -154,8 +154,11 @@ input[type=file] {
   border-bottom: 3px rgba(0, 0, 0, 0.1) solid;
 }
 
-[data-topic], [data-relation], [data-profession] {
+[data-topic], [data-relation], [data-profession], [data-author] {
   cursor: pointer;
+}
+[data-topic]:hover, [data-relation]:hover, [data-profession]:hover, [data-author]:hover {
+  text-decoration: none;
 }
 
 .nav-pills-nested {

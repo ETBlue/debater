@@ -1096,7 +1096,7 @@ define('model/recordData/points',['exports', 'model/recordData/file'], function 
         professions = professions.map(function (profession) {
           return '<span data-profession=\'' + profession + '\'></span>';
         }).join("");
-        return '\n      <blockquote class=\'point\' data-timestamp="' + this._data.timestamp + '" cite="' + this._data.url + '">\n        <p>' + this._data.content + '</p>\n        <div class="align-right small">\n          <a href="' + this._data.url + '">' + this._data.timestamp + '</a> by <a href="">' + this._data.author + '</a>\n        </div>\n        <div class="align-right clear">\n          ' + topics + '\n          ' + relations + '\n          ' + professions + '\n        </div>\n      </blockquote>\n    ';
+        return '\n      <blockquote class=\'point\' data-timestamp="' + this._data.timestamp + '" cite="' + this._data.url + '">\n        <p>' + this._data.content + '</p>\n        <div class="align-right small">\n          <a href="' + this._data.url + '">' + this._data.timestamp + '</a> by <a data-author="' + this._data.author + '">' + this._data.author + '</a>\n        </div>\n        <div class="align-right clear">\n          ' + topics + '\n          ' + relations + '\n          ' + professions + '\n        </div>\n      </blockquote>\n    ';
       }
     }]);
 
@@ -1318,15 +1318,15 @@ define('index.js',['view/home'], function (_home) {
       $('#fileURL, #fileChooser').toggle();
       $('[data-source]').toggleClass('btn-active');
     });
+    var filters = {};
 
     function filterPoints(filters) {
+      $('#points .point').css('display', 'block');
       Object.keys(filters).forEach(function (key) {
-        $('#points .point').has('[data-' + key + '="' + filters[key] + '"]').css('display', 'block');
         $('#points .point').not($('#points .point').has('[data-' + key + '="' + filters[key] + '"]')).css('display', 'none');
       });
     }
 
-    var filters = {};
     $('#topics').on('click tap', '[data-topic]', function (e) {
       e.stopPropagation();
       var topic = $(this).attr('data-topic');
@@ -1337,15 +1337,9 @@ define('index.js',['view/home'], function (_home) {
         delete filters.topic;
       }
 
+      filterPoints(filters);
       $('#topics [data-topic]').removeClass('active');
       $(this).addClass('active');
-
-      if ($(this).text() === $('#topics li').first().text()) {
-        $('#points .point').css('display', 'block');
-      } else {
-        filterPoints(filters);
-      }
-
       fixPoints();
     });
     $('#relations').on('click tap', '[data-relation]', function () {
@@ -1372,6 +1366,19 @@ define('index.js',['view/home'], function (_home) {
 
       $('#professions li').removeClass('active');
       $(this).parents('li').addClass('active');
+      filterPoints(filters);
+    });
+    $('#points').on('click tap', '[data-author]', function () {
+      var author = $(this).attr('data-author');
+
+      if (author == filters.author) {
+        delete filters.author;
+      } else if (author.length > 0) {
+        filters.author = author;
+      } else {
+        delete filters.author;
+      }
+
       filterPoints(filters);
     });
     $(window).scroll(fixPoints);
