@@ -598,9 +598,9 @@ x- 商業嬰兒
 # 廖偉程
 ## profiles
 ## backgrounds
-- GH 學員
 - 行銷初心者
 ## relations
+- GH 學員
 ## articles
 ### 2016/01/20 12:59am https://www.facebook.com/ToWoo/posts/10201654911731001
 
