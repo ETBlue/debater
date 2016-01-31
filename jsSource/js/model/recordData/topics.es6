@@ -8,7 +8,7 @@ export const topics = {
   },
   load() {
     dataRef = [];
-    $('#topics').html('<li data-topic="" class="active"><a>所有主題 <span class="badge badge-light"></span></a></li>');
+    $('#topics').html('<li data-topic="" class="active"><a>All Topics <span class="badge badge-light"></span></a></li>');
     const loadDeferred = new $.Deferred();
     const waiting = [];
     waiting.push(file.load());

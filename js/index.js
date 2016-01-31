@@ -565,16 +565,16 @@ define('model/recordData/file',['exports', 'model/fileURL', 'model/fileSource', 
           file.authors.push({
             name: line.substring(2)
           });
-        } else if (line.startsWith('## 個人頁面')) {
+        } else if (line.startsWith('## profiles')) {
           meta = 'profiles';
           file.authors[file.authors.length - 1][meta] = [];
-        } else if (line.startsWith('## 關係')) {
+        } else if (line.startsWith('## relations')) {
           meta = 'relations';
           file.authors[file.authors.length - 1][meta] = [];
-        } else if (line.startsWith('## 職業')) {
+        } else if (line.startsWith('## backgrounds')) {
           meta = 'professions';
           file.authors[file.authors.length - 1][meta] = [];
-        } else if (line.startsWith('## 文章')) {
+        } else if (line.startsWith('## articles')) {
           meta = 'posts';
           file.authors[file.authors.length - 1][meta] = [];
         } else if (line.startsWith('### ')) {
@@ -813,7 +813,7 @@ define('model/recordData/professions',['exports', 'model/recordData/file'], func
     },
     load: function load() {
       dataRef = [];
-      $('#professions').html('<li class="active"><a data-profession="">所有職業</a></li>');
+      $('#professions').html('<li class="active"><a data-profession="">All Backgrounds</a></li>');
       var loadDeferred = new $.Deferred();
       var waiting = [];
       waiting.push(_file.file.load());
@@ -898,7 +898,7 @@ define('model/recordData/relations',['exports', 'model/recordData/file'], functi
     },
     load: function load() {
       dataRef = [];
-      $('#relations').html('<li class="active"><a data-relation="">所有關係人</a></li>');
+      $('#relations').html('<li class="active"><a data-relation="">All Relations</a></li>');
       var loadDeferred = new $.Deferred();
       var waiting = [];
       waiting.push(_file.file.load());
@@ -983,7 +983,7 @@ define('model/recordData/topics',['exports', 'model/recordData/file'], function 
     },
     load: function load() {
       dataRef = [];
-      $('#topics').html('<li data-topic="" class="active"><a>所有主題 <span class="badge badge-light"></span></a></li>');
+      $('#topics').html('<li data-topic="" class="active"><a>All Topics <span class="badge badge-light"></span></a></li>');
       var loadDeferred = new $.Deferred();
       var waiting = [];
       waiting.push(_file.file.load());

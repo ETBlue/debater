@@ -8,7 +8,7 @@ export const professions = {
   },
   load() {
     dataRef = [];
-    $('#professions').html('<li class="active"><a data-profession="">所有職業</a></li>');
+    $('#professions').html('<li class="active"><a data-profession="">All Backgrounds</a></li>');
     const loadDeferred = new $.Deferred();
     const waiting = [];
     waiting.push(file.load());

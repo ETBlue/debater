@@ -2,11 +2,11 @@ Growth Hack 事件簿
 
 # 孤獨的踩雷家
 
-## 個人頁面
+## profiles
 
 - https://www.facebook.com/%E5%AD%A4%E7%8D%A8%E7%9A%84%E8%B8%A9%E9%9B%B7%E5%AE%B6-856814281099027/
 
-## 職業
+## backgrounds
 
 - 業務
 - 工程師
@@ -15,11 +15,11 @@ x- 劇本作家
 x- 家庭主婦
 x- LOL gamer
 
-## 關係 
+## relations
 
 - GH 學員
 
-## 文章
+## articles
 
 ### 2016/01/08 2:35am https://www.facebook.com/permalink.php?story_fbid=898992006881254&id=856814281099027
 
@@ -59,21 +59,21 @@ x- LOL gamer
 
 # XDite
 
-## 個人頁面
+## profiles
 
 - https://www.facebook.com/xdite
 
-## 職業
+## backgrounds
 
 - 工程師
 - 講師
 - 創業者
 
-## 關係
+## relations
 
 - GH 講師
 
-## 文章
+## articles
 
 ### 2016/01/08 2:44pm https://www.facebook.com/xdite/posts/10153899313348552
 
@@ -110,18 +110,18 @@ x- LOL gamer
 
 # 楊斯棓
 
-## 個人頁面
+## profiles
 - 
-## 職業
+## backgrounds
 - 醫師
 - 演講家
 
-## 關係
+## relations
 
 - GH 學員
 x- 商業嬰兒
 
-## 文章
+## articles
 ### 2016/01/09 10:52am https://www.facebook.com/photo.php?fbid=10204992449002195&set=a.1057172120805.2008864.1570927747&type=3
 
 - 嫌人家食物難吃，然後嘲諷其他人平常吃米糠（還是同級的名詞），真的很無謂。你平常嬌貴吃很好，關大家屁事？上個課，不過就是出外人吃個止枵，沒讓你餓到就好 #課程餐點
@@ -139,12 +139,12 @@ x- 商業嬰兒
 
 
 # Ivan Liu
-## 個人頁面
-## 職業
+## profiles
+## backgrounds
 - 律師
 - 創業家
-## 關係
-## 文章
+## relations
+## articles
 
 ### 2016/01/08 4:26pm https://www.facebook.com/ivan.eCounsel/posts/10153901285659165
 - Those who can't, teach. 他們愛教人、整天想開課，還真能收得到學生，不是沒有原因的 #入門課程市場
@@ -169,11 +169,11 @@ x- 商業嬰兒
 
 
 # 酸哥
-## 個人頁面
-## 職業
+## profiles
+## backgrounds
 - 專業經理人
-## 關係
-## 文章
+## relations
+## articles
 ### 2016/01/08 5:09pm https://www.facebook.com/ken.hsu08/posts/10153862706938787
 - 如果要學行銷的初心者，建議就去 Tesa （報名費便宜、環境也不差、講師多）報名就好了，真的不需要花到2500 #行銷入門
 - 留言：創新企劃學院的 WBSA 課程也蠻適合初心者，會系統性地講解企劃管理 ABC，搭配每週的小組作業。不過最好有兩三年相關經驗再去上課，不然很多東西會不知道實際上到底在幹嘛。但他是一般通用性的商務企劃知識，沒有特別針對電子商務 #行銷入門
@@ -182,13 +182,13 @@ x- 商業嬰兒
 
 
 # Tempo
-## 個人頁面
-## 職業
+## profiles
+## backgrounds
 - 工程師
 - 創業家
-## 關係
+## relations
 - GH 前輩
-## 文章
+## articles
 ### 2016/01/09 3:25am https://www.facebook.com/ken.hsu08/posts/10153862706938787?comment_id=10153862715168787&reply_comment_id=10153863443298787&comment_tracking=%7B%22tn%22%3A%22R%22%7D
 
 - 也許有些人講 growth 談的就是一些行銷觀念，但 growth 還包括很多數據分析與實作，如 user accounting，activation，cohorts 等，裡面我覺得還滿多技巧的，可能沒有這麼單純就是名詞而已 #GH知識
@@ -213,11 +213,11 @@ x- 商業嬰兒
 
 
 # Chang Lap
-## 個人頁面
-## 職業
+## profiles
+## backgrounds
 - 創業者
-## 關係
-## 文章
+## relations
+## articles
 ### 2016/01/09 12:00pm https://www.facebook.com/cheng.lap.9/posts/10153773431727357
 
 - 若其品質未能滿意者, 去設計更好的課程, 引入良性競爭, 互相刺激成長, 則對各方也有好處. 我認為, 最好的批評, 就是自己行動, 取而代之 #負評處理
@@ -227,14 +227,14 @@ x- 商業嬰兒
 
 
 # 蔡校長
-## 個人頁面
-## 職業
+## profiles
+## backgrounds
 - 醫師
 - 講師
 - 創業者
-## 關係
+## relations
 - GH 學員
-## 文章
+## articles
 ### 2016/01/09 12:23pm https://www.facebook.com/sillyduck.radiology/posts/1130059213671086
 
 - 不夠完美的東西難道沒有存在價值嗎？這樣子的想法放在網路上每次大規模的酸民攻擊，都可以適用 #負評處理
@@ -244,10 +244,10 @@ x- 商業嬰兒
 
 
 # Ray Chu
-## 個人頁面
-## 職業
-## 關係
-## 文章
+## profiles
+## backgrounds
+## relations
+## articles
 ### 2016/01/09 2:10pm https://www.facebook.com/ray.chu.1212/posts/10153878605819345
 
 - 大家一起動手做的表象下，隱藏著「我沒錯」的訊息。自己有沒有做好，和批評者能不能做好，完全沒有因果關係。沒比球員打得好的教練不能指導球員，指出公司業務上缺失的監察人應兼任董事（違反公司法第222條），不打算選總統或是選不上總統的庶民不能批評總統... 這樣合理嗎 #負評處理
@@ -255,10 +255,10 @@ x- 商業嬰兒
 
 
 # Chung Chieh Wu
-## 個人頁面
-## 職業
-## 關係
-## 文章
+## profiles
+## backgrounds
+## relations
+## articles
 ### 2016/01/09 5:32pm https://www.facebook.com/856814281099027/photos/a.857561204357668.1073741828.856814281099027/899785573468564/?type=3&comment_id=899809623466159&comment_tracking=%7B%22tn%22%3A%22R9%22%7D
 
 - 那便當應該是老三盒餐，訂到250的，c/p值其實有點低，老三盒餐的便當價位一百左右的c/p值最高。250已經可以訂飯店級，或看起來沒那麼彭湃，但實際上用料跟口味都好很多的便當，例如原味便當、安溯便當 #課程餐點
@@ -266,12 +266,12 @@ x- 商業嬰兒
 
 
 # BJ Wu
-## 個人頁面
-## 職業
+## profiles
+## backgrounds
 - 工程師
 - 創業者
-## 關係
-## 文章
+## relations
+## articles
 ### 2016/01/09 5:44pm https://www.facebook.com/856814281099027/photos/a.857561204357668.1073741828.856814281099027/899785573468564/?type=3&comment_id=899813010132487&comment_tracking=%7B%22tn%22%3A%22R9%22%7D
 
 - 風味美饌 $580、御廚便當 $580、真饌便當 $380 #課程餐點
@@ -280,10 +280,10 @@ x- 商業嬰兒
 
 
 # Yeager Yu
-## 個人頁面
-## 職業
-## 關係
-## 文章
+## profiles
+## backgrounds
+## relations
+## articles
 ### 2016/01/09 6:16pm https://www.facebook.com/cheng.lap.9/posts/10153773431727357?comment_id=10153773808467357&comment_tracking=%7B%22tn%22%3A%22R3%22%7D
 
 - 當XDite弄歐付寶出現了問題，他逼到歐付寶老闆出來道歉（當然歐付寶有錯），結果有人對於他的課程提出不滿意，也沒有人身攻擊，你可以去看看XDite是怎麼對去上他課的人做什麼回應，XDite說是「惡意抹黑」。光是這點就很有問題，課程當然不可能讓所有人滿意，但若對方都提出來，而且是很具體提出來的時候，講師該做的應該是發訊息去了解學員為何有這反應，來強化自身課程 #負評處理
@@ -293,10 +293,10 @@ x- 商業嬰兒
 
 
 # Junchoon Huang
-## 個人頁面
-## 職業
-## 關係
-## 文章
+## profiles
+## backgrounds
+## relations
+## articles
 ### 2016/01/09 8:18pm https://www.facebook.com/856814281099027/photos/a.857561204357668.1073741828.856814281099027/899785573468564/?type=3&comment_id=900436636736791&reply_comment_id=901508163296305&comment_tracking=%7B%22tn%22%3A%22R9%22%7D
 
 - 便當的炸物是放在飯上面，久了會吸收濕氣受潮軟掉也是正常的，這是便當店擺放的問題吧，如果是獨立包裝的炸物冷掉的確是還有可能保持外皮酥脆的，只要本身含水量不高就可以 #課程餐點
@@ -305,13 +305,13 @@ x- 商業嬰兒
 
 
 # Even Wu
-## 個人頁面
-## 職業
+## profiles
+## backgrounds
 - 設計師
 - 開源人
 - 創業者
-## 關係
-## 文章
+## relations
+## articles
 ### 2016/01/10 1:08am https://www.facebook.com/evenwu/posts/10153234165500718
 
 - 不要從懷疑是不是騙局方向思考。只要性格適合、有一定努力，自然就會紅，課程賺錢絕對有它的道理 #課程定位
@@ -327,12 +327,12 @@ x- 商業嬰兒
 
 
 # TonyQ
-## 個人頁面
-## 職業
+## profiles
+## backgrounds
 - 工程師
 - 開源人
-## 關係
-## 文章
+## relations
+## articles
 ### 2016/01/10 1:14am https://www.facebook.com/tonylovejava/posts/10208666368722326
 
 - 當學員幹橋課程天經地義 #負評處理
@@ -348,10 +348,10 @@ x- 商業嬰兒
 
 
 # 張志祺
-## 個人頁面
-## 職業
-## 關係
-## 文章
+## profiles
+## backgrounds
+## relations
+## articles
 ### 2016/01/10 1:36am https://www.facebook.com/sashalifestyle/posts/1260844440599026
 
 - 過去參與過的組織，是否有因為他的努力變得更好？是不是最後都有引起紛爭？現在是否有什麼計劃真的蓬勃發展？還是都是各種延宕？是不是每次被質疑，就急著極力反彈，忙著想洗白超怕黑？是否真的有吸引到更多認同其價值觀的人加入，而且持續帶起新的影響力？ #講師資格
@@ -359,13 +359,13 @@ x- 商業嬰兒
 
 
 # 福哥
-## 個人頁面
-## 職業
+## profiles
+## backgrounds
 - 講師
 - 創業者
-## 關係
+## relations
 - GH 學員
-## 文章
+## articles
 ### 2016/01/10 1:36am https://www.facebook.com/afuwang/posts/10208176077905390
 
 - 酸一個人最好的方法，就是實際在商場上，做一個比他更好的產品，然後得到更多用戶的肯定。這個肯定，不是只是口頭的肯定，而是用錢投票，來表示肯定 #負評處理
@@ -377,12 +377,12 @@ x- 商業嬰兒
 
 
 # 劉漢文
-## 個人頁面
-## 職業
+## profiles
+## backgrounds
 - 醫師
-## 關係
+## relations
 - GH 學員
-## 文章
+## articles
 ### 2016/01/10 2:45am https://www.facebook.com/permalink.php?story_fbid=10204106807950160&id=1824069095
 
 - 以商業嬰兒程度的觀點，報名頁的介紹很清楚，能引起興趣，看了別人的課後心得，會很想聽看看。上完課後再比對報名頁的內容，其實很實在。而且上完課才知道，報名頁正是運用課中Landing page的格式做的 #課程宣傳方式
@@ -394,10 +394,10 @@ x- 商業嬰兒
 
 
 # Clint Red
-## 個人頁面
-## 職業
-## 關係
-## 文章
+## profiles
+## backgrounds
+## relations
+## articles
 ### 2016/01/10 11:24am https://www.facebook.com/permalink.php?story_fbid=900068480106940&id=856814281099027&comment_id=900154146765040&reply_comment_id=900215143425607&comment_tracking=%7B%22tn%22%3A%22R9%22%7D
 
 - 經營和授課其實本質還算不同。知識技術高手，不見得想要去開課，教學達人，不一定經營上就無敵，各自討飯吃吧 #講師資格
@@ -406,10 +406,10 @@ x- 商業嬰兒
 
 
 # Yung Hsiang Lin
-## 個人頁面
-## 職業
-## 關係
-## 文章
+## profiles
+## backgrounds
+## relations
+## articles
 ### 2016/01/10 11:46am https://www.facebook.com/ivan.eCounsel/posts/10153905851204165?comment_id=10153905918084165&comment_tracking=%7B%22tn%22%3A%22R1%22%7D
 
 - 只要不要那一種來就是催眠說你要相信我才來上我課的 我都覺得是好的課程 #教育訓練
@@ -418,23 +418,23 @@ x- 商業嬰兒
 
 
 # Pofeng
-## 個人頁面
-## 職業
+## profiles
+## backgrounds
 - 醫師
 - 開源人
 - 創業者
-## 關係
-## 文章
+## relations
+## articles
 ### 2016/01/10 6:15pm https://www.facebook.com/pofeng/posts/10150631584099949
 
 - 香灰可能沒用，結果有些人說: 可是香灰對小病可能有幫忙啊，重病可以去醫院啊，大家各自有市場，幹麼酸來酸去呢 ? #課程定位
 
 
 # Ion Kao
-## 個人頁面
-## 職業
-## 關係
-## 文章
+## profiles
+## backgrounds
+## relations
+## articles
 ### 2016/01/11 11:11am https://www.facebook.com/xdite/posts/10153901939188552?comment_id=10153905176883552&comment_tracking=%7B%22tn%22%3A%22R%22%7D
 
 - 猜測作者之意指課程對作者而言是「marketing 入門」而不是「growth hacking 入門」 #課程定位
@@ -443,34 +443,34 @@ x- 商業嬰兒
 
 
 # Teddy Chen
-## 個人頁面
-## 職業
+## profiles
+## backgrounds
 - 工程師
 - 講師
 - 創業者
-## 關係
-## 文章
+## relations
+## articles
 ### 2016/01/
 
 
 # 廖偉程
-## 個人頁面
-## 職業
+## profiles
+## backgrounds
 - GH 學員
 - 行銷初心者
-## 關係
-## 文章
+## relations
+## articles
 ### 2016/01/
 
 
 # ETBlue
-## 個人頁面
-## 職業
+## profiles
+## backgrounds
 - 牙醫師
 - 設計師
 - 開源人
-## 關係
-## 文章
+## relations
+## articles
 ### 2016/01/27 8:58pm https://www.facebook.com/permalink.php?story_fbid=10208918333262066&id=1427463448&comment_id=10208918573228065&reply_comment_id=10208927188843450&comment_tracking=%7B%22tn%22%3A%22R6%22%7D
 - 我倒覺得講師過去職場上的表現是一回事，課程有沒有幫助是另一回事，畢竟是兩種不同能力，擅長軟體工程的不見得擅長教育訓練，反之亦然，醫學院教授也很多不會開刀的啊...（小聲） #講師資格
 - 而且講師跟學員的關係比較單純，跟職場上的狀況不一樣，即使過去有人品上的負評，在師生關係之下應該也不會造成什麼問題。

@@ -8,7 +8,7 @@ export const relations = {
   },
   load() {
     dataRef = [];
-    $('#relations').html('<li class="active"><a data-relation="">所有關係人</a></li>');
+    $('#relations').html('<li class="active"><a data-relation="">All Relations</a></li>');
     const loadDeferred = new $.Deferred();
     const waiting = [];
     waiting.push(file.load());
