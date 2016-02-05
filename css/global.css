@@ -96,6 +96,11 @@ blockquote .label {
   border: none;
   border-radius: 0;
 }
+.navbar .logo {
+  height: 2em;
+  margin-top: -0.5em;
+  margin-bottom: -0.5em;
+}
 .navbar .btn {
   background-color: transparent;
 }
