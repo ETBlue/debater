@@ -104,10 +104,10 @@ export const app = {
       $('#topics .topic').each((index, element) => {
         const parent = $(element).data('parent');
         const selector = '#topics .topic[data-topic="' + parent + '"]';
-        if ( $(selector + ' ul').length == 0 ) {
+        if ( $(selector + '>ul').length == 0 ) {
           $(selector).append('<ul class="nav-pills-nested"></ul>');
         }
-        $(selector + ' ul').append(element);
+        $(selector + '>ul').append(element);
       });
     });
     recordData.on('loaded:relations', (relations) => {

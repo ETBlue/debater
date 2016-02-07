@@ -99,10 +99,10 @@ define(['exports', 'model/recordData/recordData', 'model/fileURL', 'model/fileSo
         $('#topics .topic').each(function (index, element) {
           var parent = $(element).data('parent');
           var selector = '#topics .topic[data-topic="' + parent + '"]';
-          if ($(selector + ' ul').length == 0) {
+          if ($(selector + '>ul').length == 0) {
             $(selector).append('<ul class="nav-pills-nested"></ul>');
           }
-          $(selector + ' ul').append(element);
+          $(selector + '>ul').append(element);
         });
       });
       _recordData.recordData.on('loaded:relations', function (relations) {
