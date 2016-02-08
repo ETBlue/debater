@@ -39,10 +39,17 @@ class Topic {
     } else {
       badge = `<span class='badge badge-light'>${this._count}</span>`;
     }
+    let expandable = false;
+    let expandicon = '';
+    if (this._parent == '') {
+      expandable = true;
+      expandicon = `<span class='glyphicon-light glyphicon glyphicon-folder-open'></span>`;
+    }
     return `
-      <li class='topic' data-order='${this._order}' data-topic='${this._name}' data-parent='${this._parent}' data-count='${this._count}'>
+      <li class='topic' data-expandable='${expandable}' data-order='${this._order}' data-topic='${this._name}' data-parent='${this._parent}' data-count='${this._count}'>
         <a>${this._name} 
           ${badge}
+          ${expandicon}
         </a>
       </li>`;
   }

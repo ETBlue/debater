@@ -1032,7 +1032,15 @@ define('model/recordData/topics',['exports', 'model/recordData/file'], function 
           badge = '<span class=\'badge badge-light\'>' + this._count + '</span>';
         }
 
-        return '\n      <li class=\'topic\' data-order=\'' + this._order + '\' data-topic=\'' + this._name + '\' data-parent=\'' + this._parent + '\' data-count=\'' + this._count + '\'>\n        <a>' + this._name + ' \n          ' + badge + '\n        </a>\n      </li>';
+        var expandable = false;
+        var expandicon = '';
+
+        if (this._parent == '') {
+          expandable = true;
+          expandicon = '<span class=\'glyphicon-light glyphicon glyphicon-folder-open\'></span>';
+        }
+
+        return '\n      <li class=\'topic\' data-expandable=\'' + expandable + '\' data-order=\'' + this._order + '\' data-topic=\'' + this._name + '\' data-parent=\'' + this._parent + '\' data-count=\'' + this._count + '\'>\n        <a>' + this._name + ' \n          ' + badge + '\n          ' + expandicon + '\n        </a>\n      </li>';
       }
     }]);
 
@@ -1274,17 +1282,21 @@ define('view/home',['exports', 'model/recordData/recordData', 'model/fileURL', '
         }
       });
       _recordData.recordData.on('loaded:topics', function (topics) {
+        // render topics
         topics.forEach(function (topic) {
           $('#topics').append(topic);
         });
+        // sort topic with count by default
         $('#topics .topic').sort(function (a, b) {
           return parseInt($(a).data('count')) < parseInt($(b).data('count')) ? 1 : -1;
         }).appendTo('#topics');
+        // sort topics if order are specified
         if ($('#topics .topic[data-order="1"]').length > 0) {
           $('#topics .topic').sort(function (a, b) {
             return parseInt($(a).data('order')) < parseInt($(b).data('order')) ? -1 : 1;
           }).appendTo('#topics');
         }
+        // arrange nested topics
         $('#topics .topic').each(function (index, element) {
           var parent = $(element).data('parent');
           var selector = '#topics .topic[data-topic="' + parent + '"]';
@@ -1365,6 +1377,15 @@ define('index.js',['view/home'], function (_home) {
       $('#topics [data-topic]').removeClass('active');
       $(this).addClass('active');
       fixPoints();
+    });
+    $('#topics').on('click tap', '.glyphicon', function (e) {
+      e.stopPropagation();
+      $(this).toggleClass('glyphicon-folder-open glyphicon-folder-close');
+      $(this).closest('.topic').children('.nav-pills-nested').slideToggle();
+    });
+    $('#topics').on('click tap', '[data-expandable="true"]', function (e) {
+      $(this).find('.glyphicon').addClass('glyphicon-folder-open').removeClass('glyphicon-folder-close');
+      $(this).children('.nav-pills-nested').slideDown();
     });
     $('#relations').on('click tap', '[data-relation]', function () {
       var relation = $(this).attr('data-relation');

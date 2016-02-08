@@ -95,17 +95,21 @@ export const app = {
       }
     });
     recordData.on('loaded:topics', (topics) => {
+      // render topics
       topics.forEach((topic) => {
         $('#topics').append(topic);
       });
+      // sort topic with count by default
       $('#topics .topic').sort(function(a,b) {
         return parseInt($(a).data('count')) < parseInt($(b).data('count')) ? 1 : -1;
       }).appendTo('#topics');
+      // sort topics if order are specified
       if ($('#topics .topic[data-order="1"]').length > 0) {
         $('#topics .topic').sort(function(a,b) {
           return parseInt($(a).data('order')) < parseInt($(b).data('order')) ? -1 : 1;
         }).appendTo('#topics');
       }
+      // arrange nested topics
       $('#topics .topic').each((index, element) => {
         const parent = $(element).data('parent');
         const selector = '#topics .topic[data-topic="' + parent + '"]';

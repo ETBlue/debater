@@ -35,9 +35,15 @@ p
 
 // for bootstrap
 
+.badge
+  margin: -3px 0
 .badge-light
   background-color: rgba(#000, 0.05)
   color: #999
+
+.glyphicon-light
+  opacity: 0.3
+
 
 .container
   padding-left: 1rem
@@ -171,3 +177,15 @@ input[type=file]
     display: block
     border-radius: 4px
     text-decoration: none
+
+#topics.nav-pills>[data-expandable='true']
+  &>a
+    background-color: rgba(#fff,0.5)
+    border: 1px rgba(#000,0.1) solid
+    .glyphicon
+      position: absolute
+      right: 0
+      top: 0
+      padding: 10px
+  &.active>a
+    background-color: #337ab7

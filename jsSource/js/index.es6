@@ -52,6 +52,18 @@ $(() => {
     //}
     fixPoints();
   });
+
+  // expand or collapse nested topics
+  $('#topics').on('click tap', '.glyphicon', function (e) {
+    e.stopPropagation();
+    $(this).toggleClass('glyphicon-folder-open glyphicon-folder-close')
+    $(this).closest('.topic').children('.nav-pills-nested').slideToggle();
+  });
+  $('#topics').on('click tap', '[data-expandable="true"]', function (e) {
+    $(this).find('.glyphicon').addClass('glyphicon-folder-open').removeClass('glyphicon-folder-close');
+    $(this).children('.nav-pills-nested').slideDown();
+  });
+
   $('#relations').on('click tap', '[data-relation]', function () {
     const relation = $(this).attr('data-relation');
     if (relation.length > 0) {
