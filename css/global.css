@@ -195,16 +195,16 @@ input[type=file] {
   text-decoration: none;
 }
 
-#topics.nav-pills > [data-expandable='true'] > a {
+#topics.nav-pills > [data-expandable='true'] > a, #topics.nav-pills > [data-expandable='all'] > a {
   background-color: rgba(255, 255, 255, 0.5);
   border: 1px rgba(0, 0, 0, 0.1) solid;
 }
-#topics.nav-pills > [data-expandable='true'] > a .glyphicon {
+#topics.nav-pills > [data-expandable='true'] > a .glyphicon, #topics.nav-pills > [data-expandable='all'] > a .glyphicon {
   position: absolute;
   right: 0;
   top: 0;
   padding: 10px;
 }
-#topics.nav-pills > [data-expandable='true'].active > a {
+#topics.nav-pills > [data-expandable='true'].active > a, #topics.nav-pills > [data-expandable='all'].active > a {
   background-color: #337ab7;
 }

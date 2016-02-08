@@ -178,14 +178,15 @@ input[type=file]
     border-radius: 4px
     text-decoration: none
 
-#topics.nav-pills>[data-expandable='true']
-  &>a
-    background-color: rgba(#fff,0.5)
-    border: 1px rgba(#000,0.1) solid
-    .glyphicon
-      position: absolute
-      right: 0
-      top: 0
-      padding: 10px
-  &.active>a
-    background-color: #337ab7
+#topics.nav-pills
+  &>[data-expandable='true'], &>[data-expandable='all']
+    &>a
+      background-color: rgba(#fff,0.5)
+      border: 1px rgba(#000,0.1) solid
+      .glyphicon
+        position: absolute
+        right: 0
+        top: 0
+        padding: 10px
+    &.active>a
+      background-color: #337ab7

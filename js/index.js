@@ -994,7 +994,7 @@ define('model/recordData/topics',['exports', 'model/recordData/file'], function 
     },
     load: function load() {
       dataRef = [];
-      $('#topics').html('<li data-topic="" class="active"><a>All Topics <span class="badge badge-light"></span></a></li>');
+      $('#topics').html('<li data-topic="" data-expandable="all" class="active"><a>All Topics <span class="badge badge-light"></span><span class="glyphicon-light glyphicon glyphicon-folder-open"></span></a></li>');
       var loadDeferred = new $.Deferred();
       var waiting = [];
       waiting.push(_file.file.load());
@@ -1386,6 +1386,18 @@ define('index.js',['view/home'], function (_home) {
     $('#topics').on('click tap', '[data-expandable="true"]', function (e) {
       $(this).find('.glyphicon').addClass('glyphicon-folder-open').removeClass('glyphicon-folder-close');
       $(this).children('.nav-pills-nested').slideDown();
+    });
+    var topicExpandAll = true;
+    $('#topics').on('click tap', '[data-expandable="all"] .glyphicon', function (e) {
+      if (topicExpandAll) {
+        $('#topics .glyphicon').addClass('glyphicon-folder-close').removeClass('glyphicon-folder-open');
+        $('#topics .nav-pills-nested').slideUp();
+      } else {
+        $('#topics .glyphicon').addClass('glyphicon-folder-open').removeClass('glyphicon-folder-close');
+        $('#topics .nav-pills-nested').slideDown();
+      }
+
+      topicExpandAll = !topicExpandAll;
     });
     $('#relations').on('click tap', '[data-relation]', function () {
       var relation = $(this).attr('data-relation');

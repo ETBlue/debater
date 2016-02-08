@@ -56,12 +56,23 @@ $(() => {
   // expand or collapse nested topics
   $('#topics').on('click tap', '.glyphicon', function (e) {
     e.stopPropagation();
-    $(this).toggleClass('glyphicon-folder-open glyphicon-folder-close')
+    $(this).toggleClass('glyphicon-folder-open glyphicon-folder-close');
     $(this).closest('.topic').children('.nav-pills-nested').slideToggle();
   });
   $('#topics').on('click tap', '[data-expandable="true"]', function (e) {
     $(this).find('.glyphicon').addClass('glyphicon-folder-open').removeClass('glyphicon-folder-close');
     $(this).children('.nav-pills-nested').slideDown();
+  });
+  let topicExpandAll = true;
+  $('#topics').on('click tap', '[data-expandable="all"] .glyphicon', function (e) {
+    if (topicExpandAll) {
+      $('#topics .glyphicon').addClass('glyphicon-folder-close').removeClass('glyphicon-folder-open');
+      $('#topics .nav-pills-nested').slideUp();
+    } else {
+      $('#topics .glyphicon').addClass('glyphicon-folder-open').removeClass('glyphicon-folder-close');
+      $('#topics .nav-pills-nested').slideDown();
+    }
+    topicExpandAll = !topicExpandAll;
   });
 
   $('#relations').on('click tap', '[data-relation]', function () {
