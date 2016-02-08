@@ -542,15 +542,18 @@ define('model/recordData/file',['exports', 'model/fileURL', 'model/fileSource', 
     var lines = fileData.split("\n");
     var meta = '';
     var parents = [];
+    var order = 0;
 
-    function setParent(topic, level) {
+    function setParent(topic, level, order) {
       if (file.topics[topic]) {
         file.topics[topic].parent = parents[level];
+        file.topics[topic].order = order;
       } else {
         file.topics[topic] = {
           name: topic,
           count: 0,
-          parent: parents[level]
+          parent: parents[level],
+          order: order
         };
       }
 
@@ -631,15 +634,18 @@ define('model/recordData/file',['exports', 'model/fileURL', 'model/fileSource', 
             });
             ;
           } else if (meta == 'structure') {
+            order += 1;
             var current = line.replace('- ', '').trim();
 
             if (file.topics[current]) {
               file.topics[current].parent = '';
+              file.topics[current].order = order;
             } else {
               file.topics[current] = {
                 name: current,
                 count: 0,
-                parent: ''
+                parent: '',
+                order: order
               };
             }
 
@@ -650,23 +656,27 @@ define('model/recordData/file',['exports', 'model/fileURL', 'model/fileSource', 
           }
         } else if (line.startsWith('  - ')) {
           if (meta == 'structure') {
+            order += 1;
             var current = line.replace('  - ', '').trim();
-            setParent(current, 0);
+            setParent(current, 0, order);
           }
         } else if (line.startsWith('    - ')) {
           if (meta == 'structure') {
+            order += 1;
             var current = line.replace('    - ', '').trim();
-            setParent(current, 1);
+            setParent(current, 1, order);
           }
         } else if (line.startsWith('      - ')) {
           if (meta == 'structure') {
+            order += 1;
             var current = line.replace('      - ', '').trim();
-            setParent(current, 2);
+            setParent(current, 2, order);
           }
         } else if (line.startsWith('        - ')) {
           if (meta == 'structure') {
+            order += 1;
             var current = line.replace('        - ', '').trim();
-            setParent(current, 3);
+            setParent(current, 3, order);
           }
         } else {}
       }
@@ -991,7 +1001,7 @@ define('model/recordData/topics',['exports', 'model/recordData/file'], function 
       $.when.apply($.when, waiting).done(function () {
         var topics = _file.file.get('topics');
         Object.keys(topics).forEach(function (topicName) {
-          var topic = new Topic(topics[topicName].count, topics[topicName].name, topics[topicName].parent);
+          var topic = new Topic(topics[topicName].count, topics[topicName].name, topics[topicName].parent, topics[topicName].order);
           dataRef.push(topic.toHTML());
         });
         loadDeferred.resolve(dataRef);
@@ -1001,19 +1011,28 @@ define('model/recordData/topics',['exports', 'model/recordData/file'], function 
   };
 
   var Topic = (function () {
-    function Topic(count, name, parent) {
+    function Topic(count, name, parent, order) {
       _classCallCheck(this, Topic);
 
       this._name = name;
       this._count = count;
       this._parent = parent || '';
+      this._order = order || '';
       return this;
     }
 
     _createClass(Topic, [{
       key: 'toHTML',
       value: function toHTML() {
-        return '\n      <li class=\'topic\' data-topic=\'' + this._name + '\' data-parent=\'' + this._parent + '\' data-count=\'' + this._count + '\'>\n        <a>' + this._name + ' \n          <span class=\'badge badge-light\'>' + this._count + '</span>\n        </a>\n      </li>';
+        var badge = '';
+
+        if (this._count == 0) {
+          badge = '';
+        } else {
+          badge = '<span class=\'badge badge-light\'>' + this._count + '</span>';
+        }
+
+        return '\n      <li class=\'topic\' data-order=\'' + this._order + '\' data-topic=\'' + this._name + '\' data-parent=\'' + this._parent + '\' data-count=\'' + this._count + '\'>\n        <a>' + this._name + ' \n          ' + badge + '\n        </a>\n      </li>';
       }
     }]);
 
@@ -1261,6 +1280,11 @@ define('view/home',['exports', 'model/recordData/recordData', 'model/fileURL', '
         $('#topics .topic').sort(function (a, b) {
           return parseInt($(a).data('count')) < parseInt($(b).data('count')) ? 1 : -1;
         }).appendTo('#topics');
+        if ($('#topics .topic[data-order="1"]').length > 0) {
+          $('#topics .topic').sort(function (a, b) {
+            return parseInt($(a).data('order')) < parseInt($(b).data('order')) ? -1 : 1;
+          }).appendTo('#topics');
+        }
         $('#topics .topic').each(function (index, element) {
           var parent = $(element).data('parent');
           var selector = '#topics .topic[data-topic="' + parent + '"]';
