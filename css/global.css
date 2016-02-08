@@ -168,7 +168,9 @@ input[type=file] {
 
 .nav-pills-nested {
   list-style: none;
-  padding-left: 1em;
+  margin-left: 1em;
+  padding-left: 0;
+  border-left: 1px rgba(0, 0, 0, 0.3) dotted;
 }
 .nav-pills-nested li.active > a {
   color: #fff;
