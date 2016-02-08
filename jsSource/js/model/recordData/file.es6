@@ -63,11 +63,13 @@ function getFileJSON(fileData) {
   let lines = fileData.split("\n");
   let meta = '';
   let parents = [];
-  function setParent(topic, level) {
+  let order = 0;
+  function setParent(topic, level, order) {
     if (file.topics[topic]) {
       file.topics[topic].parent = parents[level];
+      file.topics[topic].order = order;
     } else {
-      file.topics[topic] = {name: topic, count: 0, parent: parents[level]};
+      file.topics[topic] = {name: topic, count: 0, parent: parents[level], order: order};
     }
     parents[level + 1] = topic;
   };
@@ -135,11 +137,13 @@ function getFileJSON(fileData) {
             return self.indexOf(item) == pos;
           });;
         } else if (meta == 'structure') {
+          order += 1;
           const current = line.replace('- ', '').trim();
           if (file.topics[current]) {
             file.topics[current].parent = '';
+            file.topics[current].order = order;
           } else {
-            file.topics[current] = {name: current, count: 0, parent: ''};
+            file.topics[current] = {name: current, count: 0, parent: '', order: order};
           }
           parents[0] = current;
           return;
@@ -148,23 +152,27 @@ function getFileJSON(fileData) {
         }
       } else if (line.startsWith('  - ')) {
         if (meta == 'structure') {
+          order += 1;
           const current = line.replace('  - ', '').trim();
-          setParent(current, 0);
+          setParent(current, 0, order);
         }
       } else if (line.startsWith('    - ')) {
         if (meta == 'structure') {
+          order += 1;
           const current = line.replace('    - ', '').trim();
-          setParent(current, 1);
+          setParent(current, 1, order);
         }
       } else if (line.startsWith('      - ')) {
         if (meta == 'structure') {
+          order += 1;
           const current = line.replace('      - ', '').trim();
-          setParent(current, 2);
+          setParent(current, 2, order);
         }
       } else if (line.startsWith('        - ')) {
         if (meta == 'structure') {
+          order += 1;
           const current = line.replace('        - ', '').trim();
-          setParent(current, 3);
+          setParent(current, 3, order);
         }
       } else {
       }

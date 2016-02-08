@@ -101,6 +101,11 @@ export const app = {
       $('#topics .topic').sort(function(a,b) {
         return parseInt($(a).data('count')) < parseInt($(b).data('count')) ? 1 : -1;
       }).appendTo('#topics');
+      if ($('#topics .topic[data-order="1"]').length > 0) {
+        $('#topics .topic').sort(function(a,b) {
+          return parseInt($(a).data('order')) < parseInt($(b).data('order')) ? -1 : 1;
+        }).appendTo('#topics');
+      }
       $('#topics .topic').each((index, element) => {
         const parent = $(element).data('parent');
         const selector = '#topics .topic[data-topic="' + parent + '"]';
