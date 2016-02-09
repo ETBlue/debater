@@ -226,7 +226,6 @@ input[type=file] {
   #topics.affix {
     position: fixed;
     top: 17px;
-    margin-left: -1px;
     max-height: calc(100vh - 34px);
   }
 }
