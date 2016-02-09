@@ -50,7 +50,7 @@ $(() => {
     //} else {
     //  filterPoints(filters);
     //}
-    fixPoints();
+    //fixPoints();
   });
 
   // expand or collapse nested topics
@@ -111,7 +111,7 @@ $(() => {
   });
 
   // 捲動調整爭點位置
-  $(window).scroll(fixPoints);
+  //$(window).scroll(fixPoints);
 });
 
 

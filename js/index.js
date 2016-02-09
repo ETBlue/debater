@@ -1376,7 +1376,6 @@ define('index.js',['view/home'], function (_home) {
       filterPoints(filters);
       $('#topics [data-topic]').removeClass('active');
       $(this).addClass('active');
-      fixPoints();
     });
     $('#topics').on('click tap', '.glyphicon', function (e) {
       e.stopPropagation();
@@ -1438,7 +1437,6 @@ define('index.js',['view/home'], function (_home) {
 
       filterPoints(filters);
     });
-    $(window).scroll(fixPoints);
   });
 });
 
