@@ -214,6 +214,10 @@ input[type=file] {
   background-color: #337ab7;
 }
 
+#topics {
+  transition: max-height .2s;
+}
+
 @media (min-width: 768px) {
   #topics {
     overflow: scroll;
@@ -226,6 +230,7 @@ input[type=file] {
   #topics.affix {
     position: fixed;
     top: 17px;
+    max-width: calc(25% - 30px);
     max-height: calc(100vh - 34px);
   }
 }
