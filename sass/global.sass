@@ -190,3 +190,24 @@ input[type=file]
         padding: 10px
     &.active>a
       background-color: #337ab7
+
+#topics
+  transition: max-height .2s
+
+@media (min-width: 768px)
+  #topics
+    overflow: scroll
+    &.affix-top
+      max-height: calc(100vh - 89px)
+    &.affix
+      position: fixed
+      top: 17px
+      max-width: calc(25% - 30px)
+      max-height: calc(100vh - 34px)
+
+@media (max-width: 768px)
+  #topics
+    &.affix
+      position: relative
+  #relations
+    margin-top: 17px
