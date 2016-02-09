@@ -214,29 +214,25 @@ input[type=file] {
   background-color: #337ab7;
 }
 
-#topics {
-  transition: max-height .2s;
-}
-
 @media (min-width: 768px) {
-  #topics {
+  #topics-container {
     overflow: scroll;
   }
 
-  #topics.affix-top {
+  #topics-container.affix-top {
     max-height: calc(100vh - 89px);
   }
 
-  #topics.affix {
+  #topics-container.affix {
     position: fixed;
     top: 17px;
-    max-width: calc(25% - 30px);
+    width: calc(25% - 10.75px);
     max-height: calc(100vh - 34px);
   }
 }
 
 @media (max-width: 768px) {
-  #topics.affix {
+  #topics-container.affix {
     position: relative;
   }
   #relations {
