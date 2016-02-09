@@ -3,7 +3,6 @@ html, body {
   background-color: #efefef;
   font-family: "Rosario", "Noto Sans", sans-serif;
   line-height: 1em;
-  
   font-smoothing: subpixel-antialiased !important;
   -webkit-font-smoothing: subpixel-antialiased !important;
   -moz-osx-font-smoothing: auto !important;
@@ -230,11 +229,11 @@ input[type=file] {
     max-height: calc(100vh - 34px);
   }
 }
-
 @media (max-width: 768px) {
   #topics-container.affix {
     position: relative;
   }
+
   #relations {
     margin-top: 17px;
   }
