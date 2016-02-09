@@ -206,6 +206,8 @@ input[type=file]
       top: 17px
       width: calc(25% - 10.75px)
       max-height: calc(100vh - 34px)
+  #relations-container
+    float: right
 
 @media (max-width: 768px)
   #topics
@@ -213,3 +215,8 @@ input[type=file]
       position: relative
   #relations
     margin-top: 17px
+
+@media (min-width: 1200px)
+  #topics-container
+    &.affix
+      width: calc(15% - 6.8px)
