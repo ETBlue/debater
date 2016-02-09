@@ -45,6 +45,11 @@ $(() => {
     filterPoints(filters);
     $('#topics [data-topic]').removeClass('active');
     $(this).addClass('active');
+    
+    $('body, html').stop(true, true).delay(100).animate({
+      scrollTop: $('#relations').offset().top - 17
+    }, 100);
+    
     //if ($(this).text() === $('#topics li').first().text()) {
     //  $('#points .point').css('display', 'block');
     //} else {

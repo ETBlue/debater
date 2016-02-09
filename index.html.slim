@@ -88,12 +88,12 @@ html lang='en'
     section.container
       .row
         .col-sm-3
-          ul#topics.nav.nav-pills.nav-stacked
+          ul#topics.nav.nav-pills.nav-stacked data-spy='affix' data-offset-top='56'
             li.active data-topic=''
               a
                 | All Topics 
                 span.badge.badge-light
-        .col-sm-9
+        .col-sm-9.pull-right
           nav.navbar.small.border-bottom
             ul#relations.nav.nav-pills
               li.active
