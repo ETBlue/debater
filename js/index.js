@@ -1380,11 +1380,11 @@ define('index.js',['view/home'], function (_home) {
     $('#topics').on('click tap', '.glyphicon', function (e) {
       e.stopPropagation();
       $(this).toggleClass('glyphicon-folder-open glyphicon-folder-close');
-      $(this).closest('.topic').children('.nav-pills-nested').slideToggle();
+      $(this).closest('.topic').find('.nav-pills-nested').slideToggle();
     });
     $('#topics').on('click tap', '[data-expandable="true"]', function (e) {
       $(this).find('.glyphicon').addClass('glyphicon-folder-open').removeClass('glyphicon-folder-close');
-      $(this).children('.nav-pills-nested').slideDown();
+      $(this).find('.nav-pills-nested').slideDown();
     });
     var topicExpandAll = true;
     $('#topics').on('click tap', '[data-expandable="all"] .glyphicon', function (e) {
