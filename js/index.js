@@ -1376,6 +1376,9 @@ define('index.js',['view/home'], function (_home) {
       filterPoints(filters);
       $('#topics [data-topic]').removeClass('active');
       $(this).addClass('active');
+      $('body, html').stop(true, true).delay(100).animate({
+        scrollTop: $('#relations').offset().top - 17
+      }, 100);
     });
     $('#topics').on('click tap', '.glyphicon', function (e) {
       e.stopPropagation();
