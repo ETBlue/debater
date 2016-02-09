@@ -1320,9 +1320,9 @@ define('view/home',['exports', 'model/recordData/recordData', 'model/fileURL', '
         points.forEach(function (point) {
           $('#points').append(point);
         });
-        $('#points .point').sort(function (a, b) {
-          return $(a).data('timestamp') > $(b).data('timestamp') ? 1 : -1;
-        }).appendTo('#points');
+        //$('#points .point').sort(function(a,b) {
+        //  return $(a).data('timestamp') > $(b).data('timestamp') ? 1 : -1;
+        //}).appendTo('#points');
         $('#topics [data-topic=""] .badge').html($('#points .point').length);
       });
     }
@@ -1376,10 +1376,6 @@ define('index.js',['view/home'], function (_home) {
       filterPoints(filters);
       $('#topics [data-topic]').removeClass('active');
       $(this).addClass('active');
-      
-      $('body, html').stop(true, true).delay(100).animate({
-          scrollTop: $('#relations').offset().top - 17
-      }, 100);
     });
     $('#topics').on('click tap', '.glyphicon', function (e) {
       e.stopPropagation();
