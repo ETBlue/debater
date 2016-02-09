@@ -229,7 +229,8 @@ input[type=file] {
   #topics-container.affix {
     position: fixed;
     top: 17px;
-    width: calc(25% - 10.75px);
+    width: calc(25vw - 10.75px);
+    max-width: calc(300px - 0.5px);
     max-height: calc(100vh - 34px);
   }
   
