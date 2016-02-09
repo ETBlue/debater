@@ -3,7 +3,6 @@ html, body {
   background-color: #efefef;
   font-family: "Rosario", "Noto Sans", sans-serif;
   line-height: 1em;
-  
   font-smoothing: subpixel-antialiased !important;
   -webkit-font-smoothing: subpixel-antialiased !important;
   -moz-osx-font-smoothing: auto !important;
@@ -215,18 +214,16 @@ input[type=file] {
 }
 
 #topics {
-  transition: max-height .2s;
+  transition: max-height 0.2s;
 }
 
 @media (min-width: 768px) {
   #topics {
     overflow: scroll;
   }
-
   #topics.affix-top {
     max-height: calc(100vh - 89px);
   }
-
   #topics.affix {
     position: fixed;
     top: 17px;
@@ -234,11 +231,11 @@ input[type=file] {
     max-height: calc(100vh - 34px);
   }
 }
-
 @media (max-width: 768px) {
   #topics.affix {
     position: relative;
   }
+
   #relations {
     margin-top: 17px;
   }
