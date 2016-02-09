@@ -247,9 +247,3 @@ input[type=file] {
     margin-top: 17px;
   }
 }
-
-@media (min-width: 1200px) {
-  #topics-container.affix {
-    width: calc(15% - 6.8px);
-  }
-}
