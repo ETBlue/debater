@@ -1215,7 +1215,7 @@ define('view/home',['exports', 'model/recordData/recordData', 'model/fileURL', '
           Object.keys(savedURLHistory).forEach(function (key) {
             html += '\n            <li>\n              <a data-url=\'' + key + '\'>' + savedURLHistory[key] + '</a>\n            </li>\n          ';
           });
-          html += '\n            <li role="separator" class="divider"></li>\n            <li>\n              <a data-action="clear">Clear Hostory</a>\n            </li>\n        ';
+          html += '\n            <li role="separator" class="divider"></li>\n            <li>\n              <a data-action="clear">Clear Hostory</a>\n            </li>\n            <li>\n              <a href=\'https://hackmd.io/new\' target=\'_blank\'>New Issue</a>\n            </li>\n            <li>\n              <a href=\'https://hackmd.io/CYZmCYDYFMAYA4C0BWAnARnYgLAI1gMaKoyQ6wbjbK7gTJA=\' target=\'_blank\'>Sample</a>\n            </li>\n        ';
           return html;
         }
       });
