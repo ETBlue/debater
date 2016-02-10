@@ -30,6 +30,12 @@ export const app = {
             <li>
               <a data-action="clear">Clear Hostory</a>
             </li>
+            <li>
+              <a href='https://hackmd.io/new' target='_blank'>New Issue</a>
+            </li>
+            <li>
+              <a href='https://hackmd.io/CYZmCYDYFMAYA4C0BWAnARnYgLAI1gMaKoyQ6wbjbK7gTJA=' target='_blank'>Sample</a>
+            </li>
         `;
         return html;
       }
