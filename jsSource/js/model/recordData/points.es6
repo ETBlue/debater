@@ -30,7 +30,7 @@ class Point {
   toHTML() {
     let topics = this._data.topics || [];
     topics = topics.map((topic) => {
-      return `<span data-topic='${topic}'></span>`;
+      return `<span class='badge badge-light' data-topic='${topic}'>${topic}</span>`;
     }).join("");
     let relations = this._data.relations || [];
     relations = relations.map((relation) => {
@@ -42,12 +42,14 @@ class Point {
     }).join("");
     return `
       <blockquote class='point' data-timestamp="${this._data.timestamp}" cite="${this._data.url}">
+        <p class="align-right clear">
+          ${topics}
+        </p>
         <p>${this._data.content}</p>
         <div class="align-right small">
           <a href="${this._data.url}">${this._data.timestamp}</a> by <a data-author="${this._data.author}">${this._data.author}</a>
         </div>
         <div class="align-right clear">
-          ${topics}
           ${relations}
           ${professions}
         </div>

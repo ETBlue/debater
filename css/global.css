@@ -73,18 +73,25 @@ blockquote {
 blockquote p {
   margin: 0;
 }
-blockquote .label {
-  line-height: 2em;
-  cursor: pointer;
+blockquote p:first-child {
+  margin-bottom: 0.2em;
+}
+blockquote .badge {
   font-weight: normal;
+  margin: 0 0.25em;
 }
-
-.label-light {
+blockquote .badge:last-child {
+  margin-right: 0;
+}
+blockquote .badge-light {
   color: rgba(0, 0, 0, 0.5);
-  background-color: transparent;
 }
-.label-light:hover {
+blockquote .badge-light:hover {
   color: rgba(0, 0, 0, 0.4);
+}
+blockquote .badge-light.active {
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
 .navbar {
@@ -222,11 +229,9 @@ input[type=file] {
   #topics-container {
     overflow: scroll;
   }
-
   #topics-container.affix-top {
     max-height: calc(100vh - 89px);
   }
-
   #topics-container.affix {
     position: fixed;
     top: 17px;
@@ -234,12 +239,11 @@ input[type=file] {
     max-width: calc(300px - 0.5px);
     max-height: calc(100vh - 34px);
   }
-  
+
   #relations-container {
     float: right;
   }
 }
-
 @media (max-width: 768px) {
   #topics-container.affix {
     position: relative;

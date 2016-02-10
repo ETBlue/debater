@@ -43,8 +43,9 @@ $(() => {
       delete filters.topic;
     }
     filterPoints(filters);
-    $('#topics [data-topic]').removeClass('active');
+    $('#topics [data-topic], #points [data-topic]').removeClass('active');
     $(this).addClass('active');
+    $('#points [data-topic="' + filters.topic + '"]').addClass('active');
     
     $('body, html').stop(true, true).delay(100).animate({
       scrollTop: $('#relations').offset().top - 17

@@ -69,18 +69,24 @@ blockquote
   margin-bottom: 1rem
   p
     margin: 0
-  .label
-    line-height: 2em
-    cursor: pointer
+    &:first-child
+      margin-bottom: 0.2em
+  .badge
+    //line-height: 2em
+    //cursor: pointer
     font-weight: normal
+    margin: 0 0.25em
     &:last-child
-      //margin-right: 0
+      margin-right: 0
 
-.label-light
-  color: rgba(#000,0.5)
-  background-color: rgba(#000,0)
-  &:hover
-    color: rgba(#000,0.4)
+  .badge-light
+    color: rgba(#000,0.5)
+    //background-color: rgba(#000,0.05)
+    &:hover
+      color: rgba(#000,0.4)
+    &.active
+      color: #fff
+      background-color: rgba(#000,0.4)
 
 // for navbars
 
@@ -197,22 +203,25 @@ input[type=file]
     &.active>a
       background-color: #337ab7
 
+#navbar-collapse-level1
+  overflow: visible
+
 @media (min-width: 768px)
-  #topics
+  #topics-container
     overflow: scroll
     &.affix-top
       max-height: calc(100vh - 89px)
     &.affix
       position: fixed
       top: 17px
-      width: calc(25% - 10.75px)
+      width: calc(25vw - 10.75px)
       max-width: calc(300px - 0.5px)
       max-height: calc(100vh - 34px)
   #relations-container
     float: right
 
 @media (max-width: 768px)
-  #topics
+  #topics-container
     &.affix
       position: relative
   #relations

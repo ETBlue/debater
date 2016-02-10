@@ -1113,7 +1113,7 @@ define('model/recordData/points',['exports', 'model/recordData/file'], function 
       value: function toHTML() {
         var topics = this._data.topics || [];
         topics = topics.map(function (topic) {
-          return '<span data-topic=\'' + topic + '\'></span>';
+          return '<span class=\'badge badge-light\' data-topic=\'' + topic + '\'>' + topic + '</span>';
         }).join("");
         var relations = this._data.relations || [];
         relations = relations.map(function (relation) {
@@ -1123,7 +1123,7 @@ define('model/recordData/points',['exports', 'model/recordData/file'], function 
         professions = professions.map(function (profession) {
           return '<span data-profession=\'' + profession + '\'></span>';
         }).join("");
-        return '\n      <blockquote class=\'point\' data-timestamp="' + this._data.timestamp + '" cite="' + this._data.url + '">\n        <p>' + this._data.content + '</p>\n        <div class="align-right small">\n          <a href="' + this._data.url + '">' + this._data.timestamp + '</a> by <a data-author="' + this._data.author + '">' + this._data.author + '</a>\n        </div>\n        <div class="align-right clear">\n          ' + topics + '\n          ' + relations + '\n          ' + professions + '\n        </div>\n      </blockquote>\n    ';
+        return '\n      <blockquote class=\'point\' data-timestamp="' + this._data.timestamp + '" cite="' + this._data.url + '">\n        <p class="align-right clear">\n          ' + topics + '\n        </p>\n        <p>' + this._data.content + '</p>\n        <div class="align-right small">\n          <a href="' + this._data.url + '">' + this._data.timestamp + '</a> by <a data-author="' + this._data.author + '">' + this._data.author + '</a>\n        </div>\n        <div class="align-right clear">\n          ' + relations + '\n          ' + professions + '\n        </div>\n      </blockquote>\n    ';
       }
     }]);
 
@@ -1374,8 +1374,9 @@ define('index.js',['view/home'], function (_home) {
       }
 
       filterPoints(filters);
-      $('#topics [data-topic]').removeClass('active');
+      $('#topics [data-topic], #points [data-topic]').removeClass('active');
       $(this).addClass('active');
+      $('#points [data-topic="' + filters.topic + '"]').addClass('active');
       $('body, html').stop(true, true).delay(100).animate({
         scrollTop: $('#relations').offset().top - 17
       }, 100);
