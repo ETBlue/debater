@@ -139,6 +139,7 @@ blockquote .label {
 }
 .navbar .input-group-btn li a {
   font-size: 0.9rem;
+  cursor: pointer;
 }
 
 .form-control {
