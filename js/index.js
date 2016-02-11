@@ -1379,6 +1379,7 @@ define('index.js',['view/home'], function (_home) {
       $('#topics [data-topic], #points [data-topic]').removeClass('active');
       $(this).addClass('active');
       $('#points [data-topic="' + filters.topic + '"]').addClass('active');
+      $('#topics .nav-pills-nested').not($(this).parents('.nav-pills-nested')).slideUp();
       $(this).parents('.nav-pills-nested').slideDown();
       $('body, html').stop(true, true).delay(100).animate({
         scrollTop: $('#relations').offset().top - 17
