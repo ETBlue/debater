@@ -103,13 +103,17 @@ function getFileJSON(fileData) {
       } else if (line.startsWith('- ')) {
         if (meta == 'posts') {
           if (!line.includes('#')) {
-            return;
+            //return;
           }
           let topics = [];
+          let content = '';
           if (line.indexOf('#') > 0) {
+            content = line.substring(2, line.indexOf('#'));
             topics = line.substring(line.indexOf('#') + 1).split('#').map((topic) => {
               return topic.trim();
             });
+          } else {
+            content = line.substring(2);
           }
           const relations = file.authors[file.authors.length - 1]['relations'] || '';
           const professions = file.authors[file.authors.length - 1]['professions'] || '';
@@ -120,7 +124,7 @@ function getFileJSON(fileData) {
             relations: relations,
             professions: professions,
             topics: topics,
-            content: line.substring(2, line.indexOf('#'))
+            content: content
           }
           file.points.push(point);
           topics.forEach((topic) => {
