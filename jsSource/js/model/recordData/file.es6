@@ -110,7 +110,9 @@ function getFileJSON(fileData) {
           if (line.indexOf('#') > 0) {
             content = line.substring(2, line.indexOf('#'));
             topics = line.substring(line.indexOf('#') + 1).split('#').map((topic) => {
-              return topic.trim();
+              if (topic.length > 0) {
+                return topic.trim();
+              }
             });
           } else {
             content = line.substring(2);
