@@ -1,16 +1,19 @@
 $(() => {
+
+  // unused
   // 爭點太少的自動定位到右方畫面
-  const fixPoints = () => {
-    const scrollHeight = $(window).scrollTop();
-    const divHeight = $('#points').height();
+  //const fixPoints = () => {
+  //  const scrollHeight = $(window).scrollTop();
+  //  const divHeight = $('#points').height();
+  //
+  //  if (scrollHeight > divHeight) {
+  //    $('#points').css('position', 'fixed').css('top', '15px');
+  //  } else {
+  //    $('#points').css('position', 'initial').css('top', 'initial');
+  //  }
+  //};
 
-    if (scrollHeight > divHeight) {
-      $('#points').css('position', 'fixed').css('top', '15px');
-    } else {
-      $('#points').css('position', 'initial').css('top', 'initial');
-    }
-  };
-
+  // hide local file option by default
   $('#fileChooser').toggle();
 
   // toggle about section
@@ -25,7 +28,6 @@ $(() => {
   });
 
   // initialize filter
-
   let filters = {};
   function filterPoints(filters) {
     $('#points .point').css('display', 'block');
@@ -34,8 +36,11 @@ $(() => {
     });
   }
 
+  // when users click left sidebar
   $('#topics').on('click tap', '[data-topic]', function (e) {
     e.stopPropagation();
+
+    // re-filter points
     const topic = $(this).attr('data-topic');
     if (topic.length > 0) {
       filters.topic = topic;
@@ -43,12 +48,22 @@ $(() => {
       delete filters.topic;
     }
     filterPoints(filters);
+
+    // create highlight effect
     $('#topics [data-topic], #points [data-topic]').removeClass('active');
     $(this).addClass('active');
     $(`#points [data-topic="${filters.topic}"]`).addClass('active');
-    $('#topics .nav-pills-nested').not($(this).parents('.nav-pills-nested')).slideUp();
+
+    // create accordion effect
+    $('#topics .nav-pills-nested').not($(this)).not($(this).parents('.nav-pills-nested')).not($(this).find('.nav-pills-nested')).slideUp();
     $(this).parents('.nav-pills-nested').slideDown();
-    
+    $(this).find('.nav-pills-nested').slideDown();
+
+    // switch icons for accordion effect
+    $('#topics [data-expandable="true"]').not($(this)).not($(this).parents('[data-expandable="true"]')).find('.glyphicon').removeClass('glyphicon-folder-open').addClass('glyphicon-folder-close');
+    $(this).parents('[data-expandable="true"]').find('.glyphicon').addClass('glyphicon-folder-open').removeClass('glyphicon-folder-close')
+
+    // 
     $('body, html').stop(true, true).delay(100).animate({
       scrollTop: $('#relations').offset().top - 17
     }, 100);
@@ -61,19 +76,28 @@ $(() => {
     //fixPoints();
   });
 
-  // expand or collapse nested topics
+  // when user click folder icons
   $('#topics').on('click tap', '.glyphicon', function (e) {
     e.stopPropagation();
+    // switch icon
     $(this).toggleClass('glyphicon-folder-open glyphicon-folder-close');
+    // expand or collapse level 2+ topics under this section
     $(this).closest('.topic').find('.nav-pills-nested').slideToggle();
   });
+
+  // when user click level 1 topics
   $('#topics').on('click tap', '[data-expandable="true"]', function (e) {
+    // switch icon
     $(this).find('.glyphicon').addClass('glyphicon-folder-open').removeClass('glyphicon-folder-close');
+    // expand level 2+ topics under this section
     $(this).find('.nav-pills-nested').slideDown();
   });
+
   // expand / collapse all topics
   let topicExpandAll = true;
+  // when users click icons inside "all topics"
   $('#topics').on('click tap', '[data-expandable="all"] .glyphicon', function (e) {
+    // toggle topics expand status
     if (topicExpandAll) {
       $('#topics .glyphicon').addClass('glyphicon-folder-close').removeClass('glyphicon-folder-open');
       $('#topics .nav-pills-nested').slideUp();

@@ -1337,17 +1337,6 @@ define('view/home',['exports', 'model/recordData/recordData', 'model/fileURL', '
 
 define('index.js',['view/home'], function (_home) {
   $(function () {
-    var fixPoints = function fixPoints() {
-      var scrollHeight = $(window).scrollTop();
-      var divHeight = $('#points').height();
-
-      if (scrollHeight > divHeight) {
-        $('#points').css('position', 'fixed').css('top', '15px');
-      } else {
-        $('#points').css('position', 'initial').css('top', 'initial');
-      }
-    };
-
     $('#fileChooser').toggle();
     $('[data-click="toggleAbout"]').on('click tap', function () {
       $('#about').slideToggle();
@@ -1379,8 +1368,11 @@ define('index.js',['view/home'], function (_home) {
       $('#topics [data-topic], #points [data-topic]').removeClass('active');
       $(this).addClass('active');
       $('#points [data-topic="' + filters.topic + '"]').addClass('active');
-      $('#topics .nav-pills-nested').not($(this).parents('.nav-pills-nested')).slideUp();
+      $('#topics .nav-pills-nested').not($(this)).not($(this).parents('.nav-pills-nested')).not($(this).find('.nav-pills-nested')).slideUp();
       $(this).parents('.nav-pills-nested').slideDown();
+      $(this).find('.nav-pills-nested').slideDown();
+      $('#topics [data-expandable="true"]').not($(this)).not($(this).parents('[data-expandable="true"]')).find('.glyphicon').removeClass('glyphicon-folder-open').addClass('glyphicon-folder-close');
+      $(this).parents('[data-expandable="true"]').find('.glyphicon').addClass('glyphicon-folder-open').removeClass('glyphicon-folder-close');
       $('body, html').stop(true, true).delay(100).animate({
         scrollTop: $('#relations').offset().top - 17
       }, 100);
