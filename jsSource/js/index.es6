@@ -30,7 +30,7 @@ $(() => {
   function filterPoints(filters) {
     $('#points .point').css('display', 'block');
     Object.keys(filters).forEach((key) => {
-      $('#points .point').not($('#points .point').has('[data-' + key + '="' + filters[key] + '"]')).css('display', 'none');
+      $('#points .point').not($('#points .point').has(`[data-${key}="${filters[key]}"]`)).css('display', 'none');
     });
   }
 
@@ -45,7 +45,8 @@ $(() => {
     filterPoints(filters);
     $('#topics [data-topic], #points [data-topic]').removeClass('active');
     $(this).addClass('active');
-    $('#points [data-topic="' + filters.topic + '"]').addClass('active');
+    $(`#points [data-topic="${filters.topic}"]`).addClass('active');
+    $(this).parents('.nav-pills-nested').slideDown();
     
     $('body, html').stop(true, true).delay(100).animate({
       scrollTop: $('#relations').offset().top - 17
@@ -115,6 +116,10 @@ $(() => {
       delete filters.author;
     }
     filterPoints(filters);
+  });
+  $('#points').on('click tap', '[data-topic]', function() {
+    const topic = $(this).attr('data-topic');
+    $(`#topics [data-topic="${topic}"]`).click();
   });
 
   // 捲動調整爭點位置

@@ -1379,6 +1379,7 @@ define('index.js',['view/home'], function (_home) {
       $('#topics [data-topic], #points [data-topic]').removeClass('active');
       $(this).addClass('active');
       $('#points [data-topic="' + filters.topic + '"]').addClass('active');
+      $(this).parents('.nav-pills-nested').slideDown();
       $('body, html').stop(true, true).delay(100).animate({
         scrollTop: $('#relations').offset().top - 17
       }, 100);
@@ -1442,6 +1443,10 @@ define('index.js',['view/home'], function (_home) {
       }
 
       filterPoints(filters);
+    });
+    $('#points').on('click tap', '[data-topic]', function () {
+      var topic = $(this).attr('data-topic');
+      $('#topics [data-topic="' + topic + '"]').click();
     });
   });
 });
