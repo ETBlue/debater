@@ -227,7 +227,7 @@ input[type=file] {
 
 @media (min-width: 768px) {
   #topics-container {
-    overflow: scroll;
+    overflow-y: scroll;
   }
   #topics-container.affix-top {
     max-height: calc(100vh - 89px);
