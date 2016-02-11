@@ -591,16 +591,18 @@ define('model/recordData/file',['exports', 'model/fileURL', 'model/fileSource', 
           meta = 'structure';
         } else if (line.startsWith('- ')) {
           if (meta == 'posts') {
-            if (!line.includes('#')) {
-              return;
-            }
+            if (!line.includes('#')) {}
 
             var topics = [];
+            var content = '';
 
             if (line.indexOf('#') > 0) {
+              content = line.substring(2, line.indexOf('#'));
               topics = line.substring(line.indexOf('#') + 1).split('#').map(function (topic) {
                 return topic.trim();
               });
+            } else {
+              content = line.substring(2);
             }
 
             var relations = file.authors[file.authors.length - 1]['relations'] || '';
@@ -612,7 +614,7 @@ define('model/recordData/file',['exports', 'model/fileURL', 'model/fileSource', 
               relations: relations,
               professions: professions,
               topics: topics,
-              content: line.substring(2, line.indexOf('#'))
+              content: content
             };
             file.points.push(point);
             topics.forEach(function (topic) {
