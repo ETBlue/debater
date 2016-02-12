@@ -30,10 +30,12 @@ $(() => {
   // initialize filter
   let filters = {};
   function filterPoints(filters) {
-    $('#points .point').css('display', 'block');
-    Object.keys(filters).forEach((key) => {
-      $('#points .point').not($('#points .point').has(`[data-${key}="${filters[key]}"]`)).css('display', 'none');
-    });
+    if ($('#points .point').has(`[data-topic="${filters.topic}"]`).length > 0) {
+      $('#points .point').css('display', 'block');
+      Object.keys(filters).forEach((key) => {
+        $('#points .point').not($('#points .point').has(`[data-${key}="${filters[key]}"]`)).css('display', 'none');
+      });
+    }
   }
 
   // when users click left sidebar
@@ -96,7 +98,7 @@ $(() => {
   // expand / collapse all topics
   let topicExpandAll = true;
   // when users click icons inside "all topics"
-  $('#topics').on('click tap', '[data-expandable="all"] .glyphicon', function (e) {
+  $('#topics').on('click tap', '[data-expandable="all"] .glyphicon, [data-expandable="all"]', function (e) {
     // toggle topics expand status
     if (topicExpandAll) {
       $('#topics .glyphicon').addClass('glyphicon-folder-close').removeClass('glyphicon-folder-open');

@@ -1350,10 +1350,12 @@ define('index.js',['view/home'], function (_home) {
     var filters = {};
 
     function filterPoints(filters) {
-      $('#points .point').css('display', 'block');
-      Object.keys(filters).forEach(function (key) {
-        $('#points .point').not($('#points .point').has('[data-' + key + '="' + filters[key] + '"]')).css('display', 'none');
-      });
+      if ($('#points .point').has('[data-topic="' + filters.topic + '"]').length > 0) {
+        $('#points .point').css('display', 'block');
+        Object.keys(filters).forEach(function (key) {
+          $('#points .point').not($('#points .point').has('[data-' + key + '="' + filters[key] + '"]')).css('display', 'none');
+        });
+      }
     }
 
     $('#topics').on('click tap', '[data-topic]', function (e) {
@@ -1389,7 +1391,7 @@ define('index.js',['view/home'], function (_home) {
       $(this).find('.nav-pills-nested').slideDown();
     });
     var topicExpandAll = true;
-    $('#topics').on('click tap', '[data-expandable="all"] .glyphicon', function (e) {
+    $('#topics').on('click tap', '[data-expandable="all"] .glyphicon, [data-expandable="all"]', function (e) {
       if (topicExpandAll) {
         $('#topics .glyphicon').addClass('glyphicon-folder-close').removeClass('glyphicon-folder-open');
         $('#topics .nav-pills-nested').slideUp();
