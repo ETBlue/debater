@@ -1,5 +1,7 @@
 Growth Hack 事件簿
 
+文件更新版已搬到方便編輯的 hackmd： https://hackmd.io/KwdgLAnMYIwwtBAbCADPMAmAzMeAjMAMzAKKNQBMkBTIkfETIA==
+
 # 孤獨的踩雷家
 
 ## profiles
