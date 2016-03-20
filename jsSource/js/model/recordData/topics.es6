@@ -11,9 +11,10 @@ export const topics = {
     const loadDeferred = new $.Deferred();
     const waiting = [];
     waiting.push(file.load());
+    $('#topics').html(`<li data-topic="" data-expandable="all" class="active" data-summary=""><a>All Topics <span class="badge badge-light"></span><span class="glyphicon-light glyphicon glyphicon-folder-open"></span></a></li>`);
     $.when.apply($.when, waiting).done(() => {
       const description = file.get('description');
-      $('#topics').html(`<li data-topic="" data-expandable="all" class="active" data-summary="${description}"><a>All Topics <span class="badge badge-light"></span><span class="glyphicon-light glyphicon glyphicon-folder-open"></span></a></li>`);
+      $('#topics [data-topic=""]').attr('data-summary', description);
       const topics = file.get('topics');
       Object.keys(topics).forEach((topicName) => {
         const topic = new Topic( topics[topicName].count, topics[topicName].name, topics[topicName].parent, topics[topicName].order, topics[topicName].summary);

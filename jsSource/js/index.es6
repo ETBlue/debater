@@ -29,12 +29,41 @@ $(() => {
 
   // initialize filter
   let filters = {};
+  let topicsFilter = [];
   function filterPoints(filters) {
-    if ($('#points .point').has(`[data-topic="${filters.topic}"]`).length > 0) {
+    const pointsCount = $('#points .point').has(`[data-topic="${filters.topic}"]`).length;
+    // for filters with tag topics
+    if (pointsCount > 0) {
       $('#points .point').css('display', 'block');
       Object.keys(filters).forEach((key) => {
         $('#points .point').not($('#points .point').has(`[data-${key}="${filters[key]}"]`)).css('display', 'none');
       });
+    // for filters with collection topics
+    } else {
+      // for tags item
+      if (filters.topic) {
+        // topic filter
+        $('#points .point').css('display', 'none');
+        topicsFilter.forEach((topic) => {
+          $(`#points .point`).has(`[data-topic="${topic}"]`).css('display', 'block');
+        });
+        // other filters
+        Object.keys(filters).forEach((key) => {
+          if (key != 'topic') {
+            $('#points .point').not($('#points .point').has(`[data-${key}="${filters[key]}"]`)).css('display', 'none');
+          }
+        });
+      // for all topics item
+      } else {
+        // topic filter
+        $('#points .point').css('display', 'block');
+        // other filters
+        Object.keys(filters).forEach((key) => {
+          if (key != 'topic') {
+            $('#points .point').not($('#points .point').has(`[data-${key}="${filters[key]}"]`)).css('display', 'none');
+          }
+        });
+      }
     }
   }
 
@@ -56,6 +85,10 @@ $(() => {
     } else {
       delete filters.topic;
     }
+    topicsFilter = [];
+    $(this).find('[data-topic]').each((index, element) => {
+      topicsFilter.push($(element).attr('data-topic'));
+    });
     filterPoints(filters);
 
     // create highlight effect
