@@ -42,6 +42,13 @@ $(() => {
   $('#topics').on('click tap', '[data-topic]', function (e) {
     e.stopPropagation();
 
+    // insert topic summary
+    if ( $(this).attr('data-summary').length > 0 ) {
+      $('#summary').show().html($(this).attr('data-summary'));
+    } else {
+      $('#summary').hide();
+    }
+
     // re-filter points
     const topic = $(this).attr('data-topic');
     if (topic.length > 0) {

@@ -53,7 +53,8 @@ class File {
 
 function getFileJSON(fileData) {
   let file = {
-    title: "",
+    title: '',
+    description: '',
     authors: [],
     points: [],
     professions: [],
@@ -75,7 +76,11 @@ function getFileJSON(fileData) {
     parents[level] = topic;
   };
   function setSummary(topic, summary) {
-    file.topics[topic].summary = summary;
+    if (topic) {
+      file.topics[topic].summary = summary;
+    } else {
+      file.description = summary;
+    }
   }
 
   $.each(lines, (index, line) => {
@@ -185,27 +190,27 @@ function getFileJSON(fileData) {
         }
       } else if (line.startsWith('```')) {
         if (meta == 'structure') {
-          const summary = line.replace('```', '').trim();
+          const summary = line.replace(/```/g, '').trim();
           setSummary(currentTopic, summary);
         }
       } else if (line.startsWith('  ```')) {
         if (meta == 'structure') {
-          const summary = line.replace('```', '').trim();
+          const summary = line.replace(/```/g, '').trim();
           setSummary(currentTopic, summary);
         }
       } else if (line.startsWith('    ```')) {
         if (meta == 'structure') {
-          const summary = line.replace('```', '').trim();
+          const summary = line.replace(/```/g, '').trim();
           setSummary(currentTopic, summary);
         }
       } else if (line.startsWith('      ```')) {
         if (meta == 'structure') {
-          const summary = line.replace('```', '').trim();
+          const summary = line.replace(/```/g, '').trim();
           setSummary(currentTopic, summary);
         }
       } else if (line.startsWith('        ```')) {
         if (meta == 'structure') {
-          const summary = line.replace('```', '').trim();
+          const summary = line.replace(/```/g, '').trim();
           setSummary(currentTopic, summary);
         }
       }
