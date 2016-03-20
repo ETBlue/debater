@@ -68,7 +68,7 @@ p:last-child {
 #summary {
   margin: 1rem 0;
   padding: 1rem;
-  background-color: rgba(179, 230, 204, 0.5);
+  background-color: rgba(179, 229, 230, 0.5);
   -moz-box-shadow: rgba(0, 0, 0, 0.2) 0.1rem 0.1rem 0.2rem;
   -webkit-box-shadow: rgba(0, 0, 0, 0.2) 0.1rem 0.1rem 0.2rem;
   box-shadow: rgba(0, 0, 0, 0.2) 0.1rem 0.1rem 0.2rem;

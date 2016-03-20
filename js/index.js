@@ -1030,9 +1030,10 @@ define('model/recordData/topics',['exports', 'model/recordData/file'], function 
       var loadDeferred = new $.Deferred();
       var waiting = [];
       waiting.push(_file.file.load());
+      $('#topics').html('<li data-topic="" data-expandable="all" class="active" data-summary=""><a>All Topics <span class="badge badge-light"></span><span class="glyphicon-light glyphicon glyphicon-folder-open"></span></a></li>');
       $.when.apply($.when, waiting).done(function () {
         var description = _file.file.get('description');
-        $('#topics').html('<li data-topic="" data-expandable="all" class="active" data-summary="' + description + '"><a>All Topics <span class="badge badge-light"></span><span class="glyphicon-light glyphicon glyphicon-folder-open"></span></a></li>');
+        $('#topics [data-topic=""]').attr('data-summary', description);
         var topics = _file.file.get('topics');
         Object.keys(topics).forEach(function (topicName) {
           var topic = new Topic(topics[topicName].count, topics[topicName].name, topics[topicName].parent, topics[topicName].order, topics[topicName].summary);
@@ -1384,13 +1385,35 @@ define('index.js',['view/home'], function (_home) {
       $('[data-source]').toggleClass('btn-active');
     });
     var filters = {};
+    var topicsFilter = [];
 
     function filterPoints(filters) {
-      if ($('#points .point').has('[data-topic="' + filters.topic + '"]').length > 0) {
+      var pointsCount = $('#points .point').has('[data-topic="' + filters.topic + '"]').length;
+
+      if (pointsCount > 0) {
         $('#points .point').css('display', 'block');
         Object.keys(filters).forEach(function (key) {
           $('#points .point').not($('#points .point').has('[data-' + key + '="' + filters[key] + '"]')).css('display', 'none');
         });
+      } else {
+        if (filters.topic) {
+          $('#points .point').css('display', 'none');
+          topicsFilter.forEach(function (topic) {
+            $('#points .point').has('[data-topic="' + topic + '"]').css('display', 'block');
+          });
+          Object.keys(filters).forEach(function (key) {
+            if (key != 'topic') {
+              $('#points .point').not($('#points .point').has('[data-' + key + '="' + filters[key] + '"]')).css('display', 'none');
+            }
+          });
+        } else {
+          $('#points .point').css('display', 'block');
+          Object.keys(filters).forEach(function (key) {
+            if (key != 'topic') {
+              $('#points .point').not($('#points .point').has('[data-' + key + '="' + filters[key] + '"]')).css('display', 'none');
+            }
+          });
+        }
       }
     }
 
@@ -1411,6 +1434,10 @@ define('index.js',['view/home'], function (_home) {
         delete filters.topic;
       }
 
+      topicsFilter = [];
+      $(this).find('[data-topic]').each(function (index, element) {
+        topicsFilter.push($(element).attr('data-topic'));
+      });
       filterPoints(filters);
       $('#topics [data-topic], #points [data-topic]').removeClass('active');
       $(this).addClass('active');
