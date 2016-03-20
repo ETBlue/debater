@@ -64,15 +64,19 @@ function getFileJSON(fileData) {
   let meta = '';
   let parents = [];
   let order = 0;
+  let currentTopic = '';
   function setParent(topic, level, order) {
     if (file.topics[topic]) {
-      file.topics[topic].parent = parents[level];
+      file.topics[topic].parent = parents[level -1] || '';
       file.topics[topic].order = order;
     } else {
-      file.topics[topic] = {name: topic, count: 0, parent: parents[level], order: order};
+      file.topics[topic] = {name: topic, count: 0, parent: parents[level -1] || '', order: order, summary: ''};
     }
-    parents[level + 1] = topic;
+    parents[level] = topic;
   };
+  function setSummary(topic, summary) {
+    file.topics[topic].summary = summary;
+  }
 
   $.each(lines, (index, line) => {
     if (line) {
@@ -145,13 +149,8 @@ function getFileJSON(fileData) {
         } else if (meta == 'structure') {
           order += 1;
           const current = line.replace('- ', '').trim();
-          if (file.topics[current]) {
-            file.topics[current].parent = '';
-            file.topics[current].order = order;
-          } else {
-            file.topics[current] = {name: current, count: 0, parent: '', order: order};
-          }
-          parents[0] = current;
+          currentTopic = current;
+          setParent(current, 0, order);
           return;
         } else {
           file.authors[file.authors.length - 1][meta].push(line.substring(2));
@@ -160,27 +159,55 @@ function getFileJSON(fileData) {
         if (meta == 'structure') {
           order += 1;
           const current = line.replace('  - ', '').trim();
-          setParent(current, 0, order);
+          currentTopic = current;
+          setParent(current, 1, order);
         }
       } else if (line.startsWith('    - ')) {
         if (meta == 'structure') {
           order += 1;
           const current = line.replace('    - ', '').trim();
-          setParent(current, 1, order);
+          currentTopic = current;
+          setParent(current, 2, order);
         }
       } else if (line.startsWith('      - ')) {
         if (meta == 'structure') {
           order += 1;
           const current = line.replace('      - ', '').trim();
-          setParent(current, 2, order);
+          currentTopic = current;
+          setParent(current, 3, order);
         }
       } else if (line.startsWith('        - ')) {
         if (meta == 'structure') {
           order += 1;
           const current = line.replace('        - ', '').trim();
-          setParent(current, 3, order);
+          currentTopic = current;
+          setParent(current, 4, order);
         }
-      } else {
+      } else if (line.startsWith('```')) {
+        if (meta == 'structure') {
+          const summary = line.replace('```', '').trim();
+          setSummary(currentTopic, summary);
+        }
+      } else if (line.startsWith('  ```')) {
+        if (meta == 'structure') {
+          const summary = line.replace('```', '').trim();
+          setSummary(currentTopic, summary);
+        }
+      } else if (line.startsWith('    ```')) {
+        if (meta == 'structure') {
+          const summary = line.replace('```', '').trim();
+          setSummary(currentTopic, summary);
+        }
+      } else if (line.startsWith('      ```')) {
+        if (meta == 'structure') {
+          const summary = line.replace('```', '').trim();
+          setSummary(currentTopic, summary);
+        }
+      } else if (line.startsWith('        ```')) {
+        if (meta == 'structure') {
+          const summary = line.replace('```', '').trim();
+          setSummary(currentTopic, summary);
+        }
       }
     }
   });
