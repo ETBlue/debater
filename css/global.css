@@ -65,6 +65,15 @@ p:last-child {
   display: none;
 }
 
+#summary {
+  margin: 1rem 0;
+  padding: 1rem;
+  background-color: rgba(179, 230, 204, 0.5);
+  -moz-box-shadow: rgba(0, 0, 0, 0.2) 0.1rem 0.1rem 0.2rem;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.2) 0.1rem 0.1rem 0.2rem;
+  box-shadow: rgba(0, 0, 0, 0.2) 0.1rem 0.1rem 0.2rem;
+}
+
 blockquote {
   border-color: rgba(0, 0, 0, 0.1);
   padding: 0 1rem;

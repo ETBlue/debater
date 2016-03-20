@@ -532,7 +532,8 @@ define('model/recordData/file',['exports', 'model/fileURL', 'model/fileSource', 
 
   function getFileJSON(fileData) {
     var file = {
-      title: "",
+      title: '',
+      description: '',
       authors: [],
       points: [],
       professions: [],
@@ -543,24 +544,35 @@ define('model/recordData/file',['exports', 'model/fileURL', 'model/fileSource', 
     var meta = '';
     var parents = [];
     var order = 0;
+    var currentTopic = '';
 
     function setParent(topic, level, order) {
       if (file.topics[topic]) {
-        file.topics[topic].parent = parents[level];
+        file.topics[topic].parent = parents[level - 1] || '';
         file.topics[topic].order = order;
       } else {
         file.topics[topic] = {
           name: topic,
           count: 0,
-          parent: parents[level],
-          order: order
+          parent: parents[level - 1] || '',
+          order: order,
+          summary: ''
         };
       }
 
-      parents[level + 1] = topic;
+      parents[level] = topic;
     }
 
     ;
+
+    function setSummary(topic, summary) {
+      if (topic) {
+        file.topics[topic].summary = summary;
+      } else {
+        file.description = summary;
+      }
+    }
+
     $.each(lines, function (index, line) {
       if (line) {
         if (file.title.length == 0 && line[0] != '#') {
@@ -640,20 +652,8 @@ define('model/recordData/file',['exports', 'model/fileURL', 'model/fileSource', 
           } else if (meta == 'structure') {
             order += 1;
             var current = line.replace('- ', '').trim();
-
-            if (file.topics[current]) {
-              file.topics[current].parent = '';
-              file.topics[current].order = order;
-            } else {
-              file.topics[current] = {
-                name: current,
-                count: 0,
-                parent: '',
-                order: order
-              };
-            }
-
-            parents[0] = current;
+            currentTopic = current;
+            setParent(current, 0, order);
             return;
           } else {
             file.authors[file.authors.length - 1][meta].push(line.substring(2));
@@ -662,27 +662,56 @@ define('model/recordData/file',['exports', 'model/fileURL', 'model/fileSource', 
           if (meta == 'structure') {
             order += 1;
             var current = line.replace('  - ', '').trim();
-            setParent(current, 0, order);
+            currentTopic = current;
+            setParent(current, 1, order);
           }
         } else if (line.startsWith('    - ')) {
           if (meta == 'structure') {
             order += 1;
             var current = line.replace('    - ', '').trim();
-            setParent(current, 1, order);
+            currentTopic = current;
+            setParent(current, 2, order);
           }
         } else if (line.startsWith('      - ')) {
           if (meta == 'structure') {
             order += 1;
             var current = line.replace('      - ', '').trim();
-            setParent(current, 2, order);
+            currentTopic = current;
+            setParent(current, 3, order);
           }
         } else if (line.startsWith('        - ')) {
           if (meta == 'structure') {
             order += 1;
             var current = line.replace('        - ', '').trim();
-            setParent(current, 3, order);
+            currentTopic = current;
+            setParent(current, 4, order);
           }
-        } else {}
+        } else if (line.startsWith('```')) {
+          if (meta == 'structure') {
+            var summary = line.replace(/```/g, '').trim();
+            setSummary(currentTopic, summary);
+          }
+        } else if (line.startsWith('  ```')) {
+          if (meta == 'structure') {
+            var summary = line.replace(/```/g, '').trim();
+            setSummary(currentTopic, summary);
+          }
+        } else if (line.startsWith('    ```')) {
+          if (meta == 'structure') {
+            var summary = line.replace(/```/g, '').trim();
+            setSummary(currentTopic, summary);
+          }
+        } else if (line.startsWith('      ```')) {
+          if (meta == 'structure') {
+            var summary = line.replace(/```/g, '').trim();
+            setSummary(currentTopic, summary);
+          }
+        } else if (line.startsWith('        ```')) {
+          if (meta == 'structure') {
+            var summary = line.replace(/```/g, '').trim();
+            setSummary(currentTopic, summary);
+          }
+        }
       }
     });
     return file;
@@ -998,14 +1027,15 @@ define('model/recordData/topics',['exports', 'model/recordData/file'], function 
     },
     load: function load() {
       dataRef = [];
-      $('#topics').html('<li data-topic="" data-expandable="all" class="active"><a>All Topics <span class="badge badge-light"></span><span class="glyphicon-light glyphicon glyphicon-folder-open"></span></a></li>');
       var loadDeferred = new $.Deferred();
       var waiting = [];
       waiting.push(_file.file.load());
       $.when.apply($.when, waiting).done(function () {
+        var description = _file.file.get('description');
+        $('#topics').html('<li data-topic="" data-expandable="all" class="active" data-summary="' + description + '"><a>All Topics <span class="badge badge-light"></span><span class="glyphicon-light glyphicon glyphicon-folder-open"></span></a></li>');
         var topics = _file.file.get('topics');
         Object.keys(topics).forEach(function (topicName) {
-          var topic = new Topic(topics[topicName].count, topics[topicName].name, topics[topicName].parent, topics[topicName].order);
+          var topic = new Topic(topics[topicName].count, topics[topicName].name, topics[topicName].parent, topics[topicName].order, topics[topicName].summary);
           dataRef.push(topic.toHTML());
         });
         loadDeferred.resolve(dataRef);
@@ -1015,13 +1045,14 @@ define('model/recordData/topics',['exports', 'model/recordData/file'], function 
   };
 
   var Topic = (function () {
-    function Topic(count, name, parent, order) {
+    function Topic(count, name, parent, order, summary) {
       _classCallCheck(this, Topic);
 
       this._name = name;
       this._count = count;
       this._parent = parent || '';
       this._order = order || '';
+      this._summary = summary || '';
       return this;
     }
 
@@ -1044,7 +1075,7 @@ define('model/recordData/topics',['exports', 'model/recordData/file'], function 
           expandicon = '<span class=\'glyphicon-light glyphicon glyphicon-folder-open\'></span>';
         }
 
-        return '\n      <li class=\'topic\' data-expandable=\'' + expandable + '\' data-order=\'' + this._order + '\' data-topic=\'' + this._name + '\' data-parent=\'' + this._parent + '\' data-count=\'' + this._count + '\'>\n        <a>' + this._name + ' \n          ' + badge + '\n          ' + expandicon + '\n        </a>\n      </li>';
+        return '\n      <li class=\'topic\' data-expandable=\'' + expandable + '\' data-order=\'' + this._order + '\' data-topic=\'' + this._name + '\' data-parent=\'' + this._parent + '\' data-count=\'' + this._count + '\' data-summary=\'' + this._summary + '\'>\n        <a>' + this._name + ' \n          ' + badge + '\n          ' + expandicon + '\n        </a>\n      </li>';
       }
     }]);
 
@@ -1284,6 +1315,11 @@ define('view/home',['exports', 'model/recordData/recordData', 'model/fileURL', '
           _fileURL.fileURL.setHistory(newURL, file.title);
           _this.drawHistory();
         }
+        if (file.description.length == 0) {
+          $('#summary').hide();
+        } else {
+          $('#summary').html(file.description);
+        }
       });
       _recordData.recordData.on('loaded:topics', function (topics) {
         // render topics
@@ -1360,6 +1396,13 @@ define('index.js',['view/home'], function (_home) {
 
     $('#topics').on('click tap', '[data-topic]', function (e) {
       e.stopPropagation();
+
+      if ($(this).attr('data-summary').length > 0) {
+        $('#summary').show().html($(this).attr('data-summary'));
+      } else {
+        $('#summary').hide();
+      }
+
       var topic = $(this).attr('data-topic');
 
       if (topic.length > 0) {
