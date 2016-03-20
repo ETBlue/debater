@@ -15,7 +15,7 @@ export const topics = {
     $.when.apply($.when, waiting).done(() => {
       const topics = file.get('topics');
       Object.keys(topics).forEach((topicName) => {
-        const topic = new Topic( topics[topicName].count, topics[topicName].name, topics[topicName].parent, topics[topicName].order);
+        const topic = new Topic( topics[topicName].count, topics[topicName].name, topics[topicName].parent, topics[topicName].order, topics[topicName].summary);
         dataRef.push(topic.toHTML());
       });
       loadDeferred.resolve(dataRef);
@@ -25,11 +25,12 @@ export const topics = {
 };
 
 class Topic {
-  constructor(count,name,parent,order) {
+  constructor(count,name,parent,order,summary) {
     this._name = name;
     this._count = count;
     this._parent = parent || '';
     this._order = order || '';
+    this._summary = summary || '';
     return this;
   }
   toHTML() {
@@ -46,7 +47,7 @@ class Topic {
       expandicon = `<span class='glyphicon-light glyphicon glyphicon-folder-open'></span>`;
     }
     return `
-      <li class='topic' data-expandable='${expandable}' data-order='${this._order}' data-topic='${this._name}' data-parent='${this._parent}' data-count='${this._count}'>
+      <li class='topic' data-expandable='${expandable}' data-order='${this._order}' data-topic='${this._name}' data-parent='${this._parent}' data-count='${this._count}' data-summary='${this._summary}'>
         <a>${this._name} 
           ${badge}
           ${expandicon}
