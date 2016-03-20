@@ -1318,7 +1318,7 @@ define('view/home',['exports', 'model/recordData/recordData', 'model/fileURL', '
         if (file.description.length == 0) {
           $('#summary').hide();
         } else {
-          $('#summary').html(file.description);
+          $('#summary').show().html(file.description);
         }
       });
       _recordData.recordData.on('loaded:topics', function (topics) {

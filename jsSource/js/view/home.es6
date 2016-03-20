@@ -102,7 +102,7 @@ export const app = {
       if (file.description.length == 0) {
         $('#summary').hide();
       } else {
-        $('#summary').html(file.description);
+        $('#summary').show().html(file.description);
       }
     });
     recordData.on('loaded:topics', (topics) => {
