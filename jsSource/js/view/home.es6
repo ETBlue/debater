@@ -131,14 +131,24 @@ export const app = {
       });
     });
     recordData.on('loaded:relations', (relations) => {
-      relations.forEach((relation) => {
-        $('#relations').append(relation);
-      });
+      if (relations.length > 0) {
+        $('#relations-container').show();
+        relations.forEach((relation) => {
+          $('#relations').append(relation);
+        });
+      } else {
+        $('#relations-container').hide();
+      }
     });
     recordData.on('loaded:professions', (professions) => {
-      professions.forEach((profession) => {
-        $('#professions').append(profession);
-      });
+      if (professions.length > 0) {
+        $('#professions-container').show();
+        professions.forEach((profession) => {
+          $('#professions').append(profession);
+        });
+      } else {
+        $('#professions-container').hide();
+      }
     });
     recordData.on('loaded:points', (points) => {
       points.forEach((point) => {
