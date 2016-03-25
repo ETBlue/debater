@@ -590,7 +590,7 @@ define('model/recordData/file',['exports', 'model/fileURL', 'model/fileSource', 
         } else if (line.startsWith('## backgrounds')) {
           meta = 'professions';
           file.authors[file.authors.length - 1][meta] = [];
-        } else if (line.startsWith('## articles')) {
+        } else if (line.startsWith('## articles') || line.startsWith('## ')) {
           meta = 'posts';
           file.authors[file.authors.length - 1][meta] = [];
         } else if (line.startsWith('### ')) {
