@@ -64,10 +64,24 @@ p
 // for summary
 
 #summary
-  margin: 1rem 0
+  margin: 2rem 0 1rem 0
   padding: 1rem
-  background-color: hsla(180, 50, 80, 0.5)
+  background-color: hsla(180, 50, 90, 1)
   +box-shadow(rgba(#000, 0.2) 0.1rem 0.1rem 0.2rem)
+  position: relative
+  &:before
+    content: "Editor's Note"
+    position: absolute
+    top: -1rem
+    left: -0.5rem
+    padding: 0.3rem 0.5rem
+    font-size: 0.8rem
+    width: auto
+    background-color: hsla(60, 80, 80, 1)
+    color: hsla(60, 0, 0, 0.2)
+    font-weight: bold
+    +rotate(-5deg)
+    +box-shadow(rgba(#000, 0.1) 0 0 1px)
   p
     overflow: hidden
     text-overflow: ellipsis
