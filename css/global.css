@@ -273,7 +273,7 @@ input[type=file] {
     max-height: calc(100vh - 34px);
   }
 
-  #relations-container {
+  #content-container {
     float: right;
   }
 }

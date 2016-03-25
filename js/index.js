@@ -1348,14 +1348,24 @@ define('view/home',['exports', 'model/recordData/recordData', 'model/fileURL', '
         });
       });
       _recordData.recordData.on('loaded:relations', function (relations) {
-        relations.forEach(function (relation) {
-          $('#relations').append(relation);
-        });
+        if (relations.length > 0) {
+          $('#relations-container').show();
+          relations.forEach(function (relation) {
+            $('#relations').append(relation);
+          });
+        } else {
+          $('#relations-container').hide();
+        }
       });
       _recordData.recordData.on('loaded:professions', function (professions) {
-        professions.forEach(function (profession) {
-          $('#professions').append(profession);
-        });
+        if (professions.length > 0) {
+          $('#professions-container').show();
+          professions.forEach(function (profession) {
+            $('#professions').append(profession);
+          });
+        } else {
+          $('#professions-container').hide();
+        }
       });
       _recordData.recordData.on('loaded:points', function (points) {
         points.forEach(function (point) {
