@@ -73,6 +73,10 @@ p:last-child {
   -webkit-box-shadow: rgba(0, 0, 0, 0.2) 0.1rem 0.1rem 0.2rem;
   box-shadow: rgba(0, 0, 0, 0.2) 0.1rem 0.1rem 0.2rem;
 }
+#summary p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 blockquote {
   border-color: rgba(0, 0, 0, 0.1);

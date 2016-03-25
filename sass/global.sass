@@ -61,13 +61,18 @@ p
 #about
   display: none
 
-// for points
+// for summary
 
 #summary
   margin: 1rem 0
   padding: 1rem
   background-color: hsla(180, 50, 80, 0.5)
   +box-shadow(rgba(#000, 0.2) 0.1rem 0.1rem 0.2rem)
+  p
+    overflow: hidden
+    text-overflow: ellipsis
+
+// for points
 
 blockquote
   border-color: rgba(#000, 0.1)
