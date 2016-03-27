@@ -201,6 +201,17 @@ function getFileJSON(fileData) {
           blockContent += line.trim();
         } else {
           if (meta == 'structure') {
+            const entityMap = {
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': '&quot;',
+              "'": '&#39;',
+              "/": '&#x2F;'
+            };
+            blockContent = String(blockContent).replace(/[&<>"'\/]/g, function (s) {
+              return entityMap[s];
+            });
             setSummary(currentTopic, blockContent);
             block = false;
             blockContent = '';

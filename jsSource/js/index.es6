@@ -74,7 +74,18 @@ $(() => {
     // insert topic summary
     if ( $(this).attr('data-summary').length > 0 ) {
       $('#summary').show();
-      $('#summary .content').html($(this).attr('data-summary'));
+      const entityMap = {
+        "&amp;" : "&",
+        "&lt;" : "<",
+        "&gt;" : ">",
+        '&quot;' : '"',
+        '&#39;' : "'",
+        '&#x2F;' : "/"
+      };
+      const description = String($(this).attr('data-summary')).replace(/(&amp;|&lt;|&gt;|&quot;|&#39;|&#x2F;)/g, function (s) {
+        return entityMap[s];
+      });
+      $('#summary .content').html(description);
       if ( $(this).attr('data-topic').length > 0 ) {
         $('#summary .title').html(`Editor's Note for ` + $(this).attr('data-topic'));
       } else {

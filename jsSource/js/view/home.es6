@@ -104,7 +104,18 @@ export const app = {
       } else {
         $('#summary').show();
         $('#summary .title').html(`Editor's Note`);
-        $('#summary .content').html(file.description);
+        const entityMap = {
+          "&amp;" : "&",
+          "&lt;" : "<",
+          "&gt;" : ">",
+          '&quot;' : '"',
+          '&#39;' : "'",
+          '&#x2F;' : "/"
+        };
+        const description = String(file.description).replace(/(&amp;|&lt;|&gt;|&quot;|&#39;|&#x2F;)/g, function (s) {
+          return entityMap[s];
+        });
+        $('#summary .content').html(description);
       }
     });
     recordData.on('loaded:topics', (topics) => {
