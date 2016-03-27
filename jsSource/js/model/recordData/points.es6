@@ -42,10 +42,10 @@ class Point {
     }).join("");
     return `
       <blockquote class='point' data-timestamp="${this._data.timestamp}" cite="${this._data.url}">
+        <p>${this._data.content}</p>
         <p class="align-right clear">
           ${topics}
         </p>
-        <p>${this._data.content}</p>
         <div class="align-right small">
           <a href="${this._data.url}" target="_blank">${this._data.timestamp}</a> by <a data-author="${this._data.author}">${this._data.author}</a>
         </div>
