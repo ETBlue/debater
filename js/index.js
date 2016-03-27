@@ -705,9 +705,22 @@ define('model/recordData/file',['exports', 'model/fileURL', 'model/fileSource', 
             blockContent += line.trim();
           } else {
             if (meta == 'structure') {
-              setSummary(currentTopic, blockContent);
-              block = false;
-              blockContent = '';
+              (function () {
+                var entityMap = {
+                  "&": "&amp;",
+                  "<": "&lt;",
+                  ">": "&gt;",
+                  '"': '&quot;',
+                  "'": '&#39;',
+                  "/": '&#x2F;'
+                };
+                blockContent = String(blockContent).replace(/[&<>"'\/]/g, function (s) {
+                  return entityMap[s];
+                });
+                setSummary(currentTopic, blockContent);
+                block = false;
+                blockContent = '';
+              })();
             }
           }
         }
@@ -1318,9 +1331,22 @@ define('view/home',['exports', 'model/recordData/recordData', 'model/fileURL', '
         if (file.description.length == 0) {
           $('#summary').hide();
         } else {
-          $('#summary').show();
-          $('#summary .title').html('Editor\'s Note');
-          $('#summary .content').html(file.description);
+          (function () {
+            $('#summary').show();
+            $('#summary .title').html('Editor\'s Note');
+            var entityMap = {
+              "&amp;": "&",
+              "&lt;": "<",
+              "&gt;": ">",
+              '&quot;': '"',
+              '&#39;': "'",
+              '&#x2F;': "/"
+            };
+            var description = String(file.description).replace(/(&amp;|&lt;|&gt;|&quot;|&#39;|&#x2F;)/g, function (s) {
+              return entityMap[s];
+            });
+            $('#summary .content').html(description);
+          })();
         }
       });
       _recordData.recordData.on('loaded:topics', function (topics) {
@@ -1429,17 +1455,32 @@ define('index.js',['view/home'], function (_home) {
     }
 
     $('#topics').on('click tap', '[data-topic]', function (e) {
+      var _this = this;
+
       e.stopPropagation();
 
       if ($(this).attr('data-summary').length > 0) {
-        $('#summary').show();
-        $('#summary .content').html($(this).attr('data-summary'));
+        (function () {
+          $('#summary').show();
+          var entityMap = {
+            "&amp;": "&",
+            "&lt;": "<",
+            "&gt;": ">",
+            '&quot;': '"',
+            '&#39;': "'",
+            '&#x2F;': "/"
+          };
+          var description = String($(_this).attr('data-summary')).replace(/(&amp;|&lt;|&gt;|&quot;|&#39;|&#x2F;)/g, function (s) {
+            return entityMap[s];
+          });
+          $('#summary .content').html(description);
 
-        if ($(this).attr('data-topic').length > 0) {
-          $('#summary .title').html('Editor\'s Note for ' + $(this).attr('data-topic'));
-        } else {
-          $('#summary .title').html('Editor\'s Note');
-        }
+          if ($(_this).attr('data-topic').length > 0) {
+            $('#summary .title').html('Editor\'s Note for ' + $(_this).attr('data-topic'));
+          } else {
+            $('#summary .title').html('Editor\'s Note');
+          }
+        })();
       } else {
         $('#summary').hide();
       }
