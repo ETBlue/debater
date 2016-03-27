@@ -127,10 +127,14 @@ $(() => {
   // when user click folder icons
   $('#topics').on('click tap', '.glyphicon', function (e) {
     e.stopPropagation();
+    // expand or collapse level 2+ topics under this section
+    if ($(this).hasClass('glyphicon-folder-open')) {
+      $(this).closest('.topic').find('.nav-pills-nested').slideUp();
+    } else {
+      $(this).closest('.topic').find('.nav-pills-nested').slideDown();
+    }
     // switch icon
     $(this).toggleClass('glyphicon-folder-open glyphicon-folder-close');
-    // expand or collapse level 2+ topics under this section
-    $(this).closest('.topic').find('.nav-pills-nested').slideToggle();
   });
 
   // when user click level 1 topics
