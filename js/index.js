@@ -1471,8 +1471,14 @@ define('index.js',['view/home'], function (_home) {
     });
     $('#topics').on('click tap', '.glyphicon', function (e) {
       e.stopPropagation();
+
+      if ($(this).hasClass('glyphicon-folder-open')) {
+        $(this).closest('.topic').find('.nav-pills-nested').slideUp();
+      } else {
+        $(this).closest('.topic').find('.nav-pills-nested').slideDown();
+      }
+
       $(this).toggleClass('glyphicon-folder-open glyphicon-folder-close');
-      $(this).closest('.topic').find('.nav-pills-nested').slideToggle();
     });
     $('#topics').on('click tap', '[data-expandable="true"]', function (e) {
       $(this).find('.glyphicon').addClass('glyphicon-folder-open').removeClass('glyphicon-folder-close');
