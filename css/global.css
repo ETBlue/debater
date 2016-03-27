@@ -74,8 +74,7 @@ p:last-child {
   box-shadow: rgba(0, 0, 0, 0.2) 0.1rem 0.1rem 0.2rem;
   position: relative;
 }
-#summary:before {
-  content: "Editor's Note";
+#summary .title {
   position: absolute;
   top: -1.5rem;
   left: 0;
@@ -83,11 +82,7 @@ p:last-child {
   font-size: 1rem;
   width: auto;
   background-color: #f5f5a3;
-  color: rgba(0, 0, 0, 0.3);
-  -moz-transform: rotate(-2deg);
-  -ms-transform: rotate(-2deg);
-  -webkit-transform: rotate(-2deg);
-  transform: rotate(-2deg);
+  color: rgba(0, 0, 0, 0.4);
   -moz-box-shadow: rgba(0, 0, 0, 0.2) 0 0 1px;
   -webkit-box-shadow: rgba(0, 0, 0, 0.2) 0 0 1px;
   box-shadow: rgba(0, 0, 0, 0.2) 0 0 1px;

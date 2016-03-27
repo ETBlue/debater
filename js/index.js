@@ -698,7 +698,6 @@ define('model/recordData/file',['exports', 'model/fileURL', 'model/fileSource', 
           } else if (blockLevel(line) >= 0) {
             if (meta == 'structure') {
               block = true;
-              blockContent += line.replace(/```/g, '').trim();
             }
           }
         } else if (block == true) {
@@ -1319,7 +1318,9 @@ define('view/home',['exports', 'model/recordData/recordData', 'model/fileURL', '
         if (file.description.length == 0) {
           $('#summary').hide();
         } else {
-          $('#summary').show().html(file.description);
+          $('#summary').show();
+          $('#summary .title').html('Editor\'s Note');
+          $('#summary .content').html(file.description);
         }
       });
       _recordData.recordData.on('loaded:topics', function (topics) {
@@ -1431,7 +1432,14 @@ define('index.js',['view/home'], function (_home) {
       e.stopPropagation();
 
       if ($(this).attr('data-summary').length > 0) {
-        $('#summary').show().html($(this).attr('data-summary'));
+        $('#summary').show();
+        $('#summary .content').html($(this).attr('data-summary'));
+
+        if ($(this).attr('data-topic').length > 0) {
+          $('#summary .title').html('Editor\'s Note for ' + $(this).attr('data-topic'));
+        } else {
+          $('#summary .title').html('Editor\'s Note');
+        }
       } else {
         $('#summary').hide();
       }
