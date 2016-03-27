@@ -66,7 +66,7 @@ p
   margin: 1.5rem 0 1rem 0
   padding: 1rem
   background-color: hsla(180, 50, 90, 1)
-  +box-shadow(rgba(#000, 0.2) 0.1rem 0.1rem 0.2rem)
+  +box-shadow(rgba(#000, 0.2) 1px 1px 2px)
   position: relative
   .title
     //content: "Editor's Note"
@@ -79,7 +79,7 @@ p
     background-color: hsla(60, 80, 80, 1)
     color: hsla(60, 0, 0, 0.4)
     //+rotate(-2deg)
-    +box-shadow(rgba(#000, 0.2) 0 0 1px)
+    +box-shadow(rgba(#000, 0.2) 1px 1px 2px)
   p
     overflow: hidden
     text-overflow: ellipsis
@@ -89,11 +89,11 @@ p
 blockquote
   border-color: rgba(#000, 0.1)
   padding: 0 1rem
-  margin-bottom: 1rem
+  margin: 1rem 0
   p
-    margin: 0
-    &:first-child
-      margin-bottom: 0.2em
+    //margin: 0
+    //&:first-child
+    //  margin-bottom: 0.2em
   .badge
     //line-height: 2em
     //cursor: pointer
