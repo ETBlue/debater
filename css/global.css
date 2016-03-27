@@ -77,21 +77,20 @@ p:last-child {
 #summary:before {
   content: "Editor's Note";
   position: absolute;
-  top: -1rem;
-  left: -0.5rem;
-  padding: 0.3rem 0.5rem;
-  font-size: 0.8rem;
+  top: -1.5rem;
+  left: 0;
+  padding: 10px 15px;
+  font-size: 1rem;
   width: auto;
   background-color: #f5f5a3;
-  color: rgba(0, 0, 0, 0.2);
-  font-weight: bold;
-  -moz-transform: rotate(-5deg);
-  -ms-transform: rotate(-5deg);
-  -webkit-transform: rotate(-5deg);
-  transform: rotate(-5deg);
-  -moz-box-shadow: rgba(0, 0, 0, 0.1) 0 0 1px;
-  -webkit-box-shadow: rgba(0, 0, 0, 0.1) 0 0 1px;
-  box-shadow: rgba(0, 0, 0, 0.1) 0 0 1px;
+  color: rgba(0, 0, 0, 0.3);
+  -moz-transform: rotate(-2deg);
+  -ms-transform: rotate(-2deg);
+  -webkit-transform: rotate(-2deg);
+  transform: rotate(-2deg);
+  -moz-box-shadow: rgba(0, 0, 0, 0.2) 0 0 1px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.2) 0 0 1px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0 0 1px;
 }
 #summary p {
   overflow: hidden;
