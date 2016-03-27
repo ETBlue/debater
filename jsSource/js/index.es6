@@ -73,7 +73,13 @@ $(() => {
 
     // insert topic summary
     if ( $(this).attr('data-summary').length > 0 ) {
-      $('#summary').show().html($(this).attr('data-summary'));
+      $('#summary').show();
+      $('#summary .content').html($(this).attr('data-summary'));
+      if ( $(this).attr('data-topic').length > 0 ) {
+        $('#summary .title').html(`Editor's Note for ` + $(this).attr('data-topic'));
+      } else {
+        $('#summary .title').html(`Editor's Note`);
+      }
     } else {
       $('#summary').hide();
     }

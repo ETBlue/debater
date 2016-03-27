@@ -194,7 +194,6 @@ function getFileJSON(fileData) {
         } else if (blockLevel(line) >= 0) {
           if (meta == 'structure') {
             block = true;
-            blockContent += line.replace(/```/g, '').trim();
           }
         }
       } else if (block == true) {

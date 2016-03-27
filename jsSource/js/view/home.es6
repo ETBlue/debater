@@ -102,7 +102,9 @@ export const app = {
       if (file.description.length == 0) {
         $('#summary').hide();
       } else {
-        $('#summary').show().html(file.description);
+        $('#summary').show();
+        $('#summary .title').html(`Editor's Note`);
+        $('#summary .content').html(file.description);
       }
     });
     recordData.on('loaded:topics', (topics) => {
