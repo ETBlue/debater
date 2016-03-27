@@ -63,6 +63,8 @@ function getFileJSON(fileData) {
   };
   let lines = fileData.split("\n");
   let meta = '';
+  let block = false;
+  let blockContent = '';
   let parents = [];
   let order = 0;
   let currentTopic = '';
@@ -76,142 +78,134 @@ function getFileJSON(fileData) {
     parents[level] = topic;
   };
   function setSummary(topic, summary) {
-    if (topic) {
+    if (topic.length > 0) {
       file.topics[topic].summary = summary;
     } else {
       file.description = summary;
     }
   }
+  function listLevel(line) {
+    if (line.startsWith('- ') || line.startsWith('* ') || line.startsWith('+ ')) {
+      return 0;
+    } else if (line.startsWith('  - ') || line.startsWith('  * ') || line.startsWith('  + ')) {
+      return 1;
+    } else if (line.startsWith('    - ') || line.startsWith('    * ') || line.startsWith('    + ')) {
+      return 2;
+    } else if (line.startsWith('      - ') || line.startsWith('      * ') || line.startsWith('      + ')) {
+      return 3;
+    } else if (line.startsWith('        - ') || line.startsWith('        * ') || line.startsWith('        + ')) {
+      return 4;
+    } else if (line.startsWith('          - ') || line.startsWith('          * ') || line.startsWith('          + ')) {
+      return 5;
+    } else if (line.startsWith('            - ') || line.startsWith('            * ') || line.startsWith('            + ')) {
+      return 6;
+    } else {
+      return -1;
+    }
+  }
+  function blockLevel(line) {
+    if (line.startsWith('```') || line.startsWith('  ```') || line.startsWith('    ```') || line.startsWith('      ```') || line.startsWith('        ```')) {
+      return 0;
+    } else {
+      return -1;
+    }
+  }
+  function compileStructure(line, level) {
+    order += 1;
+    let leading = '';
+    for ( i = 1; i <= level; i++ ) {
+      leading += '  ';
+    }
+    currentTopic = line.replace(leading + '- ', '').trim();
+    setParent(currentTopic, level, order);
+  }
 
   $.each(lines, (index, line) => {
     if (line) {
-      if (file.title.length == 0 && line[0] != '#') {
-        file.title = line;
-      } else if (line.startsWith('# ')) {
-        file.authors.push({name: line.substring(2)});
-      } else if (line.startsWith('## profiles')) {
-        meta = 'profiles';
-        file.authors[file.authors.length - 1][meta] = [];
-      } else if (line.startsWith('## relations')) {
-        meta = 'relations';
-        file.authors[file.authors.length - 1][meta] = [];
-      } else if (line.startsWith('## backgrounds')) {
-        meta = 'professions';
-        file.authors[file.authors.length - 1][meta] = [];
-      } else if (line.startsWith('## articles') || line.startsWith('## ')) {
-        meta = 'posts';
-        file.authors[file.authors.length - 1][meta] = [];
-      } else if (line.startsWith('### ')) {
-        const post = {
-          timestamp: line.substring(4, line.indexOf('http')).trim(),
-          url: line.substring(line.indexOf('http')).trim()
-        }
-        file.authors[file.authors.length - 1]['posts'].push(post);
-      } else if (line.startsWith('___')) {
-        meta = 'structure';
-      } else if (line.startsWith('- ')) {
-        if (meta == 'posts') {
-          if (!line.includes('#')) {
-            //return;
+      if (block == false) {
+        if (file.title.length == 0 && line[0] != '#') {
+          file.title = line;
+        } else if (line.startsWith('# ')) {
+          file.authors.push({name: line.substring(2)});
+        } else if (line.startsWith('## profiles')) {
+          meta = 'profiles';
+          file.authors[file.authors.length - 1][meta] = [];
+        } else if (line.startsWith('## relations')) {
+          meta = 'relations';
+          file.authors[file.authors.length - 1][meta] = [];
+        } else if (line.startsWith('## backgrounds')) {
+          meta = 'professions';
+          file.authors[file.authors.length - 1][meta] = [];
+        } else if (line.startsWith('## articles') || line.startsWith('## ')) {
+          meta = 'posts';
+          file.authors[file.authors.length - 1][meta] = [];
+        } else if (line.startsWith('### ')) {
+          const post = {
+            timestamp: line.substring(4, line.indexOf('http')).trim(),
+            url: line.substring(line.indexOf('http')).trim()
           }
-          let topics = [];
-          let content = '';
-          if (line.indexOf('#') > 0) {
-            content = line.substring(2, line.indexOf('#'));
-            topics = line.substring(line.indexOf('#') + 1).split('#').map((topic) => {
-              if (topic.length > 0) {
-                return topic.trim();
+          file.authors[file.authors.length - 1]['posts'].push(post);
+        } else if (line.startsWith('___') || line.startsWith('---')) {
+          meta = 'structure';
+        } else if (listLevel(line) >= 0) {
+          if (meta == 'posts') {
+            let topics = [];
+            let content = '';
+            if (line.indexOf('#') > 0) {
+              content = line.substring(2, line.indexOf('#'));
+              topics = line.substring(line.indexOf('#') + 1).split('#').map((topic) => {
+                if (topic.length > 0) {
+                  return topic.trim();
+                }
+              });
+            } else {
+              content = line.substring(2);
+            }
+            const relations = file.authors[file.authors.length - 1]['relations'] || '';
+            const professions = file.authors[file.authors.length - 1]['professions'] || '';
+            const point = {
+              author: file.authors[file.authors.length - 1].name,
+              timestamp: file.authors[file.authors.length - 1]['posts'][file.authors[file.authors.length - 1]['posts'].length - 1].timestamp,
+              url: file.authors[file.authors.length - 1]['posts'][file.authors[file.authors.length - 1]['posts'].length - 1].url,
+              relations: relations,
+              professions: professions,
+              topics: topics,
+              content: content
+            }
+            file.points.push(point);
+            topics.forEach((topic) => {
+              if (file.topics[topic]) {
+                file.topics[topic].count += 1;
+              } else {
+                file.topics[topic] = {name: topic , count: 1};
               }
             });
-          } else {
-            content = line.substring(2);
+            file.relations = file.relations.concat(relations).filter(function(item, pos, self) {
+              return self.indexOf(item) == pos;
+            });;
+            file.professions = file.professions.concat(professions).filter(function(item, pos, self) {
+              return self.indexOf(item) == pos;
+            });;
+          } else if (meta == 'structure') {
+            compileStructure(line, listLevel(line));
+          } else if (file.authors.length > 0) {
+            file.authors[file.authors.length - 1][meta].push(line.substring(2));
           }
-          const relations = file.authors[file.authors.length - 1]['relations'] || '';
-          const professions = file.authors[file.authors.length - 1]['professions'] || '';
-          const point = {
-            author: file.authors[file.authors.length - 1].name,
-            timestamp: file.authors[file.authors.length - 1]['posts'][file.authors[file.authors.length - 1]['posts'].length - 1].timestamp,
-            url: file.authors[file.authors.length - 1]['posts'][file.authors[file.authors.length - 1]['posts'].length - 1].url,
-            relations: relations,
-            professions: professions,
-            topics: topics,
-            content: content
+        } else if (blockLevel(line) >= 0) {
+          if (meta == 'structure') {
+            block = true;
+            blockContent += line.replace(/```/g, '').trim();
           }
-          file.points.push(point);
-          topics.forEach((topic) => {
-            if (file.topics[topic]) {
-              file.topics[topic].count += 1;
-            } else {
-              file.topics[topic] = {name: topic , count: 1};
-            }
-          });
-          file.relations = file.relations.concat(relations).filter(function(item, pos, self) {
-            return self.indexOf(item) == pos;
-          });;
-          file.professions = file.professions.concat(professions).filter(function(item, pos, self) {
-            return self.indexOf(item) == pos;
-          });;
-        } else if (meta == 'structure') {
-          order += 1;
-          const current = line.replace('- ', '').trim();
-          currentTopic = current;
-          setParent(current, 0, order);
-          return;
+        }
+      } else if (block == true) {
+        if (blockLevel(line) < 0) {
+          blockContent += line.trim();
         } else {
-          file.authors[file.authors.length - 1][meta].push(line.substring(2));
-        }
-      } else if (line.startsWith('  - ')) {
-        if (meta == 'structure') {
-          order += 1;
-          const current = line.replace('  - ', '').trim();
-          currentTopic = current;
-          setParent(current, 1, order);
-        }
-      } else if (line.startsWith('    - ')) {
-        if (meta == 'structure') {
-          order += 1;
-          const current = line.replace('    - ', '').trim();
-          currentTopic = current;
-          setParent(current, 2, order);
-        }
-      } else if (line.startsWith('      - ')) {
-        if (meta == 'structure') {
-          order += 1;
-          const current = line.replace('      - ', '').trim();
-          currentTopic = current;
-          setParent(current, 3, order);
-        }
-      } else if (line.startsWith('        - ')) {
-        if (meta == 'structure') {
-          order += 1;
-          const current = line.replace('        - ', '').trim();
-          currentTopic = current;
-          setParent(current, 4, order);
-        }
-      } else if (line.startsWith('```')) {
-        if (meta == 'structure') {
-          const summary = line.replace(/```/g, '').trim();
-          setSummary(currentTopic, summary);
-        }
-      } else if (line.startsWith('  ```')) {
-        if (meta == 'structure') {
-          const summary = line.replace(/```/g, '').trim();
-          setSummary(currentTopic, summary);
-        }
-      } else if (line.startsWith('    ```')) {
-        if (meta == 'structure') {
-          const summary = line.replace(/```/g, '').trim();
-          setSummary(currentTopic, summary);
-        }
-      } else if (line.startsWith('      ```')) {
-        if (meta == 'structure') {
-          const summary = line.replace(/```/g, '').trim();
-          setSummary(currentTopic, summary);
-        }
-      } else if (line.startsWith('        ```')) {
-        if (meta == 'structure') {
-          const summary = line.replace(/```/g, '').trim();
-          setSummary(currentTopic, summary);
+          if (meta == 'structure') {
+            setSummary(currentTopic, blockContent);
+            block = false;
+            blockContent = '';
+          }
         }
       }
     }
