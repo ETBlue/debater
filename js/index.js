@@ -615,6 +615,63 @@ define('model/recordData/file',['exports', 'model/fileURL', 'model/fileSource', 
       setParent(currentTopic, level, order);
     }
 
+    var entityMap = {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': '&quot;',
+      "'": '&#39;',
+      "/": '&#x2F;'
+    };
+
+    function compilePoint(line) {
+      var topics = [];
+      var content = '';
+
+      if (line.indexOf('#') > 0) {
+        content = line.substring(2, line.indexOf('#'));
+        topics = line.substring(line.indexOf('#') + 1).split('#').map(function (topic) {
+          if (topic.length > 0) {
+            return topic.trim();
+          }
+        });
+      } else {
+        content = line.substring(2);
+      }
+
+      var relations = file.authors[file.authors.length - 1]['relations'] || '';
+      var professions = file.authors[file.authors.length - 1]['professions'] || '';
+      var point = {
+        author: file.authors[file.authors.length - 1].name,
+        timestamp: file.authors[file.authors.length - 1]['posts'][file.authors[file.authors.length - 1]['posts'].length - 1].timestamp,
+        url: file.authors[file.authors.length - 1]['posts'][file.authors[file.authors.length - 1]['posts'].length - 1].url,
+        relations: relations,
+        professions: professions,
+        topics: topics,
+        content: content
+      };
+      file.points.push(point);
+      topics.forEach(function (topic) {
+        if (file.topics[topic]) {
+          file.topics[topic].count += 1;
+        } else {
+          file.topics[topic] = {
+            name: topic,
+            count: 1
+          };
+        }
+      });
+      file.relations = file.relations.concat(relations).filter(function (item, pos, self) {
+        return self.indexOf(item) == pos;
+      });
+      ;
+      file.professions = file.professions.concat(professions).filter(function (item, pos, self) {
+        return self.indexOf(item) == pos;
+      });
+      ;
+    }
+
+    ;
     $.each(lines, function (index, line) {
       if (line) {
         if (block == false) {
@@ -646,82 +703,32 @@ define('model/recordData/file',['exports', 'model/fileURL', 'model/fileSource', 
             meta = 'structure';
           } else if (listLevel(line) >= 0) {
             if (meta == 'posts') {
-              var topics = [];
-              var content = '';
-
-              if (line.indexOf('#') > 0) {
-                content = line.substring(2, line.indexOf('#'));
-                topics = line.substring(line.indexOf('#') + 1).split('#').map(function (topic) {
-                  if (topic.length > 0) {
-                    return topic.trim();
-                  }
-                });
-              } else {
-                content = line.substring(2);
-              }
-
-              var relations = file.authors[file.authors.length - 1]['relations'] || '';
-              var professions = file.authors[file.authors.length - 1]['professions'] || '';
-              var point = {
-                author: file.authors[file.authors.length - 1].name,
-                timestamp: file.authors[file.authors.length - 1]['posts'][file.authors[file.authors.length - 1]['posts'].length - 1].timestamp,
-                url: file.authors[file.authors.length - 1]['posts'][file.authors[file.authors.length - 1]['posts'].length - 1].url,
-                relations: relations,
-                professions: professions,
-                topics: topics,
-                content: content
-              };
-              file.points.push(point);
-              topics.forEach(function (topic) {
-                if (file.topics[topic]) {
-                  file.topics[topic].count += 1;
-                } else {
-                  file.topics[topic] = {
-                    name: topic,
-                    count: 1
-                  };
-                }
-              });
-              file.relations = file.relations.concat(relations).filter(function (item, pos, self) {
-                return self.indexOf(item) == pos;
-              });
-              ;
-              file.professions = file.professions.concat(professions).filter(function (item, pos, self) {
-                return self.indexOf(item) == pos;
-              });
-              ;
+              compilePoint(line);
             } else if (meta == 'structure') {
               compileStructure(line, listLevel(line));
             } else if (file.authors.length > 0) {
               file.authors[file.authors.length - 1][meta].push(line.substring(2));
             }
           } else if (blockLevel(line) >= 0) {
-            if (meta == 'structure') {
-              block = true;
-            }
+            block = true;
+
+            if (meta == 'structure') {} else if (meta == 'posts') {}
           }
         } else if (block == true) {
           if (blockLevel(line) < 0) {
             blockContent += line.trim();
           } else {
             if (meta == 'structure') {
-              (function () {
-                var entityMap = {
-                  "&": "&amp;",
-                  "<": "&lt;",
-                  ">": "&gt;",
-                  '"': '&quot;',
-                  "'": '&#39;',
-                  "/": '&#x2F;'
-                };
-                blockContent = String(blockContent).replace(/[&<>"'\/]/g, function (s) {
-                  return entityMap[s];
-                });
-                setSummary(currentTopic, blockContent);
-                block = false;
-                blockContent = '';
-              })();
+              blockContent = String(blockContent).replace(/[&<>"'\/]/g, function (s) {
+                return entityMap[s];
+              });
+              setSummary(currentTopic, blockContent);
+            } else if (meta == 'posts') {
+              compilePoint(blockContent);
             }
+
+            block = false;
+            blockContent = '';
           }
         }
       }

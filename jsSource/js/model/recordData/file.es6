@@ -119,6 +119,54 @@ function getFileJSON(fileData) {
     currentTopic = line.replace(leading + '- ', '').trim();
     setParent(currentTopic, level, order);
   }
+  const entityMap = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': '&quot;',
+    "'": '&#39;',
+    "/": '&#x2F;'
+  };
+
+  function compilePoint(line) {
+    let topics = [];
+    let content = '';
+    if (line.indexOf('#') > 0) {
+      content = line.substring(2, line.indexOf('#'));
+      topics = line.substring(line.indexOf('#') + 1).split('#').map((topic) => {
+        if (topic.length > 0) {
+          return topic.trim();
+        }
+      });
+    } else {
+      content = line.substring(2);
+    }
+    const relations = file.authors[file.authors.length - 1]['relations'] || '';
+    const professions = file.authors[file.authors.length - 1]['professions'] || '';
+    const point = {
+      author: file.authors[file.authors.length - 1].name,
+      timestamp: file.authors[file.authors.length - 1]['posts'][file.authors[file.authors.length - 1]['posts'].length - 1].timestamp,
+      url: file.authors[file.authors.length - 1]['posts'][file.authors[file.authors.length - 1]['posts'].length - 1].url,
+      relations: relations,
+      professions: professions,
+      topics: topics,
+      content: content
+    }
+    file.points.push(point);
+    topics.forEach((topic) => {
+      if (file.topics[topic]) {
+        file.topics[topic].count += 1;
+      } else {
+        file.topics[topic] = {name: topic , count: 1};
+      }
+    });
+    file.relations = file.relations.concat(relations).filter(function(item, pos, self) {
+      return self.indexOf(item) == pos;
+    });;
+    file.professions = file.professions.concat(professions).filter(function(item, pos, self) {
+      return self.indexOf(item) == pos;
+    });;
+  };
 
   $.each(lines, (index, line) => {
     if (line) {
@@ -149,51 +197,16 @@ function getFileJSON(fileData) {
           meta = 'structure';
         } else if (listLevel(line) >= 0) {
           if (meta == 'posts') {
-            let topics = [];
-            let content = '';
-            if (line.indexOf('#') > 0) {
-              content = line.substring(2, line.indexOf('#'));
-              topics = line.substring(line.indexOf('#') + 1).split('#').map((topic) => {
-                if (topic.length > 0) {
-                  return topic.trim();
-                }
-              });
-            } else {
-              content = line.substring(2);
-            }
-            const relations = file.authors[file.authors.length - 1]['relations'] || '';
-            const professions = file.authors[file.authors.length - 1]['professions'] || '';
-            const point = {
-              author: file.authors[file.authors.length - 1].name,
-              timestamp: file.authors[file.authors.length - 1]['posts'][file.authors[file.authors.length - 1]['posts'].length - 1].timestamp,
-              url: file.authors[file.authors.length - 1]['posts'][file.authors[file.authors.length - 1]['posts'].length - 1].url,
-              relations: relations,
-              professions: professions,
-              topics: topics,
-              content: content
-            }
-            file.points.push(point);
-            topics.forEach((topic) => {
-              if (file.topics[topic]) {
-                file.topics[topic].count += 1;
-              } else {
-                file.topics[topic] = {name: topic , count: 1};
-              }
-            });
-            file.relations = file.relations.concat(relations).filter(function(item, pos, self) {
-              return self.indexOf(item) == pos;
-            });;
-            file.professions = file.professions.concat(professions).filter(function(item, pos, self) {
-              return self.indexOf(item) == pos;
-            });;
+            compilePoint(line);
           } else if (meta == 'structure') {
             compileStructure(line, listLevel(line));
           } else if (file.authors.length > 0) {
             file.authors[file.authors.length - 1][meta].push(line.substring(2));
           }
         } else if (blockLevel(line) >= 0) {
+          block = true;
           if (meta == 'structure') {
-            block = true;
+          } else if (meta == 'posts') {
           }
         }
       } else if (block == true) {
@@ -201,21 +214,15 @@ function getFileJSON(fileData) {
           blockContent += line.trim();
         } else {
           if (meta == 'structure') {
-            const entityMap = {
-              "&": "&amp;",
-              "<": "&lt;",
-              ">": "&gt;",
-              '"': '&quot;',
-              "'": '&#39;',
-              "/": '&#x2F;'
-            };
             blockContent = String(blockContent).replace(/[&<>"'\/]/g, function (s) {
               return entityMap[s];
             });
             setSummary(currentTopic, blockContent);
-            block = false;
-            blockContent = '';
+          } else if (meta == 'posts') {
+            compilePoint(blockContent);
           }
+          block = false;
+          blockContent = '';
         }
       }
     }
