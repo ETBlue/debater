@@ -31,6 +31,7 @@ $(() => {
   $('#toggle-source').on('click tap', function (e) {
     $('.source-container').toggleClass('z-index');
     $(this).find('span').toggle();
+    $('#rendered').toggle();
     let dataSource = $('#source').attr('data-src');
     if ( dataSource.includes('hackmd.io') ) {
       dataSource = dataSource.replace('/download','');
