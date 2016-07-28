@@ -1434,6 +1434,7 @@ define('index.js',['view/home'], function (_home) {
     $('#toggle-source').on('click tap', function (e) {
       $('.source-container').toggleClass('z-index');
       $(this).find('span').toggle();
+      $('#rendered').toggle();
       var dataSource = $('#source').attr('data-src');
 
       if (dataSource.includes('hackmd.io')) {
