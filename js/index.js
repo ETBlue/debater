@@ -1315,6 +1315,12 @@ define('view/home',['exports', 'model/recordData/recordData', 'model/fileURL', '
         $('#source').attr('data-src', newURL);
         loadPage();
       });
+
+      // refresh page
+      $('#refresh').on('click tap', function (e) {
+        loadPage();
+      });
+
       // clear history
       $('.fileURL #recent').on('click tap', '[data-action="clear"]', function (e) {
         $('.fileURL #current').val('');
@@ -1433,7 +1439,7 @@ define('index.js',['view/home'], function (_home) {
     });
     $('#toggle-source').on('click tap', function (e) {
       $('.source-container').toggleClass('z-index');
-      $(this).find('span').toggle();
+      $(this).toggleClass('btn-active');
       $('#rendered').toggle();
       var dataSource = $('#source').attr('data-src');
 

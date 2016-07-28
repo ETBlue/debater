@@ -45,6 +45,10 @@ p:last-child {
   display: none;
 }
 
+.bold {
+  font-weight: bold;
+}
+
 .badge {
   margin: -3px 0;
 }
@@ -172,6 +176,13 @@ blockquote .badge-light.active {
   color: #40bfbf;
   font-weight: bold;
   border-radius: 0;
+}
+.navbar .btn-active .fa {
+  color: #40bfbf;
+}
+.navbar .fa {
+  font-size: 20px;
+  color: rgba(0, 0, 0, 0.3);
 }
 .navbar.large .navbar-brand, .navbar.large li a, .navbar.large .navbar-toggle {
   font-size: 1.2rem;
