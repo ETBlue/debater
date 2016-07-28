@@ -71,6 +71,8 @@ p:last-child {
 
 #about {
   display: none;
+  position: relative;
+  z-index: 10;
 }
 
 .source-container {
