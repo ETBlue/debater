@@ -79,6 +79,12 @@ export const app = {
       $('#source').attr('data-src',newURL);
       loadPage();
     });
+
+    // refresh page
+    $('#refresh').on('click tap', function(e) {
+      loadPage();
+    });
+
     // clear history
     $('.fileURL #recent').on('click tap', '[data-action="clear"]', function(e) {
       $('.fileURL #current').val('');

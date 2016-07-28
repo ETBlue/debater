@@ -30,7 +30,7 @@ $(() => {
   // toggle source iframe
   $('#toggle-source').on('click tap', function (e) {
     $('.source-container').toggleClass('z-index');
-    $(this).find('span').toggle();
+    $(this).toggleClass('btn-active');
     $('#rendered').toggle();
     let dataSource = $('#source').attr('data-src');
     if ( dataSource.includes('hackmd.io') ) {

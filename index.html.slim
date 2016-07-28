@@ -18,6 +18,7 @@ html lang='en'
     // bootstrap
     /! Latest compiled and minified CSS
     link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" rel="stylesheet" /
+    link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"
     // web fonts
     link href='https://fonts.googleapis.com/css?family=Noto+Sans:400,700' rel='stylesheet' type='text/css'
     // custom
@@ -67,9 +68,10 @@ html lang='en'
         /! Collect the nav links, forms, and other content for toggling
         #navbar-collapse-level1.collapse.navbar-collapse
           .navbar-form.navbar-right role=''
+            .fileURL#refresh.btn
+              i.fa.fa-repeat
             .fileURL#toggle-source.btn
-              span Show Source
-              span.noshow Hide Source
+              i.fa.fa-code.bold
             .btn-group role='group' aria-label=''
               span.btn.btn-active data-source='web' Web
               span.btn data-source='local' Local
