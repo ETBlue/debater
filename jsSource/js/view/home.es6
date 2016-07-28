@@ -8,13 +8,13 @@ export const app = {
     // show saved fileURL
     const savedURL = fileURL.getURL();
     if (savedURL) {
-      $('#fileURL #current').val(savedURL);
+      $('.fileURL #current').val(savedURL);
       this.drawHistory();
     }
     this.bindEvents();
   },
   drawHistory() {
-    $('#fileURL #recent').html(function() {
+    $('.fileURL #recent').html(function() {
       const savedURLHistory = fileURL.getHistory();
       if (savedURLHistory) {
         let html = '';
@@ -56,31 +56,34 @@ export const app = {
         fileSource.set('web');
         newURL = decodeURIComponent(matchQuery[2]);
         fileURL.setURL(newURL);
+        $('#source').attr('data-src',newURL);
         loadPage();
     }
 
     // source: web
-    $('#fileURL #current').keypress(function(e) {
+    $('.fileURL #current').keypress(function(e) {
       if (e.keyCode == 13) {
         fileSource.set('web');
         newURL = $(this).val();
         fileURL.setURL(newURL);
+        $('#source').attr('data-src',newURL);
         loadPage();
       }
     });
     // retrive history
-    $('#fileURL #recent').on('click tap', '[data-url]', function(e) {
+    $('.fileURL #recent').on('click tap', '[data-url]', function(e) {
       fileSource.set('web');
       newURL = $(this).attr('data-url');
-      $('#fileURL #current').val(newURL);
+      $('.fileURL #current').val(newURL);
       fileURL.setURL(newURL);
+      $('#source').attr('data-src',newURL);
       loadPage();
     });
     // clear history
-    $('#fileURL #recent').on('click tap', '[data-action="clear"]', function(e) {
-      $('#fileURL #current').val('');
+    $('.fileURL #recent').on('click tap', '[data-action="clear"]', function(e) {
+      $('.fileURL #current').val('');
       fileURL.clearHistory();
-      $('#fileURL #recent').html('<li><a>Hmmm. No history yet.</a></li>');
+      $('.fileURL #recent').html('<li><a>Hmmm. No history yet.</a></li>');
     });
 
     // source: local

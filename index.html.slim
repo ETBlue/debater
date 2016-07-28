@@ -67,10 +67,13 @@ html lang='en'
         /! Collect the nav links, forms, and other content for toggling
         #navbar-collapse-level1.collapse.navbar-collapse
           .navbar-form.navbar-right role=''
+            .fileURL#toggle-source.btn
+              span Show Source
+              span.noshow Hide Source
             .btn-group role='group' aria-label=''
               span.btn.btn-active data-source='web' Web
               span.btn data-source='local' Local
-            #fileURL.form-group
+            .fileURL.form-group
               //span.input-group-addon File URL
               //span data-source='web' Web
               input#current.form-control autofocus='true' type='text' placeholder='Your file URL here...' aria-describedby='' size='27'
@@ -88,6 +91,9 @@ html lang='en'
             #fileChooser.form-group
               //span data-source='local' Local
               input.btn.btn-default type='file'
+
+    section.source-container.fileURL
+      iframe#source src=''
 
     section.container
       .row

@@ -23,8 +23,21 @@ $(() => {
 
   // toggle file section
   $('[data-source]').on('click tap', function (e) {
-    $('#fileURL, #fileChooser').toggle();
+    $('.fileURL, #fileChooser').toggle();
     $('[data-source]').toggleClass('btn-active');
+  });
+
+  // toggle source iframe
+  $('#toggle-source').on('click tap', function (e) {
+    $('.source-container').toggleClass('z-index');
+    $(this).find('span').toggle();
+    let dataSource = $('#source').attr('data-src');
+    if ( dataSource.includes('hackmd.io') ) {
+      dataSource = dataSource.replace('/download','');
+    }
+    if( $('#source').attr('src') != dataSource ) {
+      $('#source').attr('src', dataSource);
+    }
   });
 
   // initialize filter
