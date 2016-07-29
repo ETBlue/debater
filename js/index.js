@@ -1270,7 +1270,7 @@ define('view/home',['exports', 'model/recordData/recordData', 'model/fileURL', '
           Object.keys(savedURLHistory).forEach(function (key) {
             html += '\n            <li>\n              <a data-url=\'' + key + '\'>' + savedURLHistory[key] + '</a>\n            </li>\n          ';
           });
-          html += '\n            <li role="separator" class="divider"></li>\n            <li>\n              <a data-action="clear">Clear Hostory</a>\n            </li>\n            <li>\n              <a href=\'https://hackmd.io/new\' target=\'_blank\'>New Issue</a>\n            </li>\n            <li>\n              <a href=\'https://hackmd.io/CYZmCYDYFMAYA4C0BWAnARnYgLAI1gMaKoyQ6wbjbK7gTJA=\' target=\'_blank\'>Sample</a>\n            </li>\n        ';
+          html += '\n            <li role="separator" class="divider"></li>\n            <li>\n              <a data-action="clear">Clear Hostory</a>\n            </li>\n            <li>\n              <a data-action="new">New Topic</a>\n            </li>\n            <li>\n              <a data-url=\'https://hackmd.io/CYZmCYDYFMAYA4C0BWAnARnYgLAI1gMaKoyQ6wbjbK7gTJA=/download\'>Sample</a>\n            </li>\n        ';
           return html;
         }
       });
@@ -1314,6 +1314,19 @@ define('view/home',['exports', 'model/recordData/recordData', 'model/fileURL', '
         _fileURL.fileURL.setURL(newURL);
         $('#source').attr('data-src', newURL);
         loadPage();
+      });
+
+      // new doc
+      $('.fileURL #recent').on('click tap', '[data-action="new"]', function (e) {
+        $('#source').attr('src', 'https://hackmd.io/new');
+        $('#source')[0].onload = function () {
+          newURL = this.contentWindow.location.href;
+          console.log(newURL);
+          $('.fileURL #current').val(newURL);
+          _fileURL.fileURL.setURL(newURL);
+          $('#source').attr('data-src', newURL).attr('src', newURL);
+          loadPage();
+        };
       });
 
       // refresh page

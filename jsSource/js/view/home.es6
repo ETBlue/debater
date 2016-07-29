@@ -31,10 +31,10 @@ export const app = {
               <a data-action="clear">Clear Hostory</a>
             </li>
             <li>
-              <a href='https://hackmd.io/new' target='_blank'>New Issue</a>
+              <a data-action="new">New Topic</a>
             </li>
             <li>
-              <a href='https://hackmd.io/CYZmCYDYFMAYA4C0BWAnARnYgLAI1gMaKoyQ6wbjbK7gTJA=' target='_blank'>Sample</a>
+              <a data-url='https://hackmd.io/CYZmCYDYFMAYA4C0BWAnARnYgLAI1gMaKoyQ6wbjbK7gTJA=/download'>Sample</a>
             </li>
         `;
         return html;
@@ -78,6 +78,19 @@ export const app = {
       fileURL.setURL(newURL);
       $('#source').attr('data-src',newURL);
       loadPage();
+    });
+
+    // new doc
+    $('.fileURL #recent').on('click tap', '[data-action="new"]', function(e) {
+      $('#source').attr('src','https://hackmd.io/new');
+      $('#source')[0].onload = function() {
+        newURL = this.contentWindow.location.href;
+        console.log(newURL);
+        $('.fileURL #current').val(newURL);
+        fileURL.setURL(newURL);
+        $('#source').attr('data-src', newURL).attr('src', newURL);
+        loadPage();
+      }
     });
 
     // refresh page
