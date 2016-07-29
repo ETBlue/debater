@@ -31,7 +31,7 @@ export const app = {
               <a data-action="clear">Clear Hostory</a>
             </li>
             <li>
-              <a data-action="new">New Topic</a>
+              <a href='https://hackmd.io/new' target='_blank'>New Topic</a>
             </li>
             <li>
               <a data-url='https://hackmd.io/CYZmCYDYFMAYA4C0BWAnARnYgLAI1gMaKoyQ6wbjbK7gTJA=/download'>Sample</a>
