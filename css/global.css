@@ -258,6 +258,10 @@ input[type=file] {
   background-color: #29ABE2;
 }
 
+.list-group-item.active > .badge, .nav-pills > .active > a > .badge {
+  color: #29ABE2;
+}
+
 .border-bottom {
   border-bottom: 3px rgba(0, 0, 0, 0.1) solid;
 }
