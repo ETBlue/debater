@@ -132,6 +132,8 @@ blockquote {
   border-color: rgba(0, 0, 0, 0.1);
   padding: 0 1rem;
   margin: 1rem 0;
+  position: relative;
+  margin-left: 6rem;
 }
 blockquote .badge {
   font-weight: normal;
@@ -149,6 +151,15 @@ blockquote .badge-light:hover {
 blockquote .badge-light.active {
   color: #fff;
   background-color: rgba(0, 0, 0, 0.4);
+}
+blockquote .author {
+  position: absolute;
+  left: -6rem;
+  top: 0;
+  width: 5rem;
+  font-size: 80%;
+  line-height: 1.5em;
+  text-align: right;
 }
 
 .navbar {

@@ -1178,7 +1178,7 @@ define('model/recordData/points',['exports', 'model/recordData/file'], function 
         professions = professions.map(function (profession) {
           return '<span data-profession=\'' + profession + '\'></span>';
         }).join("");
-        return '\n      <blockquote class=\'point\' data-timestamp="' + this._data.timestamp + '" cite="' + this._data.url + '">\n        <p>' + this._data.content + '</p>\n        <p class="align-right clear">\n          ' + topics + '\n        </p>\n        <div class="align-right small">\n          <a href="' + this._data.url + '" target="_blank">' + this._data.timestamp + '</a> by <a data-author="' + this._data.author + '">' + this._data.author + '</a>\n        </div>\n        <div class="align-right clear">\n          ' + relations + '\n          ' + professions + '\n        </div>\n      </blockquote>\n    ';
+        return '\n      <blockquote class=\'point\' data-timestamp="' + this._data.timestamp + '" cite="' + this._data.url + '">\n        <p>' + this._data.content + '</p>\n        <p class="align-right clear">\n          ' + topics + '\n        </p>\n        <div class="align-right small">\n          <a href="' + this._data.url + '" target="_blank">' + this._data.timestamp + '</a>\n        </div>\n        <div class="align-right clear">\n          ' + relations + '\n          ' + professions + '\n        </div>\n        <div class="author"><a data-author="' + this._data.author + '">' + this._data.author + '</a></div>\n      </blockquote>\n    ';
       }
     }]);
 
