@@ -47,12 +47,13 @@ class Point {
           ${topics}
         </p>
         <div class="align-right small">
-          <a href="${this._data.url}" target="_blank">${this._data.timestamp}</a> by <a data-author="${this._data.author}">${this._data.author}</a>
+          <a href="${this._data.url}" target="_blank">${this._data.timestamp}</a>
         </div>
         <div class="align-right clear">
           ${relations}
           ${professions}
         </div>
+        <div class="author"><a data-author="${this._data.author}">${this._data.author}</a></div>
       </blockquote>
     `;
 
