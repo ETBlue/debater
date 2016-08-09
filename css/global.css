@@ -130,7 +130,7 @@ a:hover {
 
 blockquote {
   border-color: rgba(0, 0, 0, 0.1);
-  padding: 0 1rem;
+  padding: 0 0 0 1rem;
   margin: 1rem 0;
   position: relative;
   margin-left: 6rem;
@@ -160,6 +160,10 @@ blockquote .author {
   font-size: 80%;
   line-height: 1.5em;
   text-align: right;
+}
+blockquote iframe {
+  width: 100%;
+  min-height: 268px;
 }
 
 .navbar {
