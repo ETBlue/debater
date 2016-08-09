@@ -17,6 +17,13 @@ p:last-child {
   margin-bottom: 0;
 }
 
+a {
+  color: #29ABE2;
+}
+a:hover {
+  color: #146c91;
+}
+
 .inline-block {
   display: inline-block;
 }
@@ -97,7 +104,7 @@ p:last-child {
 #summary {
   margin: 1.5rem 0 1rem 0;
   padding: 1rem;
-  background-color: #d9f2f2;
+  background-color: #FFF;
   -moz-box-shadow: rgba(0, 0, 0, 0.2) 1px 1px 2px;
   -webkit-box-shadow: rgba(0, 0, 0, 0.2) 1px 1px 2px;
   box-shadow: rgba(0, 0, 0, 0.2) 1px 1px 2px;
@@ -110,7 +117,7 @@ p:last-child {
   padding: 10px 15px;
   font-size: 1rem;
   width: auto;
-  background-color: #f5f5a3;
+  background-color: #f8e71c;
   color: rgba(0, 0, 0, 0.4);
   -moz-box-shadow: rgba(0, 0, 0, 0.2) 1px 1px 2px;
   -webkit-box-shadow: rgba(0, 0, 0, 0.2) 1px 1px 2px;
@@ -174,13 +181,13 @@ blockquote .badge-light.active {
   background-color: transparent;
 }
 .navbar .btn-active {
-  border-bottom: 0.2em #40bfbf solid;
-  color: #40bfbf;
+  border-bottom: 0.2em #29ABE2 solid;
+  color: #29ABE2;
   font-weight: bold;
   border-radius: 0;
 }
 .navbar .btn-active .fa {
-  color: #40bfbf;
+  color: #29ABE2;
 }
 .navbar .fa {
   font-size: 20px;
@@ -232,6 +239,10 @@ input[type=file] {
   margin: 0.3em 0;
 }
 
+.nav-pills > li.active > a, .nav-pills > li.active > a:focus, .nav-pills > li.active > a:hover {
+  background-color: #29ABE2;
+}
+
 .border-bottom {
   border-bottom: 3px rgba(0, 0, 0, 0.1) solid;
 }
@@ -251,10 +262,10 @@ input[type=file] {
 }
 .nav-pills-nested li.active > a {
   color: #fff;
-  background-color: #337ab7;
+  background-color: #29ABE2;
 }
 .nav-pills-nested li.active > a > .badge {
-  color: #337ab7;
+  color: #29ABE2;
   background-color: #fff;
 }
 .nav-pills-nested a {
@@ -265,7 +276,7 @@ input[type=file] {
 }
 
 #topics.nav-pills > [data-expandable='true'] > a, #topics.nav-pills > [data-expandable='all'] > a {
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: white;
   border: 1px rgba(0, 0, 0, 0.1) solid;
 }
 #topics.nav-pills > [data-expandable='true'] > a .glyphicon, #topics.nav-pills > [data-expandable='all'] > a .glyphicon {
@@ -275,7 +286,7 @@ input[type=file] {
   padding: 10px;
 }
 #topics.nav-pills > [data-expandable='true'].active > a, #topics.nav-pills > [data-expandable='all'].active > a {
-  background-color: #337ab7;
+  background-color: #29ABE2;
 }
 
 #navbar-collapse-level1 {

@@ -20,6 +20,11 @@ p
   &:last-child
     margin-bottom: 0
 
+a
+  color: #29ABE2
+  &:hover
+    color: darken(#29ABE2, 20)
+
 .inline-block
   display: inline-block
 
@@ -90,7 +95,7 @@ p
 #summary
   margin: 1.5rem 0 1rem 0
   padding: 1rem
-  background-color: hsla(180, 50, 90, 1)
+  background-color: #FFF
   +box-shadow(rgba(#000, 0.2) 1px 1px 2px)
   position: relative
   .title
@@ -101,7 +106,7 @@ p
     padding: 10px 15px
     font-size: 1rem
     width: auto
-    background-color: hsla(60, 80, 80, 1)
+    background-color: #f8e71c
     color: hsla(60, 0, 0, 0.4)
     //+rotate(-2deg)
     +box-shadow(rgba(#000, 0.2) 1px 1px 2px)
@@ -161,12 +166,12 @@ blockquote
   .btn
     background-color: rgba(#000,0)
   .btn-active
-    border-bottom: 0.2em hsla(180,50,50,1) solid
-    color: hsla(180,50,50,1)
+    border-bottom: 0.2em #29ABE2 solid
+    color: #29ABE2
     font-weight: bold
     border-radius: 0
     .fa
-      color: hsla(180,50,50,1)
+      color: #29ABE2
   .fa
     font-size: 20px
     color: rgba(#000, 0.3)
@@ -218,6 +223,9 @@ input[type=file]
 
 // for content navbar
 
+.nav-pills>li.active>a, .nav-pills>li.active>a:focus, .nav-pills>li.active>a:hover
+  background-color: #29ABE2
+
 .border-bottom
   border-bottom: 3px rgba(#000,0.1) solid
 
@@ -233,9 +241,9 @@ input[type=file]
   border-left: 1px rgba(#000, 0.3) dotted
   li.active>a
     color: #fff
-    background-color: #337ab7
+    background-color: #29ABE2
     &>.badge
-      color: #337ab7
+      color: #29ABE2
       background-color: #fff
   a
     padding: 10px 15px
@@ -246,7 +254,7 @@ input[type=file]
 #topics.nav-pills
   &>[data-expandable='true'], &>[data-expandable='all']
     &>a
-      background-color: rgba(#fff,0.5)
+      background-color: rgba(#fff,1)
       border: 1px rgba(#000,0.1) solid
       .glyphicon
         position: absolute
@@ -254,7 +262,7 @@ input[type=file]
         top: 0
         padding: 10px
     &.active>a
-      background-color: #337ab7
+      background-color: #29ABE2
 
 #navbar-collapse-level1
   overflow: visible
