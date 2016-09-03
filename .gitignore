@@ -1,6 +1,7 @@
 .sass-cache/
 .livescript-cache/
 fire_app_log.txt
+*.log
 
 *.gem
 *.rbc
