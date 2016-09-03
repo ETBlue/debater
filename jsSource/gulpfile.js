@@ -15,6 +15,7 @@ const jsPath = path.join(sourcePath, 'js');
 const connectLivereload = require('connect-livereload');
 const livereload = require('gulp-livereload');
 const util = require('gulp-util');
+const slim = require("gulp-slim");
 
 gulp.task('es6', function() {
   return gulp
@@ -78,12 +79,25 @@ gulp.task('js', ['es6'], function() {
     );
 });
 
+gulp.task('slim', function(){
+  return gulp.src("slim/*.slim")
+    .pipe(slim({
+      pretty: true
+    }))
+    .pipe(
+      gulp.dest("../"))
+    .pipe(
+      livereload()
+    );
+});
 
 gulp.task('default', ['js', 'watch']);
+gulp.task('default', ['slim', 'watch']);
 
 gulp.task('watch', ['server'], function() {
   livereload.listen({silent: true});
   gulp.watch(['js/**/*.es6'], ['js']);
+  gulp.watch(['slim/*.slim'], ['slim']);
 });
 
 gulp.task('server', function() {

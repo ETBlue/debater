@@ -22,5 +22,8 @@
     "gulp-stylus": "2.1.1",
     "gulp-util": "^3.0.7",
     "serve-static": "1.10.0"
+  },
+  "devDependencies": {
+    "gulp-slim": "^0.3.0"
   }
 }
